@@ -1,16 +1,19 @@
 package com.team1.chat.interfaces;
 
+import com.team1.chat.models.Channel;
+import com.team1.chat.models.User;
+
 public interface DatabaseSupportInterface
 {
-    boolean putUser(UserInterface u);
+    boolean putUser(User u);
 
-    UserInterface getUser(String username, String password);
+    User getUser(String username, String password);
 
-    UserInterface getUser(String uid);
+    User getUser(String uid);
 
     boolean nameAvailable(String newUsername);
 
-    ChannelInterface getChannel(String cid);
+    Channel getChannel(String cid);
 
-    boolean putChannel(ChannelInterface c);
+    boolean putChannel(Channel c);
 }

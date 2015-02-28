@@ -1,5 +1,7 @@
 package com.team1.chat.interfaces;
 
+import com.team1.chat.models.User;
+
 import java.util.ArrayList;
 
 public interface ChatServiceControllerInterface
@@ -18,5 +20,5 @@ public interface ChatServiceControllerInterface
 
     boolean joinChannel(String cid, String uid);
 
-    ArrayList<UserInterface> listChannelUsers(String cid, String uid);
+    ArrayList<User> listChannelUsers(String cid, String uid);
 }
