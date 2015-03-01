@@ -9,13 +9,6 @@
     <url>http://maven.apache.org</url>
     <dependencies>
 
-        <!-- Hibernate dependencies -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>4.3.8.Final</version>
-        </dependency>
-
         <!-- MySQL dependencies -->
         <dependency>
             <groupId>mysql</groupId>
