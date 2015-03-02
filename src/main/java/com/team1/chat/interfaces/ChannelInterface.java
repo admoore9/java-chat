@@ -6,13 +6,11 @@ import java.util.ArrayList;
 
 public interface ChannelInterface
 {
-    public boolean isRostered(String uid);
+    public boolean isWhitelisted(User u);
 
     public ArrayList<User> listChannelUsers();
 
-    public boolean addChannelUser(String uid);
+    public boolean addChannelUser(User u);
 
-    public boolean removeChannelUser(String uid);
-
-    public boolean isWhiteListed(String uid);
+    public boolean removeChannelUser(User u);
 }

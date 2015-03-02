@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 public class ChatServiceController implements ChatServiceControllerInterface
 {
+    private ChatService cs = null;
+
     public boolean createAccount(String username, String password)
     {
         return false;
@@ -33,16 +35,25 @@ public class ChatServiceController implements ChatServiceControllerInterface
 
     public boolean leaveChannel(String cid, String uid)
     {
-        return false;
+        return this.getChatServiceInstance().leaveChannel(cid, uid);
     }
 
     public boolean joinChannel(String cid, String uid)
     {
-        return false;
+        return this.getChatServiceInstance().joinChannel(cid, uid);
     }
 
     public ArrayList<User> listChannelUsers(String cid, String uid)
     {
-        return null;
+        return this.getChatServiceInstance().listChannelUsers(cid, uid);
+    }
+
+    private ChatService getChatServiceInstance()
+    {
+        if (cs == null)
+        {
+            cs = new ChatService();
+        }
+        return cs;
     }
 }
