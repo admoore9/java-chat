@@ -3,9 +3,14 @@ package com.team1.chat.models;
 import com.team1.chat.interfaces.ChatServiceControllerInterface;
 
 import java.util.ArrayList;
+import java.sql.*;
+
+
 
 public class ChatServiceController implements ChatServiceControllerInterface
 {
+
+
     public boolean createAccount(String username, String password)
     {
         return false;
@@ -21,14 +26,24 @@ public class ChatServiceController implements ChatServiceControllerInterface
         return false;
     }
 
-    public boolean setUsername(String uid, String newUsername)
+
+
+    public boolean setUsername(int uid, String newUsername)
     {
-        return false;
+        boolean success = false;
+
+        success = ChatService.setUsername(uid, newUsername);
+
+        return success;
     }
 
-    public boolean setPassword(String uid, String newPassword)
+    public boolean setPassword(int uid, String newPassword)
     {
-        return false;
+        boolean success = false;
+
+        success = ChatService.setPassword(uid, newPassword);
+
+        return success;
     }
 
     public boolean leaveChannel(String cid, String uid)
@@ -45,4 +60,6 @@ public class ChatServiceController implements ChatServiceControllerInterface
     {
         return null;
     }
+
+
 }

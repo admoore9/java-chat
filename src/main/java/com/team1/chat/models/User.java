@@ -1,17 +1,31 @@
 package com.team1.chat.models;
 
 import com.team1.chat.interfaces.UserInterface;
+import java.sql.*;
+
 
 public class User implements UserInterface
 {
+    private int uid;
+    private String username;
+    private String password;
+
+    public User(int uid, String username, String password)
+    {
+        this.uid = uid;
+        this.username = username;
+        this.password = password;
+    }
+
+
     public boolean createUser(String username, String password)
     {
         return false;
     }
 
-    public String getId()
+    public int getId()
     {
-        return null;
+        return 0;
     }
 
     // TODO what is toInactive() ?
@@ -21,9 +35,21 @@ public class User implements UserInterface
         return false;
     }
 
-    public boolean setUsername(String uid, String newUsername)
+    /**
+     * Sets the username of this User object.
+     * @param uid
+     * @param newUsername the new username for this user
+     * @return true if uid match and username set, false otherwise
+     */
+    public boolean setUsername(int uid, String newUsername)
     {
-        return false;
+        // make sure we have correct User
+        if(this.getId() == uid){
+            this.username = newUsername;
+            return true;
+        }
+        else
+            return false;
     }
 
     public String getUsername()
@@ -31,8 +57,20 @@ public class User implements UserInterface
         return null;
     }
 
-    public boolean setPassword(String uid, String newPassword)
+    /**
+     * Sets the password of this User object.
+     * @param uid
+     * @param newPassword
+     * @return true if uid match and password set, false otherwise
+     */
+    public boolean setPassword(int uid, String newPassword)
     {
-        return false;
+        // make sure we have correct User
+        if(this.getId() == uid){
+            this.password = newPassword;
+            return true;
+        }
+        else
+            return false;
     }
 }

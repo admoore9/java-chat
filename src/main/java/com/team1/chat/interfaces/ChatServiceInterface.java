@@ -12,9 +12,9 @@ public interface ChatServiceInterface
 
     boolean logout(String uid);
 
-    boolean setUsername(String uid, String newUsername);
+    boolean setUsername(int uid, String newUsername);
 
-    boolean setPassword(String uid, String newPassword);
+    boolean setPassword(int uid, String newPassword);
 
     boolean leaveChannel(String cid, String uid);
 
