@@ -145,7 +145,6 @@ public class ChatService implements ChatServiceInterface
         return null;
     }
 
-
     /**
      * @return a new instance of DatabaseSupport class
      */

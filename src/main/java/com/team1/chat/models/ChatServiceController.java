@@ -3,9 +3,6 @@ package com.team1.chat.models;
 import com.team1.chat.interfaces.ChatServiceControllerInterface;
 
 import java.util.ArrayList;
-import java.sql.*;
-
-
 
 public class ChatServiceController implements ChatServiceControllerInterface
 {
@@ -68,12 +65,4 @@ public class ChatServiceController implements ChatServiceControllerInterface
         }
         return cs;
     }
-
-    private ChatService getChatServiceInstance()
-    {
-        if (cs == null)
-            cs = new ChatService();
-        return cs;
-    }
-
 }
