@@ -1,11 +1,14 @@
 package com.team1.chat.models;
 
+import com.mysql.fabric.Server;
 import com.team1.chat.interfaces.UserInterface;
+
+import java.sql.*;
 
 public class User implements UserInterface
 {
 	private String uid;
-	private String uname;
+	private String username;
 	private String password;
 	
 	/**
@@ -24,19 +27,17 @@ public class User implements UserInterface
 	public User(String uid, String username, String password)
 	{
 		this.uid = uid;
-		uname = username;
+		this.username = username;
 		this.password = password;
 	}
 	
-	/**
-	 * Creates User with an un-set user id.
-	 */
+
     public boolean createUser(String username, String password)
     {
     	//TODO Need a helper methods to check if username and password
     	//     are of a valid format. 
-        uname=username;
-        this.password=password;
+        this.username = username;
+        this.password = password;
         uid = "";
         return true;
         
@@ -55,9 +56,21 @@ public class User implements UserInterface
         return false;
     }
 
+    /**
+     * Sets the username of this User object.
+     * @param uid
+     * @param newUsername the new username for this user
+     * @return true if uid match and username set, false otherwise
+     */
     public boolean setUsername(String uid, String newUsername)
     {
-        return false;
+        // make sure we have correct User
+        if(this.getId().equals(uid)){
+            this.username = newUsername;
+            return true;
+        }
+        else
+            return false;
     }
 
     /**
@@ -65,14 +78,27 @@ public class User implements UserInterface
      */
     public String getUsername()
     {
-        return uname;
+        return username;
     }
 
+    /**
+     * Sets the password of this User object.
+     * @param uid
+     * @param newPassword
+     * @return true if uid match and password set, false otherwise
+     */
     public boolean setPassword(String uid, String newPassword)
     {
-        return false;
+        // make sure we have correct User
+
+        if(this.getId().equals(uid)){
+            this.password = newPassword;
+            return true;
+        }
+        else
+            return false;
     }
-    
+
     /**
      * Returns the User's password.
      */
