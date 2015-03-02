@@ -9,18 +9,30 @@ import java.util.ArrayList;
 
 public class ChatServiceController implements ChatServiceControllerInterface
 {
-	ChatService cs;
+	ChatService cs = null;
+	
+	/**
+	 * Creates a new account with username and password.
+	 * @return true on success, false on failure.
+	 */
     public boolean createAccount(String username, String password)
     {
     	
     	return cs.createAccount(username, password);
     }
-
+    /**
+     * Logs in the User whose username/password match the input username and password.
+     * @return returns the user's id.
+     */
     public String login(String username, String password)
     {
         return cs.login(username, password);
     }
 
+    /**
+     * Logs out the User whose id matches the input uid. 
+     * @return true on success, false on failure.
+     */
     public boolean logout(String uid)
     {
         return cs.logout(uid);

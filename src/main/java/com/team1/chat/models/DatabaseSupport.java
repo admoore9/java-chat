@@ -1,13 +1,16 @@
 package com.team1.chat.models;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import com.team1.chat.interfaces.DatabaseSupportInterface;
 
 public class DatabaseSupport implements DatabaseSupportInterface
 {	
 	Connection conn;
+	
+	/**
+	 * Loads the driver and initializes the connection to the database.
+	 */
 	public DatabaseSupport()
 	{
 		try {   
@@ -30,6 +33,11 @@ public class DatabaseSupport implements DatabaseSupportInterface
 	    System.out.println ("*** Connected to the database ***"); 
 	}
 
+	/**
+	 * Helper method to send an update to database.
+	 * @param statement
+	 * @return
+	 */
 	private boolean setData(String statement)
 	{
 		//Simply submit statement to the MySQL server.
@@ -47,6 +55,14 @@ public class DatabaseSupport implements DatabaseSupportInterface
 	
 	//Each index of the string list represents a row. 
 	//Each line in a string represents a column.
+	
+	/**
+	 * Helper method to pull data from the database.
+	 * @param statement
+	 * @return Returns an ArrayList<String>. 
+	 * 		   Each string denotes a row. 
+	 * 		   Each line of a string denotes a column value.
+	 */
 	private ArrayList<String> getData(String statement){
 		Statement stmt;
 		ResultSet rs;
@@ -77,6 +93,9 @@ public class DatabaseSupport implements DatabaseSupportInterface
 		}
 		return data;
 	}
+	/**
+	 * Puts a new User into the database. 
+	 */
     public boolean putUser(User u)
     {
     	String statement = "INSERT INTO User " +
@@ -84,6 +103,9 @@ public class DatabaseSupport implements DatabaseSupportInterface
         return setData(statement);
     }
 
+    /**
+     * Returns a User from the database by username and password.
+     */
     public User getUser(String username, String password)
     {
     	String statement = "SELECT * " +
@@ -110,10 +132,28 @@ public class DatabaseSupport implements DatabaseSupportInterface
 		
     }
 
-    public User getUser(String uid)
-    {
-        return null;
-    }
+    /**
+     * Returns a User from the database by user id.
+     */
+	public User getUser(String uid) {
+		String statement = "SELECT * " + "FROM User u " + "WHERE u.uid ="+uid;
+		ArrayList<String> result = getData(statement);
+		if (!(result.size() == 3)) {
+			// First column: uid
+			String userId = result.get(0);
+
+			// Second column: username
+			String uname = result.get(1);
+
+			// Third column: password
+			String pw = result.get(2);
+
+			User u = new User(userId, uname, pw);
+
+			return u;
+		} else
+			return null;
+	}
 
     public boolean nameAvailable(String newUsername)
     {

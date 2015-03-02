@@ -8,11 +8,19 @@ public class User implements UserInterface
 	private String uname;
 	private String password;
 	
-	
+	/**
+	 * Default constructor.
+	 */
 	public User(){
 		
 	}
 	
+	/**
+	 * Overloaded Constructor
+	 * @param uid user id
+	 * @param username
+	 * @param password
+	 */
 	public User(String uid, String username, String password)
 	{
 		this.uid = uid;
@@ -20,6 +28,9 @@ public class User implements UserInterface
 		this.password = password;
 	}
 	
+	/**
+	 * Creates User with an un-set user id.
+	 */
     public boolean createUser(String username, String password)
     {
     	//TODO Need a helper methods to check if username and password
@@ -31,6 +42,9 @@ public class User implements UserInterface
         
     }
 
+    /**
+     * Returns the User's id.
+     */
     public String getId()
     {
     	return uid;
@@ -46,6 +60,9 @@ public class User implements UserInterface
         return false;
     }
 
+    /**
+     * Returns the User's username.
+     */
     public String getUsername()
     {
         return uname;
@@ -56,6 +73,9 @@ public class User implements UserInterface
         return false;
     }
     
+    /**
+     * Returns the User's password.
+     */
     public String getPassword()
     {
     	return password;

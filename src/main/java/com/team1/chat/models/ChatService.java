@@ -8,6 +8,10 @@ import com.team1.chat.models.User;
 public class ChatService implements ChatServiceInterface
 {
 	DatabaseSupport db;
+	
+	/**
+	 * Creates a new User in the database.
+	 */
     public boolean createAccount(String username, String password)
     {
         User u = new User();
@@ -19,13 +23,28 @@ public class ChatService implements ChatServiceInterface
         else return false;
     }
 
+    /**
+     * Gets User data from the database. 
+     * User joins the default channel.
+     * @return Returns the user's id.
+     * 		   If the database could not retrieve a valid user, id returned is empty.
+     */
     public String login(String username, String password)
     {
     	User u = db.getUser(username, password);
-        return u.getId();
+    	String id = u.getId();
+    	if (!id.isEmpty())
+    	{
+    		joinChannel("0",id);
+    	}
+        return id;
     }
 
     //TODO Need to eventually discuss what actions we want to occur on logout.
+    /**
+     * User logs out and leaves the default channel.
+     * @return true on success, false on fail.
+     */
     public boolean logout(String uid)
     {
     	User u = db.getUser(uid);
