@@ -3,13 +3,10 @@ package com.team1.chat.models;
 import com.team1.chat.interfaces.ChatServiceControllerInterface;
 
 import java.util.ArrayList;
-import java.sql.*;
-
-
 
 public class ChatServiceController implements ChatServiceControllerInterface
 {
-    ChatService cs = null;
+    private ChatService cs = null;
 
     public boolean createAccount(String username, String password)
     {
@@ -25,7 +22,6 @@ public class ChatServiceController implements ChatServiceControllerInterface
     {
         return false;
     }
-
 
 
     public boolean setUsername(String uid, String newUsername)
@@ -48,24 +44,25 @@ public class ChatServiceController implements ChatServiceControllerInterface
 
     public boolean leaveChannel(String cid, String uid)
     {
-        return false;
+        return this.getChatServiceInstance().leaveChannel(cid, uid);
     }
 
     public boolean joinChannel(String cid, String uid)
     {
-        return false;
+        return this.getChatServiceInstance().joinChannel(cid, uid);
     }
 
     public ArrayList<User> listChannelUsers(String cid, String uid)
     {
-        return null;
+        return this.getChatServiceInstance().listChannelUsers(cid, uid);
     }
 
     private ChatService getChatServiceInstance()
     {
         if (cs == null)
+        {
             cs = new ChatService();
+        }
         return cs;
     }
-
 }
