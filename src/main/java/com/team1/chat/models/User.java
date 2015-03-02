@@ -3,35 +3,58 @@ package com.team1.chat.models;
 import com.mysql.fabric.Server;
 import com.team1.chat.interfaces.UserInterface;
 
-
 import java.sql.*;
-
 
 public class User implements UserInterface
 {
-    private String uid;
-    private String username;
-    private String password;
-
-
-    public User(String uid, String username, String password)
-    {
-        this.uid = uid;
-        this.username = username;
-        this.password = password;
-    }
+	private String uid;
+	private String username;
+	private String password;
+	
+	/**
+	 * Default constructor.
+	 */
+	public User(){
+		
+	}
+	
+	/**
+	 * Overloaded Constructor
+	 * @param uid user id
+	 * @param username
+	 * @param password
+	 */
+	public User(String uid, String username, String password)
+	{
+		this.uid = uid;
+		this.username = username;
+		this.password = password;
+	}
+	
 
     public boolean createUser(String username, String password)
     {
-        return false;
+    	//TODO Need a helper methods to check if username and password
+    	//     are of a valid format. 
+        this.username = username;
+        this.password = password;
+        uid = "";
+        return true;
+        
     }
 
+    /**
+     * Returns the User's id.
+     */
     public String getId()
     {
-        return uid;
+    	return uid;
     }
-
-    // TODO what is toInactive() ?
+    
+    public boolean sendMessage(UserInterface u, String msgText)
+    {
+        return false;
+    }
 
     /**
      * Sets the username of this User object.
@@ -50,9 +73,12 @@ public class User implements UserInterface
             return false;
     }
 
+    /**
+     * Returns the User's username.
+     */
     public String getUsername()
     {
-        return null;
+        return username;
     }
 
     /**
@@ -73,5 +99,11 @@ public class User implements UserInterface
             return false;
     }
 
-
+    /**
+     * Returns the User's password.
+     */
+    public String getPassword()
+    {
+    	return password;
+    }
 }

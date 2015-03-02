@@ -28,12 +28,12 @@ public class Channel implements ChannelInterface
     }
 
     /**
-     * Method to check if the user is whitelisted
+     * Method to check if the user is WhiteListed
      *
      * @param u user
      * @return true if the whitelist contains user: false otherwise
      */
-    public boolean isWhitelisted(User u)
+    public boolean isWhiteListed(User u)
     {
         return whitelist.contains(u);
     }
@@ -56,7 +56,7 @@ public class Channel implements ChannelInterface
      */
     public boolean addChannelUser(User u)
     {
-        if (!currentUsers.contains(u) && isWhitelisted(u))
+        if (!currentUsers.contains(u) && isWhiteListed(u))
         {
             currentUsers.add(u);
             return true;

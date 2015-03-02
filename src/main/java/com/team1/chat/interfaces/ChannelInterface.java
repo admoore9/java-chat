@@ -7,19 +7,16 @@ import java.util.ArrayList;
 
 public interface ChannelInterface
 {
-    public boolean isWhitelisted(User u);
-
     public ArrayList<User> listChannelUsers();
 
     public boolean addChannelUser(User u);
 
     public boolean removeChannelUser(User u);
 
-    public boolean isWhiteListed(String uid);
+    public boolean isWhiteListed(User u);
 
     public interface ChannelListener{
         public void start();
         public boolean sendMessage(String username, String msgText);
-
     }
 }

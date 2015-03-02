@@ -6,7 +6,7 @@ public interface UserInterface
 
     public String getId();
 
-    // TODO what is toInactive() ?
+    public boolean sendMessage(UserInterface u, String msgText);
 
     public boolean setUsername(String uid, String newUsername);
 
@@ -14,5 +14,5 @@ public interface UserInterface
 
     public boolean setPassword(String uid, String newPassword);
 
-
+    public String getPassword();
 }

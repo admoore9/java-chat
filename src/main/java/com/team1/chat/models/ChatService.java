@@ -1,7 +1,6 @@
 package com.team1.chat.models;
 
 import com.team1.chat.interfaces.ChatServiceInterface;
-
 import java.util.ArrayList;
 
 public class ChatService implements ChatServiceInterface
@@ -9,23 +8,57 @@ public class ChatService implements ChatServiceInterface
     // class-level instantiation of DatabaseSupport object.
     private DatabaseSupport dbs = null;
 
+	/**
+	 * Creates a new User in the database.
+	 */
     public boolean createAccount(String username, String password)
     {
-        return false;
-    }
-
-    public String login(String username, String password)
-    {
-        return null;
-    }
-
-    public boolean logout(String uid)
-    {
-        return false;
+        User u = new User();
+        u.createUser(username, password);
+        if (dbs.putUser(u))
+        {
+        	return true;
+        }
+        else return false;
     }
 
     /**
-     * Fetch this uid associateed object from database and update username.
+     * Gets User data from the database. 
+     * User joins the default channel.
+     * @return Returns the user's id.
+     * 		   If the database could not retrieve a valid user, id returned is empty.
+     */
+    public String login(String username, String password)
+    {
+    	User u = dbs.getUser(username, password);
+    	String id = u.getId();
+    	if (!id.isEmpty())
+    	{
+    		joinChannel("0",id);
+    	}
+        return id;
+    }
+
+    //TODO Need to eventually discuss what actions we want to occur on logout.
+    /**
+     * User logs out and leaves the default channel.
+     * @return true on success, false on fail.
+     */
+    public boolean logout(String uid)
+    {
+    	User u = dbs.getUser(uid);
+    	if (u.getId() != "")
+    	{
+    		//TODO In next iteration, need to leave all channels.
+    		 leaveChannel("0",u.getId());
+    		//TODO Need to ditch toInactive() method. 
+    		 return true;
+    	}
+    	else return false;
+    }
+
+    /**
+     * Fetch this uid associated object from database and update username.
      * @param uid
      * @param newUsername
      * @return true on successful update, false otherwise.
@@ -50,7 +83,7 @@ public class ChatService implements ChatServiceInterface
     }
 
     /**
-     * Fetch this uid associateed object from database and update username.
+     * Fetch this uid associated object from database and update username.
      * @param uid
      * @param newPassword
      * @return  true on successful update, false otherwise.
