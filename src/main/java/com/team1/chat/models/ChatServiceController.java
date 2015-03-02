@@ -4,21 +4,26 @@ import com.team1.chat.interfaces.ChatServiceControllerInterface;
 
 import java.util.ArrayList;
 
+//Tyler Notes: I'm thinking that each instance of ChatServiceController
+//will need to open a Socket, and pass information to ChatService.
+
 public class ChatServiceController implements ChatServiceControllerInterface
 {
+	ChatService cs;
     public boolean createAccount(String username, String password)
     {
-        return false;
+    	
+    	return cs.createAccount(username, password);
     }
 
     public String login(String username, String password)
     {
-        return null;
+        return cs.login(username, password);
     }
 
     public boolean logout(String uid)
     {
-        return false;
+        return cs.logout(uid);
     }
 
     public boolean setUsername(String uid, String newUsername)

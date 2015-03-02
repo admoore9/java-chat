@@ -6,8 +6,10 @@ import java.util.Scanner;
 import com.team1.chat.interfaces.DatabaseSupportInterface;
 
 public class DatabaseSupport implements DatabaseSupportInterface
-{	Connection conn;
-	public DatabaseSupport(){
+{	
+	Connection conn;
+	public DatabaseSupport()
+	{
 		try {   
 	         // Load the driver (registers itself)
 	         Class.forName ("com.mysql.jdbc.Driver");
@@ -77,12 +79,35 @@ public class DatabaseSupport implements DatabaseSupportInterface
 	}
     public boolean putUser(User u)
     {
-        return false;
+    	String statement = "INSERT INTO User " +
+    					   "VALUES(DEFAULT,"+u.getUsername()+","+u.getPassword()+")";
+        return setData(statement);
     }
 
     public User getUser(String username, String password)
     {
-        return null;
+    	String statement = "SELECT * " +
+    					   "FROM User u " +
+    					   "WHERE u.username = "+username+ 
+    					   "AND u.password = "+ password;
+    	ArrayList<String> result = getData(statement);
+    	if (!(result.size()==3))
+    	{
+    		//First column: uid
+    		String uid = result.get(0);
+    	
+    		//Second column: username
+    		String uname = result.get(1);
+    		
+    		//Third column: password
+    		String pw = result.get(2);
+    		
+    		User u = new User(uid,uname,pw);
+    		
+    		return u;
+    	}
+    	else return null;
+		
     }
 
     public User getUser(String uid)
