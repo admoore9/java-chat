@@ -9,7 +9,7 @@ import java.sql.*;
 
 public class ChatServiceController implements ChatServiceControllerInterface
 {
-
+    ChatService cs = null;
 
     public boolean createAccount(String username, String password)
     {
@@ -28,20 +28,20 @@ public class ChatServiceController implements ChatServiceControllerInterface
 
 
 
-    public boolean setUsername(int uid, String newUsername)
+    public boolean setUsername(String uid, String newUsername)
     {
         boolean success = false;
 
-        success = ChatService.setUsername(uid, newUsername);
+        success = getChatServiceInstance().setUsername(uid, newUsername);
 
         return success;
     }
 
-    public boolean setPassword(int uid, String newPassword)
+    public boolean setPassword(String uid, String newPassword)
     {
         boolean success = false;
 
-        success = ChatService.setPassword(uid, newPassword);
+        success = getChatServiceInstance().setPassword(uid, newPassword);
 
         return success;
     }
@@ -61,5 +61,11 @@ public class ChatServiceController implements ChatServiceControllerInterface
         return null;
     }
 
+    private ChatService getChatServiceInstance()
+    {
+        if (cs == null)
+            cs = new ChatService();
+        return cs;
+    }
 
 }

@@ -14,7 +14,7 @@ public class DatabaseSupport implements DatabaseSupportInterface
         return null;
     }
 
-    public User getUser(int uid)
+    public User getUser(String uid)
     {
         return null;
     }
@@ -33,7 +33,5 @@ public class DatabaseSupport implements DatabaseSupportInterface
     {
         return false;
     }
-
-
 
 }

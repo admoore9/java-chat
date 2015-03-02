@@ -9,7 +9,7 @@ public interface DatabaseSupportInterface
 
     User getUser(String username, String password);
 
-    User getUser(int uid);
+    User getUser(String uid);
 
     boolean nameAvailable(String newUsername);
 

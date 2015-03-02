@@ -30,7 +30,7 @@ public class ChatService implements ChatServiceInterface
      * @param newUsername
      * @return true on successful update, false otherwise.
      */
-    public boolean setUsername(int uid, String newUsername)
+    public boolean setUsername(String uid, String newUsername)
     {
         // get User object from database.
         User u = this.getDatabaseSupportInstance().getUser(uid);
@@ -55,7 +55,7 @@ public class ChatService implements ChatServiceInterface
      * @param newPassword
      * @return  true on successful update, false otherwise.
      */
-    public boolean setPassword(int uid, String newPassword)
+    public boolean setPassword(String uid, String newPassword)
     {
         // get User object from database.
         User u = getDatabaseSupportInstance().getUser(uid);

@@ -4,15 +4,15 @@ public interface UserInterface
 {
     public boolean createUser(String username, String password);
 
-    public int getId();
+    public String getId();
 
     // TODO what is toInactive() ?
 
-    public boolean sendMessage(UserInterface u, String msgText);
-
-    public boolean setUsername(int uid, String newUsername);
+    public boolean setUsername(String uid, String newUsername);
 
     public String getUsername();
 
-    public boolean setPassword(int uid, String newPassword);
+    public boolean setPassword(String uid, String newPassword);
+
+
 }
