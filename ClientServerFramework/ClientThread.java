@@ -10,7 +10,8 @@ public class ClientThread extends Thread
 
     private Socket socket = null;
     private Client client = null;
-    private BufferedReader inputBuffer = null;
+    //private BufferedReader inputBuffer = null;
+    private DataInputStream inputStream = null;
 
     public ClientThread(Client client, Socket socket)
     {
@@ -26,7 +27,7 @@ public class ClientThread extends Thread
     public void open()
     {
         try {
-            inputBuffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            inputStream = new DataInputStream(socket.getInputStream());
         } catch (IOException e) {
             System.out.println("Error getting input stream: " + e);
             client.stop();
@@ -36,8 +37,8 @@ public class ClientThread extends Thread
     public void close()
     {
         try {
-            if (inputBuffer != null)
-                inputBuffer.close();
+            if (inputStream != null)
+                inputStream.close();
         }
         catch (IOException e) {
             System.out.println("Error closing input stream: " + e);
@@ -51,7 +52,7 @@ public class ClientThread extends Thread
     {
         while (true) {
             try {
-                client.sendMessage(inputBuffer.readLine());
+                client.sendMessage(inputStream.readUTF());
             } catch (IOException e) {
                 System.out.println("Listening error: " + e.getMessage());
                 client.stop();

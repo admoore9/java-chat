@@ -9,7 +9,7 @@ public class Client implements Runnable
 {
     private Socket socket = null;
     private Thread thread = null;
-    private BufferedReader consoleBuffer = null;
+    private DataInputStream userConsole = null;
     private DataOutputStream outputStream = null;
     private ClientThread client = null;
 
@@ -43,7 +43,7 @@ public class Client implements Runnable
     {
         while (thread != null) {
             try {
-                outputStream.writeUTF(consoleBuffer.readLine());
+                outputStream.writeUTF(userConsole.readLine());
                 outputStream.flush();
             } catch (IOException e) {
                 System.out.println("Sending error: " + e.getMessage());
@@ -71,7 +71,7 @@ public class Client implements Runnable
      */
     public void start() throws IOException
     {
-        consoleBuffer = new BufferedReader(new InputStreamReader(System.in));
+        userConsole = new DataInputStream(System.in);
         outputStream = new DataOutputStream(socket.getOutputStream());
 
         if (thread == null)
@@ -94,8 +94,8 @@ public class Client implements Runnable
 
         try
         {
-            if (consoleBuffer != null)
-                consoleBuffer.close();
+            if (userConsole != null)
+                userConsole.close();
             if (outputStream != null)
                 outputStream.close();
             if (socket != null)

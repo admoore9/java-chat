@@ -14,7 +14,7 @@ public class ServerThread extends Thread
     private Server server = null;
     private Socket socket = null;
     private int id = -1;
-    private BufferedReader inputBuffer = null;
+    private DataInputStream inputStream = null;
     private DataOutputStream outputStream = null;
 
 
@@ -70,7 +70,7 @@ public class ServerThread extends Thread
         while (true) {
             try
             {
-                server.sendMessage(id, inputBuffer.readLine());
+                server.sendMessage(id, inputStream.readUTF());
             }
             catch (IOException e)
             {
@@ -86,7 +86,7 @@ public class ServerThread extends Thread
      */
     public void open() throws IOException
     {
-        inputBuffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        inputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         outputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
     }
 
@@ -97,8 +97,8 @@ public class ServerThread extends Thread
     {
         if (socket != null)
             socket.close();
-        if (inputBuffer != null)
-            inputBuffer.close();
+        if (inputStream != null)
+            inputStream.close();
         if (outputStream != null)
             outputStream.close();
     }
