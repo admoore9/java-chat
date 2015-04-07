@@ -15,6 +15,9 @@ import java.util.ArrayList;
  */
 public class Channel implements ChannelInterface
 {
+	String name;
+	boolean isPublic;
+    String admin;	//Shouldn't this be a User?
     private ArrayList<User> whitelist;
     private ArrayList<User> currentUsers;
 
@@ -27,7 +30,15 @@ public class Channel implements ChannelInterface
         this.currentUsers = new ArrayList<User>();
     }
 
-    /**
+    public Channel( String channelName, boolean isPublic, String adminID, ArrayList<User> whiteList) {
+    	
+    	this.name = channelName;
+    	this.isPublic = isPublic;
+    	this.admin = adminID;
+    	this.whitelist=whiteList;
+	}
+
+	/**
      * Method to check if the user is WhiteListed
      *
      * @param u user
@@ -80,9 +91,9 @@ public class Channel implements ChannelInterface
         return false;
     }
 
-    /*
+   /* 
         Channel listener
-     */
+     
     public class ChannelListener extends Thread
     {
         private String uid;
@@ -100,13 +111,13 @@ public class Channel implements ChannelInterface
             this.socket = socket;
         }
 
-        /*
+        
             This creates a new thread for this unique client of this channel.
                 - Sets the socket connection
                 - Adds to list of ChannelUsers
                 - Loops infinitely listening for text
                 - sendsMessage to other Users of channel
-         */
+         
         public void start()
         {
             try{
@@ -155,9 +166,9 @@ public class Channel implements ChannelInterface
             }
         }
 
-        /*
+        
             Distribute message to Channel members
-         */
+         
         public boolean sendMessage(String username, String msgText)
         {
             // loop all Channel writers and send this client's message.
@@ -166,5 +177,21 @@ public class Channel implements ChannelInterface
             }
             return true;
         }
-    }
+    }*/
+
+	public ArrayList<User> getWhiteList() {
+		return whitelist;
+	}
+
+	public boolean isPublic() {
+		return isPublic;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getAdminId() {
+		return admin;
+	}
 }

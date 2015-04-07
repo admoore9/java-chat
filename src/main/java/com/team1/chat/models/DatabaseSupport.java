@@ -1,6 +1,7 @@
 package com.team1.chat.models;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import com.team1.chat.interfaces.DatabaseSupportInterface;
 
@@ -157,17 +158,56 @@ public class DatabaseSupport implements DatabaseSupportInterface
 
     public boolean nameAvailable(String newUsername)
     {
-        return false;
+    	ArrayList<String> result = getData("SELECT * FROM USER u WHERE u.name = "+newUsername);
+        return (result.size()==0);
     }
 
-    public Channel getChannel(String cid)
+    public Channel getChannel(String name)
     {
-        return null;
+		String statement = "SELECT * " + "FROM Channel c " + "WHERE c.name ="+name;
+		ArrayList<String> result = getData(statement);
+		if (!(result.size() == 6)) 
+		{
+			// First column: name
+			String channelName = result.get(0);
+
+			// Second column: ispublic
+			boolean isPublic;
+			if (result.get(1)=="true"){isPublic=true;}
+			else isPublic = false;
+			
+			// Third column: admin
+			String admin = result.get(2);
+			
+			// Fourth Column: whitelist
+			String whitelistIds = result.get(3);
+			Scanner scanIds = new Scanner(whitelistIds);
+			ArrayList<User> whitelist=new ArrayList<User>();
+			
+			while (scanIds.hasNextLine())
+			{
+				// This might need some error handling. Not sure. 
+				whitelist.add(getUser(scanIds.next()));
+			}
+			scanIds.close();
+			
+			Channel c = new Channel(channelName, isPublic, admin, whitelist);
+			return c;
+		} else
+			return null;
     }
 
     public boolean putChannel(Channel c)
     {
-        return false;
+    	String wList = "";
+    	ArrayList<User> tempList = c.getWhiteList();
+    	for (int i = 0; i < tempList.size();i++)
+    	{
+    		wList = wList + tempList.get(i).getId() + "\n";
+    	}
+    	String isPublic = String.valueOf(c.isPublic());
+    	String statement = "INSERT INTO Channel " +
+				   "VALUES("+c.getName()+","+isPublic+","+c.getAdminId()+","+wList+")";
+    	return setData(statement);
     }
-
 }
