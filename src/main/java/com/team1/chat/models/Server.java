@@ -11,17 +11,9 @@ import java.util.ArrayList;
 public class Server implements Runnable
 {
     private ChatServiceController csc;
-
-    // ArrayList of client/thread objects
     private ArrayList<ServerThread> clients = new ArrayList<ServerThread>();
-
-    // This server's socket
     private ServerSocket server = null;
-
-    // This server's main thread;
     private Thread thread = null;
-
-    // How many clients are on this channel
     private int numClients = 0;
 
     // Maximum number of clients allowed on this server
@@ -35,7 +27,7 @@ public class Server implements Runnable
     {
 
         try {
-            // Prompt user of port connection attempt
+            // Prompt of port connection attempt
             System.out.println("Trying to connect to port: " + port);
 
             // make the connection to the port on our server
@@ -58,12 +50,10 @@ public class Server implements Runnable
      */
     public void run()
     {
-        int successfulLogins = 0;
         while (thread != null) {
             try {
                 System.out.println("Listening for client connections. ");
                 addClient(server.accept());
-                System.out.println();
             } catch (IOException e) {
                 System.out.println("Server run() error: " + e);
             }
@@ -124,18 +114,17 @@ public class Server implements Runnable
 
         if (clients.get(clientsArrPos).getId() == id) {
 
-            numClients--;
-
             try {
+
                 clients.get(clientsArrPos).close();
-                clients.remove(clientsArrPos);
+                numClients--;
+
             }
             catch (IOException e) {
                 System.out.println("Failed to log client off. Error message: " + e);
             }
         }
     }
-
 
     /*
         Add a client thread to the server

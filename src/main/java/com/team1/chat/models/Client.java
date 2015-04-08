@@ -87,7 +87,6 @@ public class Client implements Runnable
             thread.interrupt();
             thread = null;
         }
-
         try {
             if (userConsole != null)
                 userConsole.close();
@@ -131,13 +130,14 @@ public class Client implements Runnable
         }
 
         //login succeeded, now set up and launch a new client thread.
-        boolean notReadyToStart = true;
+        boolean waitingToStart = true;
         System.out.println("Welcome " + uid + ". Please enter the desired option number.");
         System.out.println("1. View Channel Invites.");
         System.out.println("2. View Private Channels.");
+        System.out.println("3. View Public Channels.");
         System.out.println("4. Launch in your default channel.");
 
-        while(notReadyToStart){
+        while(waitingToStart){
 
             while ((userInput = console.readLine()) != null);
 
@@ -154,11 +154,16 @@ public class Client implements Runnable
                 }
             }
             else if (userInput.equals("3")) {
+                channels = csc.viewPublicChannels(uid);
+                for (Channel c : channels) {
+                    System.out.println(c.getName());
+                }
+            }
+            else if (userInput.equals("4")) {
 
-                notReadyToStart = false;
+                waitingToStart = false;
             }
         }
-
 
         // launch client
         // Iteration 3 - integrate channel selection

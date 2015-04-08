@@ -12,6 +12,7 @@ public class ServerThread extends Thread
     private Server server = null;
     private Socket socket = null;
     private int id = -1;
+
     private DataInputStream inputStream = null;
     private DataOutputStream outputStream = null;
 
@@ -26,7 +27,7 @@ public class ServerThread extends Thread
         super();
         this.server = server;
         this.socket = socket;
-
+        // iteration 3 : merge User & socket IDs
         id = socket.getPort();
     }
 

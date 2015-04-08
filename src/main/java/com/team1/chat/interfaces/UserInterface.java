@@ -33,4 +33,6 @@ public interface UserInterface
     ArrayList<Channel> viewInvitedChannels();
 
     ArrayList<Channel> viewPrivateChannels();
+
+    ArrayList<Channel> viewPublicChannels();
 }

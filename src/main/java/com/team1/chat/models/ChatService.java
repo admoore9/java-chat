@@ -321,6 +321,20 @@ public class ChatService implements ChatServiceInterface
     }
 
     /**
+     * Method that gets a list of public channels
+     *
+     * @return a list of public channels
+     */
+    public ArrayList<Channel> viewPublicChannels(String uid)
+    {
+        User u;
+
+        u = this.getDatabaseSupportInstance().getUserById(uid);
+
+        return u.viewPublicChannels();
+    }
+
+    /**
      * Method to check if password is well-formed
      * Criteria:
      * 1) 8 <= length <= 45

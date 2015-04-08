@@ -15,6 +15,7 @@ public class User implements UserInterface
     private String currentChannel;
     private ArrayList<Channel> invitedChannels;
     private ArrayList<Channel> privateChannels;
+    private ArrayList<Channel> publicChannels;
 
 	/**
 	 * Default constructor.
@@ -248,4 +249,15 @@ public class User implements UserInterface
     {
         return privateChannels;
     }
+
+    /**
+     * Method that gets a list of public channels
+     *
+     * @return a list of public channels
+     */
+    public ArrayList<Channel> viewPublicChannels()
+    {
+        return publicChannels;
+    }
+
 }
