@@ -215,11 +215,10 @@ public class DatabaseSupport implements DatabaseSupportInterface
 			ArrayList<User> whitelist=new ArrayList<User>();		
 			while (scanForColumnValues.hasNextLine())
 			{
-				// This might need some error handling. Not sure. 
-				whitelist.add(getUser(scanForColumnValues.nextLine()));
+				whitelist.add(getUserById(scanForColumnValues.nextLine()));
 			}
 			scanForColumnValues.close();
-			Channel c = new Channel(channelName, isPublic, admin, whitelist);
+			Channel c = new Channel(channelName, admin);
 			System.out.println("Channel was successfully retrieved from database.");
 			return c;
 		} else

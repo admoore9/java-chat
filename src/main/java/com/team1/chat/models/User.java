@@ -3,7 +3,8 @@ package com.team1.chat.models;
 import com.mysql.fabric.Server;
 import com.team1.chat.interfaces.UserInterface;
 
-import java.sql.*;
+import java.io.*;
+import java.net.*;
 import java.util.ArrayList;
 
 public class User implements UserInterface
@@ -23,7 +24,7 @@ public class User implements UserInterface
 	}
 
 	/**
-	 * Overloaded Constructor
+	 * Overloaded Constructor 1
 	 * @param uid user id
 	 * @param username
 	 * @param password
@@ -37,17 +38,14 @@ public class User implements UserInterface
         this.invitedChannels = new ArrayList<Channel>();
         this.privateChannels = new ArrayList<Channel>();
 	}
-	
+
 
     public boolean createUser(String username, String password)
     {
-    	//TODO Need a helper methods to check if username and password
-    	//     are of a valid format. 
         this.username = username;
         this.password = password;
         uid = "";
         return true;
-        
     }
 
     /**
