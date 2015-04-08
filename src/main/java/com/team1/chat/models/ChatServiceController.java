@@ -41,12 +41,20 @@ public class ChatServiceController implements ChatServiceControllerInterface
 
     public boolean setUsername(String uid, String newUsername)
     {
-        return this.getChatServiceInstance().setUsername(uid, newUsername);
+        boolean success = false;
+
+        success = getChatServiceInstance().setUsername(uid, newUsername);
+
+        return success;
     }
 
     public boolean setPassword(String uid, String newPassword)
     {
-        return this.getChatServiceInstance().setPassword(uid, newPassword);
+        boolean success = false;
+
+        success = getChatServiceInstance().setPassword(uid, newPassword);
+
+        return success;
     }
 
     public boolean leaveChannel(String cid, String uid)
@@ -62,42 +70,6 @@ public class ChatServiceController implements ChatServiceControllerInterface
     public ArrayList<User> listChannelUsers(String cid, String uid)
     {
         return this.getChatServiceInstance().listChannelUsers(cid, uid);
-    }
-
-    // Iteration 2
-    public boolean createChannel(String cname, String aid)
-    {
-        return this.getChatServiceInstance().createChannel(cname, aid);
-    }
-
-    public boolean deleteChannel(String cname, String aid)
-    {
-        return this.getChatServiceInstance().deleteChannel(cname, aid);
-    }
-
-    public boolean inviteUserToChannel(String cname, String aid, String uname)
-    {
-        return this.getChatServiceInstance().inviteUserToChannel(cname, aid, uname);
-    }
-
-    public boolean removeUserFromChannel(String cname, String aid, String uname)
-    {
-        return this.getChatServiceInstance().removeUserFromChannel(cname, aid, uname);
-    }
-
-    public ArrayList<Channel> viewInvitedChannels(String uid)
-    {
-        return this.getChatServiceInstance().viewInvitedChannels(uid);
-    }
-
-    public ArrayList<Channel> viewPrivateChannels(String uid)
-    {
-        return this.getChatServiceInstance().viewPrivateChannels(uid);
-    }
-
-    public boolean toggleChannelVisibility(String cname, String aid)
-    {
-        return this.getChatServiceInstance().toggleChannelVisibility(cname, aid);
     }
 
     private ChatService getChatServiceInstance()

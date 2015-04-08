@@ -11,52 +11,31 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 /**
- * The channel class which contains a list of whiteListed users and current users
+ * The channel class which contains a list of whitelisted users and current users
  */
 public class Channel implements ChannelInterface
 {
-    private String name;
-    private String admin;
-    private boolean isPublic;
-    private ArrayList<User> whiteList;
+    private ArrayList<User> whitelist;
     private ArrayList<User> currentUsers;
 
     /**
      * Constructor for the Channel
      */
-    public Channel(String name, String admin)
+    public Channel()
     {
-        this.name = name;
-        this.admin = admin;
-        this.isPublic = false;
-        this.whiteList = new ArrayList<User>();
+        this.whitelist = new ArrayList<User>();
         this.currentUsers = new ArrayList<User>();
-    }
-
-    public String getName()
-    {
-        return this.name;
     }
 
     /**
      * Method to check if the user is WhiteListed
      *
      * @param u user
-     * @return true if the white list contains user: false otherwise
+     * @return true if the whitelist contains user: false otherwise
      */
     public boolean isWhiteListed(User u)
     {
-        int i;
-
-        for (i = 0; i < whiteList.size(); i++)
-        {
-            if (whiteList.get(i).getId().equals(u.getId()))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return whitelist.contains(u);
     }
 
     /**
@@ -77,22 +56,11 @@ public class Channel implements ChannelInterface
      */
     public boolean addChannelUser(User u)
     {
-        int i;
-
-        if (isWhiteListed(u))
+        if (!currentUsers.contains(u) && isWhiteListed(u))
         {
-            for (i = 0; i < currentUsers.size(); i++)
-            {
-                if (currentUsers.get(i).getId().equals(u.getId()))
-                {
-                    return false;
-                }
-            }
-
             currentUsers.add(u);
             return true;
         }
-
         return false;
     }
 
@@ -104,15 +72,10 @@ public class Channel implements ChannelInterface
      */
     public boolean removeChannelUser(User u)
     {
-        int i;
-
-        for (i = 0; i < currentUsers.size(); i++)
+        if (currentUsers.remove(u))
         {
-            if (currentUsers.get(i).getId().equals(u.getId()))
-            {
-                currentUsers.remove(i);
-                return true;
-            }
+            currentUsers.trimToSize();
+            return true;
         }
         return false;
     }
@@ -203,88 +166,5 @@ public class Channel implements ChannelInterface
             }
             return true;
         }
-    }
-
-    // Iteration 2
-    /**
-     * Method that gets the users in the channel to prepare for deletion
-     *
-     * @param aid id of user deleting the channel
-     * @return a list of users in the channel
-     */
-    public ArrayList<User> deleteChannel(String aid)
-    {
-        if (admin.equals(aid))
-        {
-            return whiteList;
-        }
-        return null;
-    }
-
-    /**
-     * Method that adds a user to its white list
-     *
-     * @param aid id of current user
-     * @param u user to add
-     * @return
-     */
-    public boolean whiteListUser(String aid, User u)
-    {
-        int i;
-
-        if (admin.equals(aid))
-        {
-            for (i = 0; i < whiteList.size(); i++)
-            {
-                if (whiteList.get(i).getId().equals(u.getId()))
-                {
-                    return false;
-                }
-            }
-            whiteList.add(u);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Method that removes a user from the channel's white list
-     *
-     * @param aid id of current user
-     * @param u user to remove
-     * @return
-     */
-    public boolean removeUser(String aid, User u)
-    {
-        int i;
-
-        if (admin.equals(aid) && !aid.equals(u.getId()))
-        {
-            for (i = 0; i < whiteList.size(); i++)
-            {
-                if (whiteList.get(i).getId().equals(u.getId()))
-                {
-                    whiteList.remove(i);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Method that toggles is public true/false
-     *
-     * @param aid id of current user
-     * @return
-     */
-    public boolean toggleChannelVisibility(String aid)
-    {
-        if (admin.equals(aid))
-        {
-            isPublic = !isPublic;
-            return true;
-        }
-        return false;
     }
 }

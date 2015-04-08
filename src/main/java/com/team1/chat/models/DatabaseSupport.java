@@ -135,7 +135,7 @@ public class DatabaseSupport implements DatabaseSupportInterface
     /**
      * Returns a User from the database by user id.
      */
-	public User getUserById(String uid) {
+	public User getUser(String uid) {
 		String statement = "SELECT * " + "FROM User u " + "WHERE u.uid ="+uid;
 		ArrayList<String> result = getData(statement);
 		if (!(result.size() == 3)) {
@@ -170,19 +170,4 @@ public class DatabaseSupport implements DatabaseSupportInterface
         return false;
     }
 
-    // Iteration 2
-    public Channel getChannelByName(String cname)
-    {
-        return null;
-    }
-
-    public boolean deleteChannel(String cname)
-    {
-        return false;
-    }
-
-    public User getUserByName(String uname)
-    {
-        return null;
-    }
 }
