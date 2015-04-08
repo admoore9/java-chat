@@ -4,6 +4,7 @@ import com.mysql.fabric.Server;
 import com.team1.chat.interfaces.UserInterface;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class User implements UserInterface
 {
