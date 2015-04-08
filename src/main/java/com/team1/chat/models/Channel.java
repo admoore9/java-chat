@@ -46,7 +46,17 @@ public class Channel implements ChannelInterface
      */
     public boolean isWhiteListed(User u)
     {
-        return whiteList.contains(u);
+        int i;
+
+        for (i = 0; i < whiteList.size(); i++)
+        {
+            if (whiteList.get(i).getId().equals(u.getId()))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -67,11 +77,22 @@ public class Channel implements ChannelInterface
      */
     public boolean addChannelUser(User u)
     {
-        if (!currentUsers.contains(u) && isWhiteListed(u))
+        int i;
+
+        if (isWhiteListed(u))
         {
+            for (i = 0; i < currentUsers.size(); i++)
+            {
+                if (currentUsers.get(i).getId().equals(u.getId()))
+                {
+                    return false;
+                }
+            }
+
             currentUsers.add(u);
             return true;
         }
+
         return false;
     }
 
@@ -83,10 +104,15 @@ public class Channel implements ChannelInterface
      */
     public boolean removeChannelUser(User u)
     {
-        if (currentUsers.remove(u))
+        int i;
+
+        for (i = 0; i < currentUsers.size(); i++)
         {
-            currentUsers.trimToSize();
-            return true;
+            if (currentUsers.get(i).getId().equals(u.getId()))
+            {
+                currentUsers.remove(i);
+                return true;
+            }
         }
         return false;
     }

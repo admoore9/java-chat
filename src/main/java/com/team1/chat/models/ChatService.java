@@ -110,22 +110,19 @@ public class ChatService implements ChatServiceInterface
     /**
      * Method that removes a user from the channel by calling the removeChannelUser() method
      *
-     * @param cid channel id
+     * @param cname channel name
      * @param uid user id
      * @return true if successful: false otherwise
      */
-    public boolean leaveChannel(String cid, String uid)
+    public boolean leaveChannel(String cname, String uid)
     {
-        Channel ch = new Channel();
-        User u = new User();
-        // TODO the above code will be changed when db support is implemented
-
-        // TODO get channel from db
-        // TODO get user from db
+        Channel ch = this.getDatabaseSupportInstance().getChannelByName(cname);
+        User u = this.getDatabaseSupportInstance().getUserById(uid);
 
         if (ch != null && u != null && ch.removeChannelUser(u))
         {
-            // TODO put updated channel in db
+
+            this.getDatabaseSupportInstance().putChannel(ch);
             return true;
         }
         return false;
@@ -134,22 +131,18 @@ public class ChatService implements ChatServiceInterface
     /**
      * Method that adds a user to the channel by calling the addChannelUser() method
      *
-     * @param cid channel id
+     * @param cname channel id
      * @param uid user id
      * @return true if successful: false otherwise
      */
-    public boolean joinChannel(String cid, String uid)
+    public boolean joinChannel(String cname, String uid)
     {
-        Channel ch = new Channel();
-        User u = new User();
-        // TODO the above code will be changed when db support is implemented
-
-        // TODO get channel from db
-        // TODO get user from db
+        Channel ch = this.getDatabaseSupportInstance().getChannelByName(cname);
+        User u = this.getDatabaseSupportInstance().getUserById(uid);
 
         if (ch != null && u != null && ch.addChannelUser(u))
         {
-            // TODO put updated channel in db
+            this.getDatabaseSupportInstance().putChannel(ch);
             return true;
         }
         return false;
@@ -158,18 +151,14 @@ public class ChatService implements ChatServiceInterface
     /**
      * Method that returns a list of users in the channel by calling the listChannelUsers() method
      *
-     * @param cid channel id
+     * @param cname channel name
      * @param uid user id
      * @return a list of channel users if successful: null otherwise
      */
-    public ArrayList<User> listChannelUsers(String cid, String uid)
+    public ArrayList<User> listChannelUsers(String cname, String uid)
     {
-        Channel ch = new Channel();
-        User u = new User();
-        // TODO the above code will be changed when db support is implemented
-
-        // TODO get channel from db
-        // TODO get user from db
+        Channel ch = this.getDatabaseSupportInstance().getChannelByName(cname);
+        User u = this.getDatabaseSupportInstance().getUserById(uid);
 
         if (ch != null && u != null && ch.isWhiteListed(u))
         {
