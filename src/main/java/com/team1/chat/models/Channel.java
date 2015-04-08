@@ -27,6 +27,11 @@ public class Channel implements ChannelInterface
         this.currentUsers = new ArrayList<User>();
     }
 
+    public String getName()
+    {
+        return this.name;
+    }
+
     /**
      * Method to check if the user is WhiteListed
      *
