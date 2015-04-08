@@ -46,7 +46,7 @@ public class ChatService implements ChatServiceInterface
      */
     public boolean logout(String uid)
     {
-    	User u = dbs.getUser(uid);
+    	User u = dbs.getUserById(uid);
     	if (u.getId() != "")
     	{
     		//TODO In next iteration, need to leave all channels.
@@ -66,7 +66,7 @@ public class ChatService implements ChatServiceInterface
     public boolean setUsername(String uid, String newUsername)
     {
         // get User object from database.
-        User u = this.getDatabaseSupportInstance().getUser(uid);
+        User u = this.getDatabaseSupportInstance().getUserById(uid);
 
        // if(u == null)
             //throw error here.
@@ -91,7 +91,7 @@ public class ChatService implements ChatServiceInterface
     public boolean setPassword(String uid, String newPassword)
     {
         // get User object from database.
-        User u = getDatabaseSupportInstance().getUser(uid);
+        User u = getDatabaseSupportInstance().getUserById(uid);
 
         // if(u == null)
              //throw error here.
