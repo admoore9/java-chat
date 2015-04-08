@@ -11,7 +11,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 /**
- * The channel class which contains a list of whitelisted users and current users
+ * The channel class which contains a list of whiteListed users and current users
  */
 public class Channel implements ChannelInterface
 {
