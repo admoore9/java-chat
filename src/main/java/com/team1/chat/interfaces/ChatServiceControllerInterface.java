@@ -37,5 +37,7 @@ public interface ChatServiceControllerInterface
 
     ArrayList<Channel> viewPrivateChannels(String uid);
 
+    ArrayList<Channel> viewPublicChannels(String uid);
+
     boolean toggleChannelVisibility(String cname, String aid);
 }
