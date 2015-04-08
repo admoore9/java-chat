@@ -1,18 +1,36 @@
 package com.team1.chat.interfaces;
 
+import com.team1.chat.models.Channel;
+
+import java.util.ArrayList;
+
 public interface UserInterface
 {
-    public boolean createUser(String username, String password);
+    // Iteration 1
+    boolean createUser(String username, String password);
 
-    public String getId();
+    String getId();
 
-    public boolean sendMessage(UserInterface u, String msgText);
+    boolean sendMessage(UserInterface u, String msgText);
 
-    public boolean setUsername(String uid, String newUsername);
+    boolean setUsername(String uid, String newUsername);
 
-    public String getUsername();
+    String getUsername();
 
-    public boolean setPassword(String uid, String newPassword);
+    boolean setPassword(String uid, String newPassword);
 
-    public String getPassword();
+    String getPassword();
+
+    // Iteration 2
+    boolean addChannel(Channel c);
+
+    boolean deleteChannel(Channel c);
+
+    boolean addChannelInvite(Channel c);
+
+    boolean removeFromChannel(Channel c);
+
+    ArrayList<Channel> viewInvitedChannels();
+
+    ArrayList<Channel> viewPrivateChannels();
 }

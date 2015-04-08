@@ -5,17 +5,23 @@ import com.team1.chat.models.User;
 
 public interface DatabaseSupportInterface
 {
+    // Iteration 1
     boolean putUser(User u);
 
     User getUser(String username, String password);
 
-    User getUser(String uid);
+    User getUserById(String uid);
 
     boolean nameAvailable(String newUsername);
 
-    Channel getChannel(String name);
-    
     boolean putChannel(Channel c);
-    
+
     void close();
+
+    // Iteration 2
+    Channel getChannelByName(String cname);
+
+    boolean deleteChannel(String cname);
+
+    User getUserByName(String uname);
 }

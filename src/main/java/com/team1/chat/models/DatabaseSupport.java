@@ -153,8 +153,9 @@ public class DatabaseSupport implements DatabaseSupportInterface
     /**
      * Returns a User from the database by user id.
      */
-	public User getUser(String uid) {
-		String statement = "SELECT * " + "FROM User u " + "WHERE u.uid ='"+uid+"'";
+
+	public User getUserById(String uid) {
+		String statement = "SELECT * " + "FROM User u " + "WHERE u.uid ="+uid;
 		ArrayList<String> result = getData(statement);
 		
     	if (result.size()==1)
@@ -185,7 +186,7 @@ public class DatabaseSupport implements DatabaseSupportInterface
         return (result.size()==0);
     }
 
-    public Channel getChannel(String name)
+    public Channel getChannelByName(String name)
     {
 		String statement = "SELECT * " + "FROM Channel c " + "WHERE c.name ='"+name+"'";
 		ArrayList<String> result = getData(statement);
@@ -239,5 +240,15 @@ public class DatabaseSupport implements DatabaseSupportInterface
 				   			"VALUES('"+c.getName()+"','"+isPublic+"','"+c.getAdminId()+"','"+wList+"')";
     	System.out.println("Channel was successfully added to database.");
     	return setData(statement);
+    }
+
+    public User getUserByName(String uname)
+    {
+        return null;
+    }
+
+    public boolean deleteChannel(String name)
+    {
+        return false;
     }
 }
