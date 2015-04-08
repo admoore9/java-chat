@@ -46,6 +46,10 @@ public class DatabaseSupport implements DatabaseSupportInterface
 		}
 	}
 	/**
+	 * 
+	 */
+	
+	/**
 	 * Helper method to send an update to database.
 	 * @param statement
 	 * @return
@@ -92,10 +96,6 @@ public class DatabaseSupport implements DatabaseSupportInterface
 				String rowStr = "";
 				for (int j = 1; j <= numColumns;j++)
 				{
-					//Object rowObj = rs.getObject(j);
-					//if (rowObj!=null){
-					//	rowStr = rowStr + (String) rowObj + "\n";
-					//}
 					rowStr = rowStr + rs.getString(j)+"\n";
 				}
 				data.add(rowStr);
@@ -188,41 +188,42 @@ public class DatabaseSupport implements DatabaseSupportInterface
 
     public Channel getChannelByName(String name)
     {
-		String statement = "SELECT * " + "FROM Channel c " + "WHERE c.name ='"+name+"'";
-		ArrayList<String> result = getData(statement);
-		
-		if (result.size() == 1)
-		{
-			Scanner scanForColumnValues = new Scanner(result.get(0));
-			
-			// First column: name
-			String channelName = scanForColumnValues.nextLine();
+        String statement = "SELECT * " + "FROM Channel c " + "WHERE c.name ='"+name+"'";
+        ArrayList<String> result = getData(statement);
 
-			// Second column: ispublic
-			Boolean isPublic;
-			String visibility = scanForColumnValues.nextLine();
-			if (visibility != "0"){
-				isPublic=true;
-			}
-			else isPublic = false;
-			
-			// Third column: admin
-			String admin = scanForColumnValues.nextLine();
-			
-			// Fourth Column: whitelist
-			// 	This could've been implemented better. Should prob change the format for lists on the database to 
-			// 	json or something, instead of how I have it now. 
-			ArrayList<User> whitelist=new ArrayList<User>();		
-			while (scanForColumnValues.hasNextLine())
-			{
-				whitelist.add(getUserById(scanForColumnValues.nextLine()));
-			}
-			scanForColumnValues.close();
-			Channel c = new Channel(channelName, admin);
-			System.out.println("Channel was successfully retrieved from database.");
-			return c;
-		} else
-			return null;
+        if (result.size() == 1)
+        {
+            Scanner scanForColumnValues = new Scanner(result.get(0));
+
+            // First column: name
+            String channelName = scanForColumnValues.nextLine();
+
+            // Second column: ispublic
+            Boolean isPublic;
+            String visibility = scanForColumnValues.nextLine();
+            if (visibility != "0"){
+                isPublic=true;
+            }
+            else isPublic = false;
+
+            // Third column: admin
+            String admin = scanForColumnValues.nextLine();
+
+            // Fourth Column: whitelist
+            // 	This could've been implemented better. Should prob change the format for lists on the database to
+            // 	json or something, instead of how I have it now.
+            ArrayList<User> whitelist=new ArrayList<User>();
+            while (scanForColumnValues.hasNextLine())
+            {
+                // This might need some error handling. Not sure.
+                whitelist.add(getUserById(scanForColumnValues.nextLine()));
+            }
+            scanForColumnValues.close();
+            Channel c = new Channel(channelName, admin);
+            System.out.println("Channel was successfully retrieved from database.");
+            return c;
+        } else
+            return null;
     }
 
     public boolean putChannel(Channel c)
@@ -243,11 +244,33 @@ public class DatabaseSupport implements DatabaseSupportInterface
 
     public User getUserByName(String uname)
     {
-        return null;
+    	String statement = "SELECT * " +
+				   "FROM User u " +
+				   "WHERE u.username = '"+uname+"'";
+		ArrayList<String> result = getData(statement);
+		if (result.size() == 1) {
+			Scanner scanForColumnValues = new Scanner(result.get(0));
+
+			// First column: uid
+			String uid = scanForColumnValues.nextLine();
+
+			// Second column: username
+			String username = scanForColumnValues.nextLine();
+
+			// Third column: password
+			String pw = scanForColumnValues.nextLine();
+
+			User u = new User(uid, username, pw);
+
+			scanForColumnValues.close();
+			return u;
+		} else
+			return null;
     }
 
     public boolean deleteChannel(String name)
     {
-        return false;
+        String statement = "DELETE FROM Channel WHERE name = '"+name+"'";
+        return (setData(statement));
     }
 }
