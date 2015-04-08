@@ -15,14 +15,20 @@ import java.util.ArrayList;
  */
 public class Channel implements ChannelInterface
 {
+    private String name;
+    private String admin;
+    private boolean isPublic;
     private ArrayList<User> whiteList;
     private ArrayList<User> currentUsers;
 
     /**
      * Constructor for the Channel
      */
-    public Channel()
+    public Channel(String name, String admin)
     {
+        this.name = name;
+        this.admin = admin;
+        this.isPublic = false;
         this.whiteList = new ArrayList<User>();
         this.currentUsers = new ArrayList<User>();
     }
