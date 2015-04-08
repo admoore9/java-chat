@@ -42,7 +42,7 @@ public class Channel implements ChannelInterface
      * Method to check if the user is WhiteListed
      *
      * @param u user
-     * @return true if the whitelist contains user: false otherwise
+     * @return true if the white list contains user: false otherwise
      */
     public boolean isWhiteListed(User u)
     {
@@ -177,5 +177,88 @@ public class Channel implements ChannelInterface
             }
             return true;
         }
+    }
+
+    // Iteration 2
+    /**
+     * Method that gets the users in the channel to prepare for deletion
+     *
+     * @param aid id of user deleting the channel
+     * @return a list of users in the channel
+     */
+    public ArrayList<User> deleteChannel(String aid)
+    {
+        if (admin.equals(aid))
+        {
+            return whiteList;
+        }
+        return null;
+    }
+
+    /**
+     * Method that adds a user to its white list
+     *
+     * @param aid id of current user
+     * @param u user to add
+     * @return
+     */
+    public boolean whiteListUser(String aid, User u)
+    {
+        int i;
+
+        if (admin.equals(aid))
+        {
+            for (i = 0; i < whiteList.size(); i++)
+            {
+                if (whiteList.get(i).getId().equals(u.getId()))
+                {
+                    return false;
+                }
+            }
+            whiteList.add(u);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Method that removes a user from the channel's white list
+     *
+     * @param aid id of current user
+     * @param u user to remove
+     * @return
+     */
+    public boolean removeUser(String aid, User u)
+    {
+        int i;
+
+        if (admin.equals(aid) && !aid.equals(u.getId()))
+        {
+            for (i = 0; i < whiteList.size(); i++)
+            {
+                if (whiteList.get(i).getId().equals(u.getId()))
+                {
+                    whiteList.remove(i);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Method that toggles is public true/false
+     *
+     * @param aid id of current user
+     * @return
+     */
+    public boolean toggleChannelVisibility(String aid)
+    {
+        if (admin.equals(aid))
+        {
+            isPublic = !isPublic;
+            return true;
+        }
+        return false;
     }
 }
