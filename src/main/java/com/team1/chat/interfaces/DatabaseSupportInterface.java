@@ -13,7 +13,9 @@ public interface DatabaseSupportInterface
 
     boolean nameAvailable(String newUsername);
 
-    Channel getChannel(String cid);
-
+    Channel getChannel(String name);
+    
     boolean putChannel(Channel c);
+    
+    void close();
 }

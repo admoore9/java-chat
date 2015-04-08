@@ -17,7 +17,7 @@ public class Channel implements ChannelInterface
 {
 	String name;
 	boolean isPublic;
-    String admin;	//Shouldn't this be a User?
+    String admin;	
     private ArrayList<User> whitelist;
     private ArrayList<User> currentUsers;
 

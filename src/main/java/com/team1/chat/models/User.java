@@ -7,15 +7,15 @@ import java.sql.*;
 
 public class User implements UserInterface
 {
-	private String uid;
-	private String username;
-	private String password;
+	protected String uid;
+	protected String username;
+	protected String password;
 	
 	/**
 	 * Default constructor.
 	 */
 	public User(){
-		
+		this.uid = "-1";
 	}
 	
 	/**

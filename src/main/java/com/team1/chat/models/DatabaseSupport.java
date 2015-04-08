@@ -33,7 +33,18 @@ public class DatabaseSupport implements DatabaseSupportInterface
 	    }
 	    System.out.println ("*** Connected to the database ***"); 
 	}
-
+	
+	/**
+	 * Connection should be closed whenever the program exits. 
+	 */
+	public void close(){
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	/**
 	 * Helper method to send an update to database.
 	 * @param statement
@@ -77,14 +88,17 @@ public class DatabaseSupport implements DatabaseSupportInterface
 			//Get number of columns in a row.
 			rsmd = rs.getMetaData();
 			int numColumns = rsmd.getColumnCount();
-			
-			for (int i = 0;rs.next();i++) {
-				String row = "";
-				for (int j = 0; j < numColumns;j++)
+			while (rs.next()) {
+				String rowStr = "";
+				for (int j = 1; j <= numColumns;j++)
 				{
-					row = row + rs.getString(i)+"\n";
+					//Object rowObj = rs.getObject(j);
+					//if (rowObj!=null){
+					//	rowStr = rowStr + (String) rowObj + "\n";
+					//}
+					rowStr = rowStr + rs.getString(j)+"\n";
 				}
-				data.add(row);
+				data.add(rowStr);
 			}
 			stmt.close();
 			
@@ -100,7 +114,7 @@ public class DatabaseSupport implements DatabaseSupportInterface
     public boolean putUser(User u)
     {
     	String statement = "INSERT INTO User " +
-    					   "VALUES(DEFAULT,"+u.getUsername()+","+u.getPassword()+")";
+    					   "VALUES(DEFAULT,'" + u.getUsername()+"','"+u.getPassword()+"')";
         return setData(statement);
     }
 
@@ -111,22 +125,25 @@ public class DatabaseSupport implements DatabaseSupportInterface
     {
     	String statement = "SELECT * " +
     					   "FROM User u " +
-    					   "WHERE u.username = "+username+ 
-    					   "AND u.password = "+ password;
+    					   "WHERE u.username = '"+username+ 
+    					   "'AND u.password = '"+ password+"'";
     	ArrayList<String> result = getData(statement);
-    	if (!(result.size()==3))
+    	if (result.size()==1)
     	{
+    		Scanner scanForColumnValues = new Scanner(result.get(0));
+    		
     		//First column: uid
-    		String uid = result.get(0);
-    	
+    		String uid = scanForColumnValues.nextLine();
+    		
     		//Second column: username
-    		String uname = result.get(1);
+    		String uname = scanForColumnValues.nextLine();
     		
     		//Third column: password
-    		String pw = result.get(2);
+    		String pw = scanForColumnValues.nextLine();
     		
     		User u = new User(uid,uname,pw);
     		
+    		scanForColumnValues.close();
     		return u;
     	}
     	else return null;
@@ -137,61 +154,72 @@ public class DatabaseSupport implements DatabaseSupportInterface
      * Returns a User from the database by user id.
      */
 	public User getUser(String uid) {
-		String statement = "SELECT * " + "FROM User u " + "WHERE u.uid ="+uid;
+		String statement = "SELECT * " + "FROM User u " + "WHERE u.uid ='"+uid+"'";
 		ArrayList<String> result = getData(statement);
-		if (!(result.size() == 3)) {
-			// First column: uid
-			String userId = result.get(0);
+		
+    	if (result.size()==1)
+    	{
+    		Scanner scanForColumnValues = new Scanner(result.get(0));
+    		//First column: uid
+    		String userid = scanForColumnValues.nextLine();
 
-			// Second column: username
-			String uname = result.get(1);
+    		
+    		//Second column: username
+    		String uname = scanForColumnValues.nextLine();
 
-			// Third column: password
-			String pw = result.get(2);
+    		
+    		//Third column: password
+    		String pw = scanForColumnValues.nextLine();
 
-			User u = new User(userId, uname, pw);
-
-			return u;
-		} else
-			return null;
+    		User u = new User(userid,uname,pw);
+    		
+    		scanForColumnValues.close();
+    		return u;
+    	}
+    	else return null;
 	}
 
     public boolean nameAvailable(String newUsername)
     {
-    	ArrayList<String> result = getData("SELECT * FROM USER u WHERE u.name = "+newUsername);
+    	ArrayList<String> result = getData("SELECT * FROM User u WHERE u.username = '"+newUsername+"'");
         return (result.size()==0);
     }
 
     public Channel getChannel(String name)
     {
-		String statement = "SELECT * " + "FROM Channel c " + "WHERE c.name ="+name;
+		String statement = "SELECT * " + "FROM Channel c " + "WHERE c.name ='"+name+"'";
 		ArrayList<String> result = getData(statement);
-		if (!(result.size() == 6)) 
+		
+		if (result.size() == 1)
 		{
+			Scanner scanForColumnValues = new Scanner(result.get(0));
+			
 			// First column: name
-			String channelName = result.get(0);
+			String channelName = scanForColumnValues.nextLine();
 
 			// Second column: ispublic
-			boolean isPublic;
-			if (result.get(1)=="true"){isPublic=true;}
+			Boolean isPublic;
+			String visibility = scanForColumnValues.nextLine();
+			if (visibility != "0"){
+				isPublic=true;
+			}
 			else isPublic = false;
 			
 			// Third column: admin
-			String admin = result.get(2);
+			String admin = scanForColumnValues.nextLine();
 			
 			// Fourth Column: whitelist
-			String whitelistIds = result.get(3);
-			Scanner scanIds = new Scanner(whitelistIds);
-			ArrayList<User> whitelist=new ArrayList<User>();
-			
-			while (scanIds.hasNextLine())
+			// 	This could've been implemented better. Should prob change the format for lists on the database to 
+			// 	json or something, instead of how I have it now. 
+			ArrayList<User> whitelist=new ArrayList<User>();		
+			while (scanForColumnValues.hasNextLine())
 			{
 				// This might need some error handling. Not sure. 
-				whitelist.add(getUser(scanIds.next()));
+				whitelist.add(getUser(scanForColumnValues.nextLine()));
 			}
-			scanIds.close();
-			
+			scanForColumnValues.close();
 			Channel c = new Channel(channelName, isPublic, admin, whitelist);
+			System.out.println("Channel was successfully retrieved from database.");
 			return c;
 		} else
 			return null;
@@ -205,9 +233,11 @@ public class DatabaseSupport implements DatabaseSupportInterface
     	{
     		wList = wList + tempList.get(i).getId() + "\n";
     	}
-    	String isPublic = String.valueOf(c.isPublic());
+    	int val = c.isPublic() ? 1 : 0;
+    	String isPublic = String.valueOf(val);
     	String statement = "INSERT INTO Channel " +
-				   "VALUES("+c.getName()+","+isPublic+","+c.getAdminId()+","+wList+")";
+				   			"VALUES('"+c.getName()+"','"+isPublic+"','"+c.getAdminId()+"','"+wList+"')";
+    	System.out.println("Channel was successfully added to database.");
     	return setData(statement);
     }
 }
