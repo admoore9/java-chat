@@ -41,20 +41,12 @@ public class ChatServiceController implements ChatServiceControllerInterface
 
     public boolean setUsername(String uid, String newUsername)
     {
-        boolean success = false;
-
-        success = getChatServiceInstance().setUsername(uid, newUsername);
-
-        return success;
+        return this.getChatServiceInstance().setUsername(uid, newUsername);
     }
 
     public boolean setPassword(String uid, String newPassword)
     {
-        boolean success = false;
-
-        success = getChatServiceInstance().setPassword(uid, newPassword);
-
-        return success;
+        return this.getChatServiceInstance().setPassword(uid, newPassword);
     }
 
     public boolean leaveChannel(String cid, String uid)
