@@ -46,6 +46,10 @@ public class DatabaseSupport implements DatabaseSupportInterface
 		}
 	}
 	/**
+	 * 
+	 */
+	
+	/**
 	 * Helper method to send an update to database.
 	 * @param statement
 	 * @return
@@ -92,10 +96,6 @@ public class DatabaseSupport implements DatabaseSupportInterface
 				String rowStr = "";
 				for (int j = 1; j <= numColumns;j++)
 				{
-					//Object rowObj = rs.getObject(j);
-					//if (rowObj!=null){
-					//	rowStr = rowStr + (String) rowObj + "\n";
-					//}
 					rowStr = rowStr + rs.getString(j)+"\n";
 				}
 				data.add(rowStr);
@@ -216,10 +216,11 @@ public class DatabaseSupport implements DatabaseSupportInterface
 			while (scanForColumnValues.hasNextLine())
 			{
 				// This might need some error handling. Not sure. 
-				whitelist.add(getUser(scanForColumnValues.nextLine()));
+				whitelist.add(getUserById(scanForColumnValues.nextLine()));
 			}
 			scanForColumnValues.close();
-			Channel c = new Channel(channelName, isPublic, admin, whitelist);
+			//Channel c = new Channel(channelName, isPublic, admin, whitelist);
+			Channel c = new Channel(channelName, admin);
 			System.out.println("Channel was successfully retrieved from database.");
 			return c;
 		} else
@@ -244,11 +245,33 @@ public class DatabaseSupport implements DatabaseSupportInterface
 
     public User getUserByName(String uname)
     {
-        return null;
+    	String statement = "SELECT * " +
+				   "FROM User u " +
+				   "WHERE u.username = '"+uname+"'";
+		ArrayList<String> result = getData(statement);
+		if (result.size() == 1) {
+			Scanner scanForColumnValues = new Scanner(result.get(0));
+
+			// First column: uid
+			String uid = scanForColumnValues.nextLine();
+
+			// Second column: username
+			String username = scanForColumnValues.nextLine();
+
+			// Third column: password
+			String pw = scanForColumnValues.nextLine();
+
+			User u = new User(uid, username, pw);
+
+			scanForColumnValues.close();
+			return u;
+		} else
+			return null;
     }
 
     public boolean deleteChannel(String name)
     {
-        return false;
+        String statement = "DELETE FROM Channel WHERE name = '"+name+"'";
+        return (setData(statement));
     }
 }
