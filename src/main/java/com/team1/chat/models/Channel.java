@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class Channel implements ChannelInterface
 {
-    private ArrayList<User> whitelist;
+    private ArrayList<User> whiteList;
     private ArrayList<User> currentUsers;
 
     /**
@@ -23,7 +23,7 @@ public class Channel implements ChannelInterface
      */
     public Channel()
     {
-        this.whitelist = new ArrayList<User>();
+        this.whiteList = new ArrayList<User>();
         this.currentUsers = new ArrayList<User>();
     }
 
@@ -35,7 +35,7 @@ public class Channel implements ChannelInterface
      */
     public boolean isWhiteListed(User u)
     {
-        return whitelist.contains(u);
+        return whiteList.contains(u);
     }
 
     /**

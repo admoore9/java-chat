@@ -171,7 +171,7 @@ public class ChatService implements ChatServiceInterface
         // TODO get channel from db
         // TODO get user from db
 
-        if (ch != null && u != null && ch.isWhitelisted(u))
+        if (ch != null && u != null && ch.isWhiteListed(u))
         {
             return ch.listChannelUsers();
         }
