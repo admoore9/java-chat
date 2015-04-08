@@ -11,6 +11,9 @@ public class User implements UserInterface
 	private String uid;
 	private String username;
 	private String password;
+    private String currentChannel;
+    private ArrayList<Channel> invitedChannels;
+    private ArrayList<Channel> privateChannels;
 	
 	/**
 	 * Default constructor.
@@ -30,6 +33,9 @@ public class User implements UserInterface
 		this.uid = uid;
 		this.username = username;
 		this.password = password;
+        this.currentChannel = null;
+        this.invitedChannels = new ArrayList<Channel>();
+        this.privateChannels = new ArrayList<Channel>();
 	}
 	
 
