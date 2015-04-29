@@ -199,8 +199,8 @@ public class Client
         }
 
         // create new client
-        Client client = new Client("104.236.206.121", 4444, uid);
-//        Client client = new Client("localhost",4444,uid);
+        //Client client = new Client("104.236.206.121", 4444, uid);
+        Client client = new Client("localhost",4444,uid);
         
         // test we can connect
         if (!client.start())
