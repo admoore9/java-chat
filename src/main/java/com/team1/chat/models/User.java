@@ -34,7 +34,17 @@ public class User implements UserInterface
         this.blocked = new ArrayList<User>();
         this.publicName = "";
 	}
-
+	public User(String id, String username, String password){
+		this.username=username;
+		this.password=password;
+		this.uid=id;
+        this.currentChannel = null;
+        this.invitedChannels = new ArrayList<Channel>();
+        this.privateChannels = new ArrayList<Channel>();
+        this.friends = new ArrayList<User>();
+        this.blocked = new ArrayList<User>();
+        this.publicName = "";		
+	}
     /**
      * Method to create a user using a username and password
      * @param username user username
