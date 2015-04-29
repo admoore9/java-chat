@@ -138,31 +138,60 @@ public class Client
         String userInput;
         String uid = "";
 
-
+        System.out.println("\nTo login enter: login <username> <password>");
+        System.out.println("To create an account enter: createAccount <username> <password>");
         //Prompt user to login
-        System.out.println("To login please enter: username password");
         while ((userInput = scanner.nextLine()) != null) {
 
             // split the string into separate username and password tokens.
             String[] in = userInput.split(" ");
-            String username = in[0];
-            String password = in[1];
 
-            // call login method
-            uid = csc.login(username, password);
+            if (in.length == 3)
+            {
+                String username = in[1];
+                String password = in[2];
 
-            // if bad login, try again
-            if (uid.equals("")) {
-                System.out.println("Username or Password not found. Please re-enter.");
+                // user logging in
+                if (in[0].equals("login"))
+                {
+                    uid = csc.login(username, password);
+                    if (uid != null)
+                    {
+                        System.out.println("Login successful");
+                        break;
+                    }
+                    else
+                    {
+                        System.out.println("Username or Password not found. Please re-enter.");
+                    }
+                }
+                // user creating an account
+                else if (in[0].equals("createAccount"))
+                {
+                    if (csc.createAccount(username, password))
+                    {
+                        System.out.println("Account creation successful.");
+                    }
+                    else
+                    {
+                        System.out.println("Account creation failed. Try a new username or password.");
+                    }
+                    break;
+                }
+                else
+                {
+                    System.out.println("Incorrect input. You should enter three arguments.");
+                }
             }
             else
-                break;
+            {
+                System.out.println("Incorrect input. You should enter three arguments.");
+            }
         }
 
-
         // create new client
-        //Client client = new Client("104.236.206.121", 4444, uid);
-        Client client = new Client("localhost",4444,uid);
+        Client client = new Client("104.236.206.121", 4444, uid);
+//        Client client = new Client("localhost",4444,uid);
         
         // test we can connect
         if (!client.start())
