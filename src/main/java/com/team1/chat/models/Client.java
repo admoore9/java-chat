@@ -152,7 +152,7 @@ public class Client
             uid = csc.login(username, password);
 
             // if bad login, try again
-            if (uid.equals("")) {
+            if ((uid==null)||uid.equals("")) {
                 System.out.println("Username or Password not found. Please re-enter.");
             }
             else
