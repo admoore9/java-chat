@@ -260,4 +260,175 @@ public class User implements UserInterface
         return publicChannels;
     }
 
+    // Iteration 3
+    /**
+     * Method that adds a user to the user's friends list
+     *
+     * @param f friend to add
+     * @return true on success
+     */
+    public boolean addFriend(User f)
+    {
+        int i;
+
+        for (i = 0; i < friends.size(); i++)
+        {
+            if (friends.get(i).getUsername().equals(f.getUsername()))
+            {
+                return true;
+            }
+        }
+
+        friends.add(f);
+        return true;
+    }
+
+    /**
+     * Method that removes a user from the user's friends list
+     *
+     * @param f friend to remove
+     * @return true on success
+     */
+    public boolean removeFriend(User f)
+    {
+        int i;
+
+        for (i = 0; i < friends.size(); i++)
+        {
+            if (friends.get(i).getUsername().equals(f.getUsername()))
+            {
+                friends.remove(i);
+                return true;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns the user's list of friends
+     */
+    public ArrayList<User> getFriends()
+    {
+        return friends;
+    }
+
+    /**
+     * Method that adds a user to the user's blocked list
+     *
+     * @param f user to add
+     * @return true on success
+     */
+    public boolean blockUser(User f)
+    {
+        int i;
+
+        for (i = 0; i < blocked.size(); i++)
+        {
+            if (blocked.get(i).getUsername().equals(f.getUsername()))
+            {
+                return true;
+            }
+        }
+
+        blocked.add(f);
+        return true;
+    }
+
+    /**
+     * Method that removes a user from the user's blocked list
+     *
+     * @param f user to remove
+     * @return true on success
+     */
+    public boolean removeBlockedUser(User f)
+    {
+        int i;
+
+        for (i = 0; i < blocked.size(); i++)
+        {
+            if (blocked.get(i).getUsername().equals(f.getUsername()))
+            {
+                blocked.remove(i);
+                return true;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns the user's list of blocked users
+     */
+    public ArrayList<User> getBlockedUsers()
+    {
+        return blocked;
+    }
+
+    /**
+     * Method that changes the public name of the user
+     *
+     * @param n name to set as public name
+     * @return true on success
+     */
+    public boolean setPublicName(String n)
+    {
+        this.publicName = n;
+        return true;
+    }
+
+    public String getPublicName()
+    {
+        return publicName;
+    }
+
+    /**
+     * Method that handles accepting a channel invite
+     *
+     * @param c channel
+     * @return true on success
+     */
+    public boolean acceptChannelInvite(Channel c)
+    {
+        int i;
+
+        for (i = 0; i < invitedChannels.size(); i++)
+        {
+            if (invitedChannels.get(i).getName().equals(c.getName()))
+            {
+                invitedChannels.remove(i);
+
+                if (!c.isPublic())
+                {
+                    privateChannels.add(c);
+                }
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Method that handles declining a channel invite
+     *
+     * @param c channel
+     * @return true on success
+     */
+    public boolean declineChannelInvite(Channel c)
+    {
+        int i;
+
+        for (i = 0; i < invitedChannels.size(); i++)
+        {
+            if (invitedChannels.get(i).getName().equals(c.getName()))
+            {
+                invitedChannels.remove(i);
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
