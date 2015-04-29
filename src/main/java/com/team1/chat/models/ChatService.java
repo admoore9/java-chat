@@ -384,6 +384,202 @@ public class ChatService implements ChatServiceInterface
         return c != null && c.toggleChannelVisibility(aid);
     }
 
+    // Iteration 3
+
+    /**
+     * Method that adds a friend to a user
+     *
+     * @param uid user id
+     * @param username friend username
+     * @return true on success
+     */
+    public boolean addFriend(String uid, String username)
+    {
+        User u, f;
+
+        u = this.getDatabaseSupportInstance().getUserById(uid);
+        f = this.getDatabaseSupportInstance().getUserByName(username);
+
+        if (f != null)
+        {
+            u.addFriend(f);
+            this.getDatabaseSupportInstance().putUser(u);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Method that removes a friend from a user
+     *
+     * @param uid user id
+     * @param username friend username
+     * @return true on success
+     */
+    public boolean removeFriend(String uid, String username)
+    {
+        User u, f;
+
+        u = this.getDatabaseSupportInstance().getUserById(uid);
+        f = this.getDatabaseSupportInstance().getUserByName(username);
+
+        if (f != null)
+        {
+            u.removeFriend(f);
+            this.getDatabaseSupportInstance().putUser(u);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Method that returns a users friend list
+     *
+     * @param uid user id
+     * @return a list of friends
+     */
+    public ArrayList<User> viewFriends(String uid)
+    {
+        User u;
+
+        u = this.getDatabaseSupportInstance().getUserById(uid);
+
+        return u.getFriends();
+    }
+
+    /**
+     * Method that adds users to a user's block list
+     *
+     * @param uid user id
+     * @param username blocked users username
+     * @return true on success
+     */
+    public boolean addBlockedUser(String uid, String username)
+    {
+        User u, f;
+
+        u = this.getDatabaseSupportInstance().getUserById(uid);
+        f = this.getDatabaseSupportInstance().getUserByName(username);
+
+        if (f != null)
+        {
+            u.blockUser(f);
+            this.getDatabaseSupportInstance().putUser(u);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Method that removes a user from a user's block list
+     *
+     * @param uid user id
+     * @param username blocked users username
+     * @return true on success
+     */
+    public boolean removeBlockedUser(String uid, String username)
+    {
+        User u, f;
+
+        u = this.getDatabaseSupportInstance().getUserById(uid);
+        f = this.getDatabaseSupportInstance().getUserByName(username);
+
+        if (f != null)
+        {
+            u.removeBlockedUser(f);
+            this.getDatabaseSupportInstance().putUser(u);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Method that returns a user's block list
+     *
+     * @param uid user id
+     * @return a list of blocked users
+     */
+    public ArrayList<User> viewBlockedUsers(String uid)
+    {
+        User u;
+
+        u = this.getDatabaseSupportInstance().getUserById(uid);
+
+        return u.getBlockedUsers();
+    }
+
+    /**
+     * Method that sets the public name of a user
+     *
+     * @param uid user id
+     * @param publicName public name for user
+     * @return true on success
+     */
+    public boolean setPublicName(String uid, String publicName)
+    {
+        User u;
+
+        u = this.getDatabaseSupportInstance().getUserById(uid);
+        u.setPublicName(publicName);
+        this.getDatabaseSupportInstance().putUser(u);
+
+        return true;
+    }
+
+    /**
+     * Method that handles accepting an invite to a channel
+     *
+     * @param uid user id
+     * @param cname channel name
+     * @return true on success
+     */
+    public boolean acceptInviteToChannel(String uid, String cname)
+    {
+        User u;
+        Channel c;
+
+        u = this.getDatabaseSupportInstance().getUserById(uid);
+        c = this.getDatabaseSupportInstance().getChannelByName(cname);
+
+        if (c != null && c.isWhiteListed(u))
+        {
+            u.acceptChannelInvite(c);
+            this.getDatabaseSupportInstance().putUser(u);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Method that handles declining an invite to a channel
+     *
+     * @param uid user id
+     * @param cname channel name
+     * @return true on success
+     */
+    public boolean declineInviteToChannel(String uid, String cname)
+    {
+        User u;
+        Channel c;
+
+        u = this.getDatabaseSupportInstance().getUserById(uid);
+        c = this.getDatabaseSupportInstance().getChannelByName(cname);
+
+        return (c != null &&
+                c.isWhiteListed(u) &&
+                c.removeDeclinedInviteFromWhiteList(uid) &&
+                u.declineChannelInvite(c));
+    }
+
     /**
      * @return a new instance of DatabaseSupport class
      */
