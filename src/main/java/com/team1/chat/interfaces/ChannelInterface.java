@@ -29,4 +29,8 @@ public interface ChannelInterface
     boolean removeUser(String aid, User u);
 
     boolean toggleChannelVisibility(String aid);
+
+    // Iteration 3
+
+    boolean removeDeclinedInviteFromWhiteList(String uid);
 }
