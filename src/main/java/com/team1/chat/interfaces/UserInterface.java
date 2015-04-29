@@ -1,6 +1,7 @@
 package com.team1.chat.interfaces;
 
 import com.team1.chat.models.Channel;
+import com.team1.chat.models.User;
 
 import java.util.ArrayList;
 
@@ -33,4 +34,25 @@ public interface UserInterface
     ArrayList<Channel> viewInvitedChannels();
 
     ArrayList<Channel> viewPrivateChannels();
+
+    ArrayList<Channel> viewPublicChannels();
+
+    // Iteration 3
+    boolean addFriend(User f);
+
+    boolean removeFriend(User f);
+
+    ArrayList<User> getFriends();
+
+    boolean blockUser(User f);
+
+    boolean removeBlockedUser(User f);
+
+    ArrayList<User> getBlockedUsers();
+
+    boolean setPublicName(String publicName);
+
+    boolean acceptChannelInvite(Channel c);
+
+    boolean declineChannelInvite(Channel c);
 }

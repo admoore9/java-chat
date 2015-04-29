@@ -3,7 +3,8 @@ package com.team1.chat.models;
 import com.mysql.fabric.Server;
 import com.team1.chat.interfaces.UserInterface;
 
-import java.sql.*;
+import java.io.*;
+import java.net.*;
 import java.util.ArrayList;
 
 public class User implements UserInterface
@@ -11,43 +12,41 @@ public class User implements UserInterface
 	private String uid;
 	private String username;
 	private String password;
+    private String publicName;
     private String currentChannel;
     private ArrayList<Channel> invitedChannels;
     private ArrayList<Channel> privateChannels;
+    private ArrayList<Channel> publicChannels;
+    private ArrayList<User> friends;
+    private ArrayList<User> blocked;
 
 	/**
-	 * Default constructor.
+	 * Constructor
+	 * @param username user username
+	 * @param password user password
 	 */
-	public User(){
-		this.uid = "-1";
-	}
-
-	/**
-	 * Overloaded Constructor
-	 * @param uid user id
-	 * @param username
-	 * @param password
-	 */
-	public User(String uid, String username, String password)
+	public User()
 	{
-		this.uid = uid;
-		this.username = username;
-		this.password = password;
         this.currentChannel = null;
         this.invitedChannels = new ArrayList<Channel>();
         this.privateChannels = new ArrayList<Channel>();
+        this.friends = new ArrayList<User>();
+        this.blocked = new ArrayList<User>();
+        this.publicName = "";
 	}
-	
 
+    /**
+     * Method to create a user using a username and password
+     * @param username user username
+     * @param password user password
+     * @return true
+     */
     public boolean createUser(String username, String password)
     {
-    	//TODO Need a helper methods to check if username and password
-    	//     are of a valid format. 
         this.username = username;
         this.password = password;
-        uid = "";
+        this.uid = "";
         return true;
-        
     }
 
     /**
@@ -65,7 +64,7 @@ public class User implements UserInterface
 
     /**
      * Sets the username of this User object.
-     * @param uid
+     * @param uid users id
      * @param newUsername the new username for this user
      * @return true if uid match and username set, false otherwise
      */
@@ -90,8 +89,8 @@ public class User implements UserInterface
 
     /**
      * Sets the password of this User object.
-     * @param uid
-     * @param newPassword
+     * @param uid user id
+     * @param newPassword new password for user
      * @return true if uid match and password set, false otherwise
      */
     public boolean setPassword(String uid, String newPassword)
@@ -249,5 +248,187 @@ public class User implements UserInterface
     public ArrayList<Channel> viewPrivateChannels()
     {
         return privateChannels;
+    }
+
+    /**
+     * Method that gets a list of public channels
+     *
+     * @return a list of public channels
+     */
+    public ArrayList<Channel> viewPublicChannels()
+    {
+        return publicChannels;
+    }
+
+    // Iteration 3
+    /**
+     * Method that adds a user to the user's friends list
+     *
+     * @param f friend to add
+     * @return true on success
+     */
+    public boolean addFriend(User f)
+    {
+        int i;
+
+        for (i = 0; i < friends.size(); i++)
+        {
+            if (friends.get(i).getUsername().equals(f.getUsername()))
+            {
+                return true;
+            }
+        }
+
+        friends.add(f);
+        return true;
+    }
+
+    /**
+     * Method that removes a user from the user's friends list
+     *
+     * @param f friend to remove
+     * @return true on success
+     */
+    public boolean removeFriend(User f)
+    {
+        int i;
+
+        for (i = 0; i < friends.size(); i++)
+        {
+            if (friends.get(i).getUsername().equals(f.getUsername()))
+            {
+                friends.remove(i);
+                return true;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns the user's list of friends
+     */
+    public ArrayList<User> getFriends()
+    {
+        return friends;
+    }
+
+    /**
+     * Method that adds a user to the user's blocked list
+     *
+     * @param f user to add
+     * @return true on success
+     */
+    public boolean blockUser(User f)
+    {
+        int i;
+
+        for (i = 0; i < blocked.size(); i++)
+        {
+            if (blocked.get(i).getUsername().equals(f.getUsername()))
+            {
+                return true;
+            }
+        }
+
+        blocked.add(f);
+        return true;
+    }
+
+    /**
+     * Method that removes a user from the user's blocked list
+     *
+     * @param f user to remove
+     * @return true on success
+     */
+    public boolean removeBlockedUser(User f)
+    {
+        int i;
+
+        for (i = 0; i < blocked.size(); i++)
+        {
+            if (blocked.get(i).getUsername().equals(f.getUsername()))
+            {
+                blocked.remove(i);
+                return true;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns the user's list of blocked users
+     */
+    public ArrayList<User> getBlockedUsers()
+    {
+        return blocked;
+    }
+
+    /**
+     * Method that changes the public name of the user
+     *
+     * @param n name to set as public name
+     * @return true on success
+     */
+    public boolean setPublicName(String n)
+    {
+        this.publicName = n;
+        return true;
+    }
+
+    public String getPublicName()
+    {
+        return publicName;
+    }
+
+    /**
+     * Method that handles accepting a channel invite
+     *
+     * @param c channel
+     * @return true on success
+     */
+    public boolean acceptChannelInvite(Channel c)
+    {
+        int i;
+
+        for (i = 0; i < invitedChannels.size(); i++)
+        {
+            if (invitedChannels.get(i).getName().equals(c.getName()))
+            {
+                invitedChannels.remove(i);
+
+                if (!c.isPublic())
+                {
+                    privateChannels.add(c);
+                }
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Method that handles declining a channel invite
+     *
+     * @param c channel
+     * @return true on success
+     */
+    public boolean declineChannelInvite(Channel c)
+    {
+        int i;
+
+        for (i = 0; i < invitedChannels.size(); i++)
+        {
+            if (invitedChannels.get(i).getName().equals(c.getName()))
+            {
+                invitedChannels.remove(i);
+                return true;
+            }
+        }
+
+        return false;
     }
 }

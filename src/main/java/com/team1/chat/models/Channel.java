@@ -95,7 +95,7 @@ public class Channel implements ChannelInterface
     {
         int i;
 
-        if (isWhiteListed(u))
+        if ((isWhiteListed(u) && !isPublic) || isPublic)
         {
             for (i = 0; i < currentUsers.size(); i++)
             {
@@ -213,6 +213,28 @@ public class Channel implements ChannelInterface
             isPublic = !isPublic;
             return true;
         }
+        return false;
+    }
+
+    /**
+     * Method that removes a user from the white list when they decline an invite
+     *
+     * @param uid user id
+     * @return true on success
+     */
+    public boolean removeDeclinedInviteFromWhiteList(String uid)
+    {
+        int i;
+
+        for (i = 0; i < whiteList.size(); i++)
+        {
+            if (whiteList.get(i).getId().equals(uid))
+            {
+                whiteList.remove(i);
+                return true;
+            }
+        }
+
         return false;
     }
 }
