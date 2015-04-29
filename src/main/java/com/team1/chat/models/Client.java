@@ -175,8 +175,8 @@ public class Client
                     else
                     {
                         System.out.println("Account creation failed. Try a new username or password.");
+                        break;
                     }
-                    break;
                 }
                 else
                 {
