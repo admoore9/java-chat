@@ -44,13 +44,14 @@ public class Server
 
                 // someone is trying to connect. accecpt the conn.
                 Socket socket = serverSocket.accept();
-
+                
                 if (!running)
                     break;
 
                 // add thread to master-list and send them to initialize.
                 ClientThread ct = new ClientThread(socket);
                 clients.add(ct);
+                System.out.println("Client #"+numClients+" has been connected.");
                 ct.start();
             }
 
