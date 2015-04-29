@@ -105,6 +105,52 @@ public class ChatServiceController implements ChatServiceControllerInterface
         return this.getChatServiceInstance().toggleChannelVisibility(cname, aid);
     }
 
+    // Iteration 3
+    public boolean addFriend(String uid, String username)
+    {
+        return this.getChatServiceInstance().addFriend(uid, username);
+    }
+
+    public boolean removeFriend(String uid, String username)
+    {
+        return this.getChatServiceInstance().removeFriend(uid, username);
+    }
+
+    public ArrayList<User> viewFriends(String uid)
+    {
+        return this.getChatServiceInstance().viewFriends(uid);
+    }
+
+    public boolean addBlockedUser(String uid, String username)
+    {
+        return this.getChatServiceInstance().addBlockedUser(uid, username);
+    }
+
+    public boolean removeBlockedUser(String uid, String username)
+    {
+        return this.getChatServiceInstance().removeBlockedUser(uid, username);
+    }
+
+    public ArrayList<User> viewBlockedUsers(String uid)
+    {
+        return this.getChatServiceInstance().viewBlockedUsers(uid);
+    }
+
+    public boolean setPublicName(String uid, String publicName)
+    {
+        return this.getChatServiceInstance().setPublicName(uid, publicName);
+    }
+
+    public boolean acceptInviteToChannel(String uid, String cname)
+    {
+        return this.getChatServiceInstance().acceptInviteToChannel(uid, cname);
+    }
+
+    public boolean declineInviteToChannel(String uid, String cname)
+    {
+        return this.getChatServiceInstance().declineInviteToChannel(uid, cname);
+    }
+
     private ChatService getChatServiceInstance()
     {
         if (cs == null)
