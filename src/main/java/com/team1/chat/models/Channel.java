@@ -216,6 +216,12 @@ public class Channel implements ChannelInterface
         return false;
     }
 
+    /**
+     * Method that removes a user from the white list when they decline an invite
+     *
+     * @param uid user id
+     * @return true on success
+     */
     public boolean removeDeclinedInviteFromWhiteList(String uid)
     {
         int i;
