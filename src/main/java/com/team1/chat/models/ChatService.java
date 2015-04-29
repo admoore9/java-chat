@@ -9,6 +9,9 @@ public class ChatService implements ChatServiceInterface
     // class-level instantiation of DatabaseSupport object.
     private DatabaseSupport dbs = null;
 
+    public ChatService(){
+    	dbs = this.getDatabaseSupportInstance();
+    }
     /**
      * Creates a new User in the database.
      */

@@ -11,6 +11,9 @@ public class ChatServiceController implements ChatServiceControllerInterface
 {
     private ChatService cs = null;
 	
+    public ChatServiceController(){
+    	cs = this.getChatServiceInstance();
+    }
 	/**
 	 * Creates a new account with username and password.
 	 * @return true on success, false on failure.
