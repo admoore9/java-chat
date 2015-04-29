@@ -137,6 +137,7 @@ public class Client
         Scanner scanner = new Scanner(System.in);
         String userInput;
         String uid = "";
+        String username;
 
         System.out.println("\nTo login enter: login <username> <password>");
         System.out.println("To create an account enter: createAccount <username> <password>");
@@ -148,7 +149,7 @@ public class Client
 
             if (in.length == 3)
             {
-                String username = in[1];
+                username = in[1];
                 String password = in[2];
 
                 // user logging in
@@ -190,8 +191,8 @@ public class Client
         }
 
         // create new client
-        // Client client = new Client("104.236.206.121", 4444, uid);
-        Client client = new Client("localhost",4444,uid);
+        Client client = new Client("104.236.206.121", 4444, uid);
+//        Client client = new Client("localhost",4444,uid);
         
         // test we can connect
         if (!client.start())
