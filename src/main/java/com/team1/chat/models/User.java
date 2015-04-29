@@ -40,7 +40,12 @@ public class User implements UserInterface
         this.privateChannels = new ArrayList<Channel>();
 	}
 
-
+    /**
+     * Method to create a user using a username and password
+     * @param username user username
+     * @param password user password
+     * @return true
+     */
     public boolean createUser(String username, String password)
     {
         this.username = username;
@@ -64,7 +69,7 @@ public class User implements UserInterface
 
     /**
      * Sets the username of this User object.
-     * @param uid
+     * @param uid users id
      * @param newUsername the new username for this user
      * @return true if uid match and username set, false otherwise
      */
@@ -89,8 +94,8 @@ public class User implements UserInterface
 
     /**
      * Sets the password of this User object.
-     * @param uid
-     * @param newPassword
+     * @param uid user id
+     * @param newPassword new password for user
      * @return true if uid match and password set, false otherwise
      */
     public boolean setPassword(String uid, String newPassword)
