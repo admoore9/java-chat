@@ -141,6 +141,7 @@ public class Client
 
         System.out.println("\nTo login enter: login <username> <password>");
         System.out.println("To create an account enter: createAccount <username> <password>");
+        System.out.println("To exit enter: exit");
         //Prompt user to login
         while ((userInput = scanner.nextLine()) != null) {
 
@@ -182,6 +183,13 @@ public class Client
                 else
                 {
                     System.out.println("Incorrect input. You should enter three arguments.");
+                }
+            }
+            else if (in.length == 1)
+            {
+                if (in[0].equals("exit"))
+                {
+                    return;
                 }
             }
             else
