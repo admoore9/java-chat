@@ -12,32 +12,27 @@ public class User implements UserInterface
 	private String uid;
 	private String username;
 	private String password;
+    private String publicName;
     private String currentChannel;
     private ArrayList<Channel> invitedChannels;
     private ArrayList<Channel> privateChannels;
     private ArrayList<Channel> publicChannels;
+    private ArrayList<User> friends;
+    private ArrayList<User> blocked;
 
 	/**
-	 * Default constructor.
+	 * Constructor
+	 * @param username user username
+	 * @param password user password
 	 */
-	public User(){
-		this.uid = "-1";
-	}
-
-	/**
-	 * Overloaded Constructor 1
-	 * @param uid user id
-	 * @param username
-	 * @param password
-	 */
-	public User(String uid, String username, String password)
+	public User()
 	{
-		this.uid = uid;
-		this.username = username;
-		this.password = password;
         this.currentChannel = null;
         this.invitedChannels = new ArrayList<Channel>();
         this.privateChannels = new ArrayList<Channel>();
+        this.friends = new ArrayList<User>();
+        this.blocked = new ArrayList<User>();
+        this.publicName = "";
 	}
 
     /**
@@ -50,7 +45,7 @@ public class User implements UserInterface
     {
         this.username = username;
         this.password = password;
-        uid = "";
+        this.uid = "";
         return true;
     }
 

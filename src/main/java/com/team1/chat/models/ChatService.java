@@ -28,10 +28,7 @@ public class ChatService implements ChatServiceInterface
         User u = new User();
         u.createUser(username, password);
 
-        if (dbs.putUser(u)) {
-            return true;
-        }
-        else return false;
+        return dbs.putUser(u);
     }
 
     /**
@@ -62,7 +59,7 @@ public class ChatService implements ChatServiceInterface
     public boolean logout(String uid)
     {
         User u = dbs.getUserById(uid);
-        if (u.getId() != "") {
+        if (u.getId().equals("")) {
             //TODO In iteration-3, need to leave all channels.
             leaveChannel("0", u.getId());
 
@@ -74,8 +71,8 @@ public class ChatService implements ChatServiceInterface
     /**
      * Fetch this uid associated object from database and update username.
      *
-     * @param uid
-     * @param newUsername
+     * @param uid user id
+     * @param newUsername new username for user
      * @return true on successful update, false otherwise.
      */
     public boolean setUsername(String uid, String newUsername)
@@ -100,8 +97,8 @@ public class ChatService implements ChatServiceInterface
     /**
      * Fetch this uid associated object from database and update username.
      *
-     * @param uid
-     * @param newPassword
+     * @param uid user id
+     * @param newPassword new password for user
      * @return true on successful update, false otherwise.
      */
     public boolean setPassword(String uid, String newPassword)
@@ -340,8 +337,8 @@ public class ChatService implements ChatServiceInterface
      * 1) 8 <= length <= 45
      * 2) string contains at least two numerics [0-9]
      *
-     * @param newPass
-     * @return
+     * @param newPass password to check
+     * @return true if well-formed
      */
     public boolean checkWellFormed(String newPass)
     {
@@ -370,7 +367,6 @@ public class ChatService implements ChatServiceInterface
         }
 
     }
-
 
     /**
      * Method that toggles visibility of a channel
