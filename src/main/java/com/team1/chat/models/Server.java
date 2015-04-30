@@ -1,7 +1,5 @@
 package com.team1.chat.models;
 
-
-import javax.swing.*;
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -11,7 +9,6 @@ import java.util.ArrayList;
  */
 public class Server
 {
-    protected ChatServiceController csc;
     private ArrayList<ClientThread> clients;
     private int port;
     private int numClients = 0;
@@ -23,7 +20,6 @@ public class Server
     public Server(int port)
     {
         this.port = port;
-        csc = new ChatServiceController();
         clients = new ArrayList<ClientThread>();
     }
 
@@ -51,7 +47,7 @@ public class Server
                 // add thread to master-list and send them to initialize.
                 ClientThread ct = new ClientThread(socket);
                 clients.add(ct);
-                System.out.println("Client #"+numClients+" has been connected.");
+                System.out.println("Client #" + numClients + " has been connected.");
                 ct.start();
             }
 
@@ -81,25 +77,26 @@ public class Server
     {
         // print to server
         System.out.println(message);
-        int i = 0;
+
         // print to clients
-        for (ClientThread st : clients) {
-            i++;
+        for (int i = clients.size(); i >= 0; --i) {
+
             // if sendMessage for a client fails, disconnect them from channel.
-            if (!st.sendMessage(message)) {
-                st.logout(i);
-                System.out.println("Disconnected client: " + st.username + " removed from active clients.");
+            if (!clients.get(i).sendMessage(message)) {
+
+                System.out.println("Client: " + clients.get(i).username + " disconnected. Removing from active.");
+                removeFromServerList(i);
             }
         }
     }
 
-    public synchronized void logout(int id)
+    public synchronized void removeFromServerList(int indexToRemove)
     {
         int i = 0;
         for (ClientThread s : clients) {
             i++;
-            if (s.uid == id) {
-                s.logout(i);
+            if (s.thread_ID == indexToRemove) {
+                clients.remove(i);
                 return;
             }
         }
@@ -128,7 +125,7 @@ public class Server
         Socket socket = null;
         ObjectInputStream socketInput;
         ObjectOutputStream socketOutput;
-        int uid;
+        int thread_ID;
         int numClients;
         String username;
         String message;
@@ -136,7 +133,7 @@ public class Server
         /* Construct a new client thread */
         public ClientThread(Socket socket)
         {
-            uid = numClients += 1;
+            thread_ID = numClients += 1;
             this.socket = socket;
 
             // create data streams
@@ -161,14 +158,13 @@ public class Server
         public void run()
         {
             boolean running = true;
-
             while (running) {
 
                 // read string
                 try {
                     message = (String) socketInput.readObject();
                 } catch (IOException e) {
-                    System.out.println(uid + " error thrown reading stream. " + e);
+                    System.out.println(thread_ID + " error thrown reading stream. " + e);
                     break;
                 } catch (ClassNotFoundException c) {
                     break;
@@ -178,7 +174,7 @@ public class Server
                 // print to server
                 broadcast(username + ": " + message);
             }
-            logout(uid);
+            removeFromServerList(thread_ID);
             close();
         }
 
@@ -204,13 +200,6 @@ public class Server
             } catch (Exception ece) {
                 System.out.println("Closing server socket threw: " + ece);
             }
-        }
-
-
-        public void logout(int uid)
-        {
-            // TODO - fix me
-            // csc.logout();
         }
 
         public boolean sendMessage(String message)
