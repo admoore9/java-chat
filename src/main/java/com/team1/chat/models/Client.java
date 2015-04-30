@@ -249,7 +249,7 @@ public class Client
 
                 else if (in.length == 2 && in[0].equals("/setUsername"))
                 {
-                    if (false)
+                    if (csc.setUsername(uid, in[1]))
                     {
                         username = in[1];
                         System.out.println("Username has been set to " + username + ".");
@@ -262,7 +262,7 @@ public class Client
 
                 else if (in.length == 2 && in[0].equals("/setPassword"))
                 {
-                    if (false)
+                    if (csc.setPassword(uid, in[1]))
                     {
                         System.out.println("Password has been changed.");
                     }
@@ -274,61 +274,67 @@ public class Client
 
                 else if (in.length == 2 && in[0].equals("/listChannelUsers"))
                 {
-                    if (false)
+                    ArrayList<User> users = csc.listChannelUsers(in[1], uid);
+                    if (users != null)
                     {
+                        System.out.println("Users in channel " + in[1] + " are:");
 
+                        for (User u : users)
+                        {
+                            System.out.println(u.getUsername());
+                        }
                     }
                     else
                     {
-
+                        System.out.println("List channel users failed.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/joinChannel"))
                 {
-                    if (false)
+                    if (csc.joinChannel(in[1], uid))
                     {
-
+                        System.out.println("You have successfully joined " + in[1] + ".");
                     }
                     else
                     {
-
+                        System.out.println("Join channel failed.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/leaveChannel"))
                 {
-                    if (false)
+                    if (csc.leaveChannel(in[1], uid))
                     {
-
+                        System.out.println("You have successfully left " + in[1] + ".");
                     }
                     else
                     {
-
+                        System.out.println("Leave channel failed.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/createChannel"))
                 {
-                    if (false)
+                    if (csc.createChannel(in[1], uid))
                     {
-
+                        System.out.println("Channel " + in[1] + " has been created.");
                     }
                     else
                     {
-
+                        System.out.println("Create channel failed.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/deleteChannel"))
                 {
-                    if (false)
+                    if (csc.deleteChannel(in[1], uid))
                     {
-
+                        System.out.println("Channel " + in[1] + " has been deleted.");
                     }
                     else
                     {
-
+                        System.out.println("Delete channel failed.");
                     }
                 }
 
@@ -356,7 +362,7 @@ public class Client
                     }
                 }
 
-                else if (in[0].equals("/viewPublicChannels"))
+                else if (in.length == 1 && in[0].equals("/viewPublicChannels"))
                 {
                     if (false)
                     {
@@ -368,7 +374,7 @@ public class Client
                     }
                 }
 
-                else if (in[0].equals("/viewPrivateChannels"))
+                else if (in.length == 1 && in[0].equals("/viewPrivateChannels"))
                 {
                     if (false)
                     {
@@ -380,7 +386,7 @@ public class Client
                     }
                 }
 
-                else if (in[0].equals("/viewInvitedChannels"))
+                else if (in.length == 1 && in[0].equals("/viewInvitedChannels"))
                 {
                     if (false)
                     {
@@ -428,7 +434,7 @@ public class Client
                     }
                 }
 
-                else if (in[0].equals("/viewFriends"))
+                else if (in.length == 1 && in[0].equals("/viewFriends"))
                 {
                     if (false)
                     {
@@ -464,7 +470,7 @@ public class Client
                     }
                 }
 
-                else if (in[0].equals("/viewBlockedUsers"))
+                else if (in.length == 1 && in[0].equals("/viewBlockedUsers"))
                 {
                     if (false)
                     {
@@ -514,7 +520,7 @@ public class Client
 
                 else
                 {
-                    System.out.println("Invalid command entered.");
+                    System.out.println("Command is invalid, misspelled, or has the wrong number of arguments.");
                 }
             }
             else if (message.length() > 0)
