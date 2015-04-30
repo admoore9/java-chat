@@ -1,6 +1,5 @@
 package com.team1.chat.models;
 
-
 import java.lang.reflect.Array;
 import java.net.*;
 import java.io.*;
@@ -224,14 +223,9 @@ public class Client
                         username = in[1];
                         System.out.println("Username has been set to " + username + ".");
                     }
-<<<<<<< Updated upstream
                     else
                     {
                     	System.out.println("Username change failed.");
-=======
-                    else {
-                        System.out.println("Username change failed.");
->>>>>>> Stashed changes
                     }
                 }
 
@@ -436,74 +430,6 @@ public class Client
             else if (message.length() > 0) {
                 client.sendMessage(message);
             }
-
-//            else if (message.equalsIgnoreCase("viewPublicChannels")) {
-//
-//                System.out.println(csc.viewPublicChannels(uid));
-//            }
-//            else if (message.equalsIgnoreCase("viewPrivateChannels")) {
-//
-//                System.out.println(csc.viewPrivateChannels(uid));
-//            }
-//            else if (message.equalsIgnoreCase("viewInvitedChannels")) {
-//
-//                System.out.println(csc.viewInvitedChannels(uid));
-//            }
-//            else if (message.equalsIgnoreCase("addFriend")) {
-//
-//                //TODO - prompt for uid && username
-//                boolean ret = csc.addFriend("1", "testUN1");
-//                if (ret) System.out.println("Friend added. ");
-//                else System.out.println("addFriend failed. ");
-//            }
-//            else if (message.equalsIgnoreCase("removeFriend")) {
-//
-//                //TODO - prompt for uid && username
-//                boolean ret = csc.removeFriend("1", "testUN1");
-//                if (ret) System.out.println("Friend removed. ");
-//                else System.out.println("removeFriend failed. ");
-//            }
-//            else if (message.equalsIgnoreCase("viewFriends")) {
-//
-//                System.out.println(csc.viewFriends(uid));
-//            }
-//            else if (message.equalsIgnoreCase("addBlockedUser")) {
-//                //TODO - prompt
-//                boolean ret = csc.addBlockedUser("1", "testUN1");
-//                if (ret) System.out.println("addBlockedUser success");
-//                else System.out.println("addBlockedUser failed");
-//            }
-//            else if (message.equalsIgnoreCase("setPublicName")) {
-//                //TODO - prompt
-//                System.out.println(csc.setPublicName("1", "Batman"));
-//            }
-//            else if (message.equalsIgnoreCase("removeBlockedUser")) {
-//                //TODO - prompt
-//                boolean ret = csc.removeBlockedUser("1", "testUN1");
-//                if (ret) System.out.println("removelockedUser success");
-//                else System.out.println("removeBlockedUser failed");
-//            }
-//            else if (message.equalsIgnoreCase("viewBlockedUsers")) {
-//                //TODO - prompt
-//                System.out.println(csc.viewBlockedUsers(uid));
-//            }
-//            else if (message.equalsIgnoreCase("acceptInvite")) {
-//                // TODO - prompt
-//                boolean ret = csc.acceptInviteToChannel("1", "testChannel");
-//                if(ret) System.out.println("Accept invite success.");
-//                else System.out.println("Accept invite failed");
-//            }
-//            else if (message.equalsIgnoreCase("declineInvite")) {
-//                //TODO - prompt
-//                boolean ret = csc.declineInviteToChannel("1", "testChannel");
-//                if(ret) System.out.println("Decline invite success.");
-//                else System.out.println("Decline invite failed");
-//            }
-//            else {
-//                client.sendMessage(message);
-//            }
-
-
         }
         // logout user, close all connections.
         csc.logout(uid);
