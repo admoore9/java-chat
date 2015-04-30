@@ -62,9 +62,9 @@ public class ChatServiceController implements ChatServiceControllerInterface
         return this.getChatServiceInstance().joinChannel(cid, uid);
     }
 
-    public ArrayList<User> listChannelUsers(String cid, String uid)
+    public ArrayList<User> listChannelUsers(String cname, String uid)
     {
-        return this.getChatServiceInstance().listChannelUsers(cid, uid);
+        return this.getChatServiceInstance().listChannelUsers(cname, uid);
     }
 
     // Iteration 2
