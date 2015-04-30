@@ -136,6 +136,7 @@ public class Client
 
         Scanner scanner = new Scanner(System.in);
         String userInput;
+        String[] in;
         String uid = "";
         String username;
 
@@ -143,10 +144,10 @@ public class Client
         System.out.println("To create an account enter: createAccount <username> <password>");
         System.out.println("To exit enter: exit");
         //Prompt user to login
-        while ((userInput = scanner.nextLine()) != null) {
-
+        while ((userInput = scanner.nextLine()) != null)
+        {
             // split the string into separate username and password tokens.
-            String[] in = userInput.split(" ");
+            in = userInput.split(" ");
 
             if (in.length == 3)
             {
@@ -206,78 +207,360 @@ public class Client
         if (!client.start())
             return;
 
-        while (true) {
+        while (true)
+        {
             System.out.print("> ");
             String message = scanner.nextLine();
 
-            if (message.equalsIgnoreCase("logmeout")) {
-                break;
-            }
-            else if (message.equalsIgnoreCase("viewPublicChannels")) {
+            if (message.length() > 0 && message.charAt(0) == '/')
+            {
+                in = message.split(" ");
 
-                System.out.println(csc.viewPublicChannels(uid));
-            }
-            else if (message.equalsIgnoreCase("viewPrivateChannels")) {
+                if (in.length == 1 && in[0].equals("/logout"))
+                {
+                    break;
+                }
 
-                System.out.println(csc.viewPrivateChannels(uid));
-            }
-            else if (message.equalsIgnoreCase("viewInvitedChannels")) {
+                else if (in.length == 2 && in[0].equals("/setUsername"))
+                {
+                    if (false)
+                    {
+                        username = in[1];
+                        System.out.println("Username has been set to " + username + ".");
+                    }
+                    else
+                    {
+                        System.out.println("Username change failed.");
+                    }
+                }
 
-                System.out.println(csc.viewInvitedChannels(uid));
-            }
-            else if (message.equalsIgnoreCase("addFriend")) {
+                else if (in.length == 2 && in[0].equals("/setPassword"))
+                {
+                    if (false)
+                    {
+                        System.out.println("Password has been changed.");
+                    }
+                    else
+                    {
+                        System.out.println("Password change failed.");
+                    }
+                }
 
-                //TODO - prompt for uid && username
-                boolean ret = csc.addFriend("1", "testUN1");
-                if (ret) System.out.println("Friend added. ");
-                else System.out.println("addFriend failed. ");
-            }
-            else if (message.equalsIgnoreCase("removeFriend")) {
+                else if (in.length == 2 && in[0].equals("/listChannelUsers"))
+                {
+                    if (false)
+                    {
 
-                //TODO - prompt for uid && username
-                boolean ret = csc.removeFriend("1", "testUN1");
-                if (ret) System.out.println("Friend removed. ");
-                else System.out.println("removeFriend failed. ");
-            }
-            else if (message.equalsIgnoreCase("viewFriends")) {
+                    }
+                    else
+                    {
 
-                System.out.println(csc.viewFriends(uid));
+                    }
+                }
+
+                else if (in.length == 2 && in[0].equals("/joinChannel"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else if (in.length == 2 && in[0].equals("/leaveChannel"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else if (in.length == 2 && in[0].equals("/createChannel"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else if (in.length == 2 && in[0].equals("/deleteChannel"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else if (in.length == 3 && in[0].equals("/inviteUserToChannel"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else if (in.length == 3 && in[0].equals("/removeUserFromChannel"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else if (in[0].equals("/viewPublicChannels"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else if (in[0].equals("/viewPrivateChannels"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else if (in[0].equals("/viewInvitedChannels"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else if (in.length == 2 && in[0].equals("/toggleChannelVisibility"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else if (in.length == 2 && in[0].equals("/addFriend"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else if (in.length == 2 && in[0].equals("/removeFriend"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else if (in[0].equals("/viewFriends"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else if (in.length == 2 && in[0].equals("/addBlockedUser"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else if (in.length == 2 && in[0].equals("/removeBlockedUser"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else if (in[0].equals("/viewBlockedUsers"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else if (in.length == 2 && in[0].equals("/setPublicName"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else if (in.length == 2 && in[0].equals("/acceptInviteToChannel"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else if (in.length == 2 && in[0].equals("/declineInviteToChannel"))
+                {
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                else
+                {
+                    System.out.println("Invalid command entered.");
+                }
             }
-            else if (message.equalsIgnoreCase("addBlockedUser")) {
-                //TODO - prompt
-                boolean ret = csc.addBlockedUser("1", "testUN1");
-                if (ret) System.out.println("addBlockedUser success");
-                else System.out.println("addBlockedUser failed");
-            }
-            else if (message.equalsIgnoreCase("setPublicName")) {
-                //TODO - prompt
-                System.out.println(csc.setPublicName("1", "Batman"));
-            }
-            else if (message.equalsIgnoreCase("removeBlockedUser")) {
-                //TODO - prompt
-                boolean ret = csc.removeBlockedUser("1", "testUN1");
-                if (ret) System.out.println("removelockedUser success");
-                else System.out.println("removeBlockedUser failed");
-            }
-            else if (message.equalsIgnoreCase("viewBlockedUsers")) {
-                //TODO - prompt
-                System.out.println(csc.viewBlockedUsers(uid));
-            }
-            else if (message.equalsIgnoreCase("acceptInvite")) {
-                // TODO - prompt
-                boolean ret = csc.acceptInviteToChannel("1", "testChannel");
-                if(ret) System.out.println("Accept invite success.");
-                else System.out.println("Accept invite failed");
-            }
-            else if (message.equalsIgnoreCase("declineInvite")) {
-                //TODO - prompt
-                boolean ret = csc.declineInviteToChannel("1", "testChannel");
-                if(ret) System.out.println("Decline invite success.");
-                else System.out.println("Decline invite failed");
-            }
-            else {
+            else if (message.length() > 0)
+            {
                 client.sendMessage(message);
             }
+
+//            else if (message.equalsIgnoreCase("viewPublicChannels")) {
+//
+//                System.out.println(csc.viewPublicChannels(uid));
+//            }
+//            else if (message.equalsIgnoreCase("viewPrivateChannels")) {
+//
+//                System.out.println(csc.viewPrivateChannels(uid));
+//            }
+//            else if (message.equalsIgnoreCase("viewInvitedChannels")) {
+//
+//                System.out.println(csc.viewInvitedChannels(uid));
+//            }
+//            else if (message.equalsIgnoreCase("addFriend")) {
+//
+//                //TODO - prompt for uid && username
+//                boolean ret = csc.addFriend("1", "testUN1");
+//                if (ret) System.out.println("Friend added. ");
+//                else System.out.println("addFriend failed. ");
+//            }
+//            else if (message.equalsIgnoreCase("removeFriend")) {
+//
+//                //TODO - prompt for uid && username
+//                boolean ret = csc.removeFriend("1", "testUN1");
+//                if (ret) System.out.println("Friend removed. ");
+//                else System.out.println("removeFriend failed. ");
+//            }
+//            else if (message.equalsIgnoreCase("viewFriends")) {
+//
+//                System.out.println(csc.viewFriends(uid));
+//            }
+//            else if (message.equalsIgnoreCase("addBlockedUser")) {
+//                //TODO - prompt
+//                boolean ret = csc.addBlockedUser("1", "testUN1");
+//                if (ret) System.out.println("addBlockedUser success");
+//                else System.out.println("addBlockedUser failed");
+//            }
+//            else if (message.equalsIgnoreCase("setPublicName")) {
+//                //TODO - prompt
+//                System.out.println(csc.setPublicName("1", "Batman"));
+//            }
+//            else if (message.equalsIgnoreCase("removeBlockedUser")) {
+//                //TODO - prompt
+//                boolean ret = csc.removeBlockedUser("1", "testUN1");
+//                if (ret) System.out.println("removelockedUser success");
+//                else System.out.println("removeBlockedUser failed");
+//            }
+//            else if (message.equalsIgnoreCase("viewBlockedUsers")) {
+//                //TODO - prompt
+//                System.out.println(csc.viewBlockedUsers(uid));
+//            }
+//            else if (message.equalsIgnoreCase("acceptInvite")) {
+//                // TODO - prompt
+//                boolean ret = csc.acceptInviteToChannel("1", "testChannel");
+//                if(ret) System.out.println("Accept invite success.");
+//                else System.out.println("Accept invite failed");
+//            }
+//            else if (message.equalsIgnoreCase("declineInvite")) {
+//                //TODO - prompt
+//                boolean ret = csc.declineInviteToChannel("1", "testChannel");
+//                if(ret) System.out.println("Decline invite success.");
+//                else System.out.println("Decline invite failed");
+//            }
+//            else {
+//                client.sendMessage(message);
+//            }
 
 
         }
