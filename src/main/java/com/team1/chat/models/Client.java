@@ -223,20 +223,18 @@ public class Client
 
                 else if (in.length == 2 && in[0].equals("/setUsername"))
                 {
-                    if (false)
-                    {
-                        username = in[1];
+                    if (csc.setUsername(uid, in[1])){
+                    	username = in[1];
                         System.out.println("Username has been set to " + username + ".");
                     }
-                    else
-                    {
-                        System.out.println("Username change failed.");
+                    else {
+                    	System.out.println("Username change failed.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/setPassword"))
                 {
-                    if (false)
+                    if (csc.setPassword(uid, in[1]))
                     {
                         System.out.println("Password has been changed.");
                     }

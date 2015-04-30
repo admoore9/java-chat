@@ -27,6 +27,7 @@ public class User implements UserInterface
 	 */
 	public User()
 	{
+		this.uid=null;
         this.currentChannel = null;
         this.invitedChannels = new ArrayList<Channel>();
         this.privateChannels = new ArrayList<Channel>();
@@ -55,7 +56,6 @@ public class User implements UserInterface
     {
         this.username = username;
         this.password = password;
-        this.uid = "";
         return true;
     }
 
@@ -106,7 +106,6 @@ public class User implements UserInterface
     public boolean setPassword(String uid, String newPassword)
     {
         // make sure we have correct User
-
         if(this.getId().equals(uid)){
             this.password = newPassword;
             return true;
