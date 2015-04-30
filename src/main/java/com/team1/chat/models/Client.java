@@ -215,7 +215,34 @@ public class Client
             {
                 in = message.split(" ");
 
-                if (in.length == 1 && in[0].equals("/logout"))
+                if (in.length == 1 && in[0].equals("/help"))
+                {
+                    System.out.println("/logout");
+                    System.out.println("/setUserName <username>");
+                    System.out.println("/setPassword <password");
+                    System.out.println("/listChannelUsers");
+                    System.out.println("/joinChannel <channelName>");
+                    System.out.println("/leaveChannel <channelName");
+                    System.out.println("/createChannel <channelName");
+                    System.out.println("/deleteChannel <channelName");
+                    System.out.println("/inviteUserToChannel <username> <channelName>");
+                    System.out.println("/removeUserFromChannel <username> <channelName>");
+                    System.out.println("/viewPublicChannels");
+                    System.out.println("/viewPrivateChannels");
+                    System.out.println("/viewInvitedChannels");
+                    System.out.println("/toggleChannelVisibility <channelName>");
+                    System.out.println("/addFriend <username>");
+                    System.out.println("/removeFriend <username>");
+                    System.out.println("/viewFriends");
+                    System.out.println("/addBlockedUser <username>");
+                    System.out.println("/removeBlockedUser <username>");
+                    System.out.println("/viewBlockedUsers");
+                    System.out.println("/setPublicName <publicName>");
+                    System.out.println("/acceptInviteToChannel <channelName>");
+                    System.out.println("/declineInviteToChannel <channelName>");
+                }
+
+                else if (in.length == 1 && in[0].equals("/logout"))
                 {
                     break;
                 }
