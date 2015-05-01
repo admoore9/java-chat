@@ -113,8 +113,17 @@ public class DatabaseSupport implements DatabaseSupportInterface
 	 */
     public boolean putUser(User u)
     {
-    	String statement = "INSERT INTO User " +
+    	String statement;
+    	User thisUser = getUserById(u.getId());
+    	if (thisUser!=null){
+    		statement = "UPDATE User "+
+    						"SET username='"+u.getUsername()+"',"+
+    							"password='"+u.getPassword()+"'"+
+    						"WHERE uid='"+u.getId()+"'";
+    	}
+    	else {statement = "INSERT INTO User " +
     					   "VALUES(DEFAULT,'" + u.getUsername()+"','"+u.getPassword()+"')";
+    	}
         return setData(statement);
     }
 
@@ -155,6 +164,9 @@ public class DatabaseSupport implements DatabaseSupportInterface
      */
 
 	public User getUserById(String uid) {
+		if (uid==null){
+			return null;
+		}
 		String statement = "SELECT * " + "FROM User u " + "WHERE u.uid ="+uid;
 		ArrayList<String> result = getData(statement);
 		

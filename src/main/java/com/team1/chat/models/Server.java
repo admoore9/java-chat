@@ -1,7 +1,5 @@
 package com.team1.chat.models;
 
-
-import javax.swing.*;
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -81,7 +79,7 @@ public class Server
         System.out.println(message);
 
         // print to clients
-        for (int i = clients.size(); i >= 0; --i) {
+        for (int i = clients.size()-1; i >= 0; --i) {
 
             // if sendMessage for a client fails, disconnect them from channel.
             if (!clients.get(i).sendMessage(message)) {
@@ -171,10 +169,24 @@ public class Server
                 } catch (ClassNotFoundException c) {
                     break;
                 }
+                // user sent logout message. Set flag, and break loop. Perform logout.
+                if(message.contains("/logout")){
+                    running = false;
+                    continue;
+                }
+                // user changed screen name. set this.username to  username.
+                if(message.contains("/changeName")){
 
-                // renamed from sendMessage, less ambiguity for server/client methods.
-                // print to server
-                broadcast(username + ": " + message);
+                    String[] input = message.split(" ");
+                    if(!input[1].isEmpty())
+                        username = input[1];
+
+                }
+                else {
+                    // renamed from sendMessage, less ambiguity for server/client methods.
+                    // print to server
+                    broadcast(username + ": " + message);
+                }
             }
             removeFromServerList(thread_ID);
             close();
@@ -220,5 +232,6 @@ public class Server
             }
             return true;
         }
+
     }
 }

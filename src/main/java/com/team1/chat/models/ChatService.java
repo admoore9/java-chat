@@ -91,11 +91,24 @@ public class ChatService implements ChatServiceInterface
         if (u == null){
         	return false;
         }
-        // if(u == null)
-        //throw error here.
-
+        // Check if username is same as first.
+        if (u.getUsername().equals(newUsername)){
+        	System.out.println("Username entered is same as the existing username.");
+        	return false;
+        }
+        // Check if username is already taken.
+//        User isTaken = this.getDatabaseSupportInstance().getUserByName(newUsername);
+//        if (isTaken != null){
+        if (!this.getDatabaseSupportInstance().nameAvailable(newUsername)){
+        	System.out.println("That username is not available.");
+        	return false;
+        }
+        
         // use setUsername method in User object to place new username.
-        u.setUsername(uid, newUsername);
+        if (!u.setUsername(uid, newUsername)){
+        	System.out.println("User.setUsername(uid, newUsername) Error: uid parameter does not match this user's id."); 
+        	return false;
+        }
 
         // return User object to database, if returns false, we have an error.
         if (!dbs.putUser(u)) {
@@ -119,11 +132,20 @@ public class ChatService implements ChatServiceInterface
         if (u==null){
         	return false;
         }
-        // if(u == null)
-        //throw error here.
-
+        // check if new password is same as old password.
+        if (u.getPassword().equals(newPassword)){
+        	System.out.println("New password is same as existing password.");
+        	return false;
+        }
+        // check if password if of a valid format.
+        if (!this.checkWellFormed(newPassword)){
+        	return false;
+        }
         // use setUsername method in User object to place new username.
-        u.setPassword(uid, newPassword);
+        if (!u.setPassword(uid, newPassword)){
+        	System.out.println("User.setPassword(uid, newPassword) Error: uid does not match this user's id.");
+        	return false;
+        }
 
         // return User object to database, if returns false, we have an error.
         if (!dbs.putUser(u)) {
