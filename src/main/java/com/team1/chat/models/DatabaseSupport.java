@@ -46,12 +46,12 @@ public class DatabaseSupport implements DatabaseSupportInterface
     		// Get corresponding user.
     		User u = getUserById(id);
     		// Attempt to add each user to default channel's whitelist.
-    		System.out.println("userid: "+id);
+    		// System.out.println("userid: "+id);
     		if(defaultChannel.whiteListUser("33", u)){
-    				System.out.println("User successfully added to whitelist.");
+    		//		System.out.println("User successfully added to whitelist.");
     		}
     		else {
-    			System.out.println("User unsuccessfully added to whitelist.");
+    		//	System.out.println("User unsuccessfully added to whitelist.");
     		}
 			scanForColumnValues.close();
 		}
@@ -255,20 +255,20 @@ public class DatabaseSupport implements DatabaseSupportInterface
             	if (!id.equals("0")){
 	            	User u = getUserById(id);
 	            	if (u==null){
-	            		System.out.println("getChannelByName(): User["+id+"] could not be found.");
+	            		//System.out.println("getChannelByName(): User["+id+"] could not be found.");
 	            		continue;
 	            	}
 	                // This might need some error handling. Not sure.
 	               // whitelist.add(getUserById(scanForColumnValues.nextLine()));
 	                if (c.whiteListUser(admin, u)){
-	                	System.out.println("getChannelByName(): Successfully added user["+id+"] to whitelist.");
+	                	//System.out.println("getChannelByName(): Successfully added user["+id+"] to whitelist.");
 	                }
 	                else {
-	                	System.out.println("getChannelByName(): Failed to add user["+id+"] to whitelist.");
+	                	//System.out.println("getChannelByName(): Failed to add user["+id+"] to whitelist.");
 	                }
             	}
             	else{
-            		System.out.println("At end of whitelist column.");
+            		//System.out.println("At end of whitelist column.");
             		break;
             	}
             }
@@ -283,25 +283,25 @@ public class DatabaseSupport implements DatabaseSupportInterface
 	            	User u = getUserById(id);
 	            	
 	            	if (u==null){
-	            		System.out.println("getChannelByName(): User["+id+"] could not be found.");
+	            		//System.out.println("getChannelByName(): User["+id+"] could not be found.");
 	            		continue;
 	            	}
 	                // This might need some error handling. Not sure.
 	                //currentlist.add(getUserById(scanForColumnValues.nextLine()));
 	                if (c.addChannelUser(u)){
-	                	System.out.println("getChannelByName(): Successfully added user["+id+"] to currentlist.");
+	                	//System.out.println("getChannelByName(): Successfully added user["+id+"] to currentlist.");
 	                }
 	                else {
-	                	System.out.println("getChannelByName(): Failed to add user["+id+"] to currentlist.");
+	                	//System.out.println("getChannelByName(): Failed to add user["+id+"] to currentlist.");
 	                }
             	}
             	else {
-            		System.out.println("At end of currentlist column.");
+            		//System.out.println("At end of currentlist column.");
             		break;
             	}
             }
             scanForColumnValues.close();
-            System.out.println("Channel was successfully retrieved from database.");
+            //System.out.println("Channel was successfully retrieved from database.");
             return c;
         } else
             return null;

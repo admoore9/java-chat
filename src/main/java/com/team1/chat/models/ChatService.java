@@ -19,7 +19,7 @@ public class ChatService implements ChatServiceInterface
     {
         //check if name is available
         if(!getDatabaseSupportInstance().nameAvailable(username)) {
-            System.out.println("Error in createAccount: Name already in use.");
+            System.out.println("Error creating account: Name already in use.");
             return false;
         }
 
@@ -74,13 +74,18 @@ public class ChatService implements ChatServiceInterface
         if (u==null){
         	return false;
         }
-        if (u.getId().equals("")) {
+       //if (u.getId().equals("")) {
             //TODO In iteration-3, need to leave all channels.
-            leaveChannel("0", u.getId());
-
-            return true;
-        }
-        else return false;
+            if (leaveChannel("testCH1", u.getId())){
+            	System.out.println("Logout successful");
+            	return true;
+            }
+            else{
+            	System.out.println("Logout unsuccessful");
+            	return false;
+            }
+        //}
+        //else return false;
     }
 
     /**
@@ -173,17 +178,19 @@ public class ChatService implements ChatServiceInterface
         Channel ch = this.getDatabaseSupportInstance().getChannelByName(cname);
         //TODO: REVIEW THIS CONDITIONAL LATER
         if (ch==null){
-        	return true;
+        	return false;
         }
         User u = this.getDatabaseSupportInstance().getUserById(uid);
         if (u==null){
         	return false;
         }
-        if (ch != null && u != null && ch.removeChannelUser(u)) {
+        if ((ch != null && u != null) && ch.removeChannelUser(u)) {
 
             this.getDatabaseSupportInstance().putChannel(ch);
+            System.out.println("Successfully left channel.");
             return true;
         }
+        System.out.println("Leave channel failed.");
         return false;
     }
 
@@ -207,10 +214,12 @@ public class ChatService implements ChatServiceInterface
         }
         
         if ((ch != null && u != null) && ch.addChannelUser(u)) {
-            if (!this.getDatabaseSupportInstance().putChannel(ch)){
-            	System.out.println("Failed to update Channel's contents in database.");
+        	if (this.getDatabaseSupportInstance().putChannel(ch)){
+        		return true;
+        	}
+        	else{
+            	//System.out.println("Failed to update Channel's contents in database.");
             }
-            else return true;
         }
         return false;
     }

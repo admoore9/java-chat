@@ -72,11 +72,11 @@ public class Channel implements ChannelInterface
         	User temp = whiteList.get(i);
         	String id = temp.getId();
         	if (id.equals(u.getId())){
-        		System.out.println("User["+id+"] from the channel's whitelist is the current client.");
+        		//System.out.println("User["+id+"] from the channel's whitelist is the current client.");
         		return true;
         	}
         	else {
-        		System.out.println("User["+id+"] from the channel's whitelist is not the client.");
+        		//System.out.println("User["+id+"] from the channel's whitelist is not the client.");
         	}
         }
 
