@@ -49,9 +49,15 @@ public class ChatService implements ChatServiceInterface
         }
         String id = u.getId();
 
-        if (!id.isEmpty()) {
-            joinChannel("0", id);
-        }
+        //if (!id.isEmpty()) {
+            //joinChannel("0", id);
+        	if (joinChannel("testCH1",id)){
+        		System.out.println("Successfully joined default channel.");
+        	}
+        	else {
+        		System.out.println("Failed to join default channel.");
+        	}
+        //}
         return id;
     }
 
@@ -193,15 +199,18 @@ public class ChatService implements ChatServiceInterface
         Channel ch = this.getDatabaseSupportInstance().getChannelByName(cname);
         //TODO: REVIEW THIS CONDITIONAL LATER
         if (ch==null){
-        	return true;
+        	return false;
         }
         User u = this.getDatabaseSupportInstance().getUserById(uid);
         if (u==null){
         	return false;
         }
-        if (ch != null && u != null && ch.addChannelUser(u)) {
-            this.getDatabaseSupportInstance().putChannel(ch);
-            return true;
+        
+        if ((ch != null && u != null) && ch.addChannelUser(u)) {
+            if (!this.getDatabaseSupportInstance().putChannel(ch)){
+            	System.out.println("Failed to update Channel's contents in database.");
+            }
+            else return true;
         }
         return false;
     }
@@ -217,12 +226,20 @@ public class ChatService implements ChatServiceInterface
     {
 
         Channel ch = this.getDatabaseSupportInstance().getChannelByName(cname);
-        User u = this.getDatabaseSupportInstance().getUserById(uid);
-        if (u==null){
+        if (ch==null){
+        	System.out.println("Channel["+cname+"] does not exist.");
         	return null;
         }
-        if (ch != null && u != null && ch.isWhiteListed(u)) {
+        User u = this.getDatabaseSupportInstance().getUserById(uid);
+        if (u==null){
+        	System.out.println("User["+uid+"] does not exist.");
+        	return null;
+        }
+        if ((ch != null && u != null) && ch.isWhiteListed(u)) {
             return ch.listChannelUsers();
+        }
+        else {
+        	System.out.println("User["+u.getId()+"] is not white listed.");
         }
         return null;
     }
