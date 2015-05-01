@@ -94,11 +94,12 @@ public class Server
     {
         int i = 0;
         for (ClientThread s : clients) {
-            i++;
+
             if (s.thread_ID == indexToRemove) {
                 clients.remove(i);
                 return;
             }
+            i++;
         }
     }
 

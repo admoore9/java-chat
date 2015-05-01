@@ -89,16 +89,16 @@ public class Client
     {
         // close out connections
         try {
-            if (socketInput != null)
-                socketInput.close();
             if (socketOutput != null)
                 socketOutput.close();
+            if (socketInput != null)
+                socketInput.close();
             if (socket != null)
                 socket.close();
         } catch (IOException e) {
             System.out.println("Error closing client process. Error message: " + e);
         }
-        csc.logout(userID);
+        getChatServiceControllerInstance().logout(userID);
     }
 
     /*
@@ -291,139 +291,158 @@ public class Client
                         System.out.println("Delete channel failed.");
                     }
                 }
-
+                // TODO - untested from here down.
                 else if (in.length == 3 && in[0].equals("/inviteUserToChannel")) {
-                    if (false) {
-
+                    if (csc.inviteUserToChannel(in[1], uid, in[2])) {
+                        System.out.println("User: " + in[2] + " added to Channel: " + in[1]);
                     }
                     else {
-
+                        System.out.println("Invite user to channel failed.");
                     }
                 }
 
                 else if (in.length == 3 && in[0].equals("/removeUserFromChannel")) {
-                    if (false) {
-
+                    if (csc.removeUserFromChannel(in[1], uid, in[2])) {
+                        System.out.println("User: " + in[2] + " removed from Channel: " + in[1]);
                     }
                     else {
-
+                        System.out.println("Error removing user from Channel");
                     }
                 }
 
                 else if (in.length == 1 && in[0].equals("/viewPublicChannels")) {
-                    if (false) {
-
+                    int i = 1;
+                    ArrayList<Channel> publicChannels = csc.viewPublicChannels(uid);
+                    if (!publicChannels.isEmpty()) {
+                        System.out.println("\n List of " + username + "'s Public Channels:");
+                        for(Channel c : publicChannels)
+                            System.out.println(i + ". ) " + c.getName());
                     }
                     else {
-
+                        System.out.println("Sorry, no public channels were found.");
                     }
                 }
 
                 else if (in.length == 1 && in[0].equals("/viewPrivateChannels")) {
-                    if (false) {
-
+                    int i = 1;
+                    ArrayList<Channel> privateChannels = csc.viewPrivateChannels(uid);
+                    if (!privateChannels.isEmpty()) {
+                        System.out.println("\n List of " + username + "'s Private Channels:");
+                        for(Channel c : privateChannels)
+                            System.out.println(i + ". ) " + c.getName());
                     }
                     else {
-
+                        System.out.println("Sorry, no private channels were found.");
                     }
                 }
 
                 else if (in.length == 1 && in[0].equals("/viewInvitedChannels")) {
-                    if (false) {
-
+                    int i = 1;
+                    ArrayList<Channel> invitedChannels = csc.viewInvitedChannels(uid);
+                    if (!invitedChannels.isEmpty()) {
+                        System.out.println("\n List of " + username + "'s Channel Invitations:");
+                        for(Channel c : invitedChannels)
+                            System.out.println(i + ". ) " + c.getName());
                     }
                     else {
-
+                        System.out.println("Sorry, no channel invites were found.");
                     }
                 }
-
+                // TODO - No way to get a Channel in CSC. Need it here, and for Channel switching.
+                // TODO - should we instantiate a DBS object or add a method to CSC?
                 else if (in.length == 2 && in[0].equals("/toggleChannelVisibility")) {
-                    if (false) {
-
+                    if (csc.toggleChannelVisibility(in[1], in[2])) {
+                        System.out.println("Channel: " + in[1] + " visibility has been changed.");
                     }
                     else {
-
+                        System.out.println("Error while toggling channel visibility.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/addFriend")) {
-                    if (false) {
-
+                    if (csc.addFriend(uid, in[1])) {
+                        System.out.println(in[1] + " has been added to your friends list.");
                     }
                     else {
-
+                        System.out.println("Error adding " + in[1] + " to your friends list.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/removeFriend")) {
-                    if (false) {
-
+                    if (csc.removeFriend(uid, in[1])) {
+                        System.out.println(in[1] + " has been removed from your friends list.");
                     }
                     else {
-
+                        System.out.println("Error removing " + in[1] + " from your friends list.");
                     }
                 }
 
                 else if (in.length == 1 && in[0].equals("/viewFriends")) {
-                    if (false) {
-
+                    ArrayList<User> friendList = csc.viewFriends(uid);
+                    if (!friendList.isEmpty()) {
+                        System.out.println(username + "'s Friends List:");
+                        for(User u : friendList)
+                            System.out.println("  * " + u.getUsername());
                     }
                     else {
-
+                        System.out.println("Error retrieving your Friends List.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/addBlockedUser")) {
-                    if (false) {
-
+                    if (csc.addBlockedUser(uid,in[1])) {
+                        System.out.println("Messages from " + in[1] + " are now blocked.");
                     }
                     else {
-
+                        System.out.println("Error adding user to block list.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/removeBlockedUser")) {
-                    if (false) {
-
+                    if (csc.removeBlockedUser(uid, in[1])) {
+                        System.out.println("Messages from " + in[1] + " are no longer blocked");
                     }
                     else {
-
+                        System.out.println("Error removing user from block list.");
                     }
                 }
 
                 else if (in.length == 1 && in[0].equals("/viewBlockedUsers")) {
-                    if (false) {
-
+                    ArrayList<User> blockedList = csc.viewBlockedUsers(uid);
+                    if (!blockedList.isEmpty()) {
+                        System.out.println("Users currently on your Block List:");
+                        for(User u : blockedList)
+                            System.out.println("  * " + u.getUsername());
                     }
                     else {
-
+                        System.out.println("Error retrieving your Block List.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/setPublicName")) {
-                    if (false) {
-
+                    if (csc.setPublicName(uid, in[1])) {
+                        System.out.println("Public name set to: " + in[1]);
                     }
                     else {
-
+                        System.out.println("Error setting public name.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/acceptInviteToChannel")) {
-                    if (false) {
-
+                    if (csc.acceptInviteToChannel(uid, in[1])) {
+                        System.out.println("You are now a member of channel: " + in[1]);
                     }
                     else {
-
+                        System.out.println("Error accepting Channel invite. Please try again.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/declineInviteToChannel")) {
-                    if (false) {
-
+                    if (csc.declineInviteToChannel(uid, in[1])) {
+                        System.out.println("Declined invite to " + in[1] + " was successful.");
                     }
                     else {
-
+                        System.out.println("Could not process invitation decline. Try again.");
                     }
                 }
 
