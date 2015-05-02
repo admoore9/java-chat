@@ -15,7 +15,7 @@ public class Client
     private String serverName;
     private int serverPort;
 
-    private ChatServiceController csc;
+    private static ChatServiceController csc = new ChatServiceController();
 
     /*
         Create client object
@@ -33,8 +33,7 @@ public class Client
      */
     public boolean start()
     {
-
-        System.out.println("Tring to connect to server host: " + serverName + " at port: " + serverPort);
+        System.out.println("Trying to connect to server host: " + serverName + " at port: " + serverPort);
 
         try {
             socket = new Socket(serverName, serverPort);
@@ -55,7 +54,9 @@ public class Client
             System.out.println("Exception creating new Input/output Streams: " + e);
             return false;
         }
-
+        System.out.println();
+        System.out.println("~~~~~~~~~~~~~~~~~~~~ WELCOME TO THE CHAT APPLICATION ~~~~~~~~~~~~~~~~~~~~");
+        
         // init server to client listener
         new ClientListener().start();
 
@@ -97,7 +98,12 @@ public class Client
         } catch (IOException e) {
             System.out.println("Error closing client process. Error message: " + e);
         }
-        csc.logout(userID);
+        if (getChatServiceControllerInstance().logout(userID)){
+        	System.out.println("Disconnect successful!");
+        }
+        else {
+        	System.out.println("Disconnect failed.");
+        }
     }
 
     /*
@@ -117,7 +123,7 @@ public class Client
      */
     public static void main(String args[]) throws IOException
     {
-        ChatServiceController csc = new ChatServiceController();
+        //ChatServiceController csc = new ChatServiceController();
 
         Scanner scanner = new Scanner(System.in);
         String userInput;
@@ -215,6 +221,7 @@ public class Client
 
                 else if (in.length == 1 && in[0].equals("/logout")) {
                     client.disconnect();
+                    System.out.println("Logout successful!");
                     break;
                 }
 
@@ -432,8 +439,8 @@ public class Client
             }
         }
         // logout user, close all connections.
-        csc.logout(uid);
-        client.disconnect();
+        //csc.logout(uid);
+        //client.disconnect();
     }
 
 
@@ -451,7 +458,7 @@ public class Client
 
 
                 } catch (IOException e) {
-                    System.out.println("Server has close the connection: " + e);
+                    System.out.println("Server has closed the connection: " + e);
                     break;
                 }
                 // can't happen with a String object but need the catch anyhow

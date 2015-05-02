@@ -160,7 +160,7 @@ public class Channel implements ChannelInterface
     /**
      * Method that adds a user to its white list
      *
-     * @param aid id of current user
+     * @param aid id of channel admin
      * @param u user to add
      * @return true on success
      */

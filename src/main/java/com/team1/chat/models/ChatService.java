@@ -74,18 +74,12 @@ public class ChatService implements ChatServiceInterface
         if (u==null){
         	return false;
         }
-       //if (u.getId().equals("")) {
-            //TODO In iteration-3, need to leave all channels.
-            if (leaveChannel("testCH1", u.getId())){
-            	System.out.println("Logout successful");
+        if (leaveChannel("testCH1", u.getId())){
             	return true;
-            }
-            else{
-            	System.out.println("Logout unsuccessful");
+        }
+        else{
             	return false;
-            }
-        //}
-        //else return false;
+        }
     }
 
     /**
@@ -178,14 +172,20 @@ public class ChatService implements ChatServiceInterface
         Channel ch = this.getDatabaseSupportInstance().getChannelByName(cname);
         //TODO: REVIEW THIS CONDITIONAL LATER
         if (ch==null){
+        	System.out.println("Specified channel name does not exist.");
+        	return false;
+        }
+        if (uid==null){
+        	System.out.println("The user id provided is null.");
         	return false;
         }
         User u = this.getDatabaseSupportInstance().getUserById(uid);
         if (u==null){
+        	System.out.println("Specified user does not exist.");
         	return false;
         }
         if ((ch != null && u != null) && ch.removeChannelUser(u)) {
-
+        	System.out.println("Attempting to remove user from channel.");
             this.getDatabaseSupportInstance().putChannel(ch);
             System.out.println("Successfully left channel.");
             return true;

@@ -79,7 +79,7 @@ public class Server
         System.out.println(message);
 
         // print to clients
-        for (int i = clients.size(); i >= 0; --i) {
+        for (int i = clients.size()-1; i >= 0; --i) {
 
             // if sendMessage for a client fails, disconnect them from channel.
             if (!clients.get(i).sendMessage(message)) {
@@ -94,11 +94,12 @@ public class Server
     {
         int i = 0;
         for (ClientThread s : clients) {
-            i++;
+            //i++;
             if (s.thread_ID == indexToRemove) {
                 clients.remove(i);
                 return;
             }
+            i++;
         }
     }
 
