@@ -289,137 +289,162 @@ public class Client
                 }
 
                 else if (in.length == 3 && in[0].equals("/inviteUserToChannel")) {
-                    if (false) {
-
+                    if (csc.inviteUserToChannel(in[2], uid, in[1])) {
+                        System.out.println(in[1] + " has been added to " + in[2] + ".");
                     }
                     else {
-
+                        System.out.println("Invite user to channel failed");
                     }
                 }
 
                 else if (in.length == 3 && in[0].equals("/removeUserFromChannel")) {
-                    if (false) {
-
+                    if (csc.removeUserFromChannel(in[2], uid, in[1])) {
+                        System.out.println(in[1] + " has been removed from " + in[2] + ".");
                     }
                     else {
-
+                        System.out.println("Remove user from channel failed");
                     }
                 }
 
                 else if (in.length == 1 && in[0].equals("/viewPublicChannels")) {
-                    if (false) {
+                    ArrayList<Channel> channels = csc.viewPublicChannels(uid);
+                    if (channels != null) {
+                        System.out.println("Public channels are:");
 
+                        for (Channel c : channels) {
+                            System.out.println(c.getName());
+                        }
                     }
                     else {
-
+                        System.out.println("View public channels failed.");
                     }
                 }
 
                 else if (in.length == 1 && in[0].equals("/viewPrivateChannels")) {
-                    if (false) {
+                    ArrayList<Channel> channels = csc.viewPrivateChannels(uid);
+                    if (channels != null) {
+                        System.out.println("Private channels are:");
 
+                        for (Channel c : channels) {
+                            System.out.println(c.getName());
+                        }
                     }
                     else {
-
+                        System.out.println("View Private channels failed.");
                     }
                 }
 
                 else if (in.length == 1 && in[0].equals("/viewInvitedChannels")) {
-                    if (false) {
+                    ArrayList<Channel> channels = csc.viewInvitedChannels(uid);
+                    if (channels != null) {
+                        System.out.println("Invited channels are:");
 
+                        for (Channel c : channels) {
+                            System.out.println(c.getName());
+                        }
                     }
                     else {
-
+                        System.out.println("View invited channels failed.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/toggleChannelVisibility")) {
-                    if (false) {
-
+                    if (csc.toggleChannelVisibility(in[1], uid)) {
+                        System.out.println(in[1] + " visibility toggled.");
                     }
                     else {
-
+                        System.out.println("Toggle visibility failed.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/addFriend")) {
-                    if (false) {
-
+                    if (csc.addFriend(uid, in[1])) {
+                        System.out.println(in[1] + " has been added to your friends list.");
                     }
                     else {
-
+                        System.out.println("Add friend failed.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/removeFriend")) {
-                    if (false) {
-
+                    if (csc.removeFriend(uid, in[1])) {
+                        System.out.println(in[1] + " has been removed from your friends list.");
                     }
                     else {
-
+                        System.out.println("Remove friend failed.");
                     }
                 }
 
                 else if (in.length == 1 && in[0].equals("/viewFriends")) {
-                    if (false) {
+                    ArrayList<User> friends = csc.viewFriends(uid);
+                    if (friends != null) {
+                        System.out.println("Your friends are:");
 
+                        for (User u : friends) {
+                            System.out.println(u.getUsername());
+                        }
                     }
                     else {
-
+                        System.out.println("View friends failed.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/addBlockedUser")) {
-                    if (false) {
-
+                    if (csc.addBlockedUser(uid, in[1])) {
+                        System.out.println(in[1] + " has been added to your block list.");
                     }
                     else {
-
+                        System.out.println("Add blocked user failed.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/removeBlockedUser")) {
-                    if (false) {
-
+                    if (csc.removeBlockedUser(uid, in[1])) {
+                        System.out.println(in[1] + " has been removed from your block list.");
                     }
                     else {
-
+                        System.out.println("Remove blocked user failed.");
                     }
                 }
 
                 else if (in.length == 1 && in[0].equals("/viewBlockedUsers")) {
-                    if (false) {
+                    ArrayList<User> blocked = csc.viewBlockedUsers(uid);
+                    if (blocked != null) {
+                        System.out.println("You have blocked:");
 
+                        for (User u : blocked) {
+                            System.out.println(u.getUsername());
+                        }
                     }
                     else {
-
+                        System.out.println("View blocked users failed.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/setPublicName")) {
-                    if (false) {
-
+                    if (csc.setPublicName(uid, in[1])) {
+                        System.out.println("Public name has been set to " + in[1] + ".");
                     }
                     else {
-
+                        System.out.println("Set public name failed.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/acceptInviteToChannel")) {
-                    if (false) {
-
+                    if (csc.acceptInviteToChannel(uid, in[1])) {
+                        System.out.println("Invite accepted to " + in[1] + ".");
                     }
                     else {
-
+                        System.out.println("Accept invite to channel failed.");
                     }
                 }
 
                 else if (in.length == 2 && in[0].equals("/declineInviteToChannel")) {
-                    if (false) {
-
+                    if (csc.declineInviteToChannel(uid, in[1])) {
+                        System.out.println("Invite declined to " + in[1] + ".");
                     }
                     else {
-
+                        System.out.println("Decline invite to channel failed.");
                     }
                 }
 
