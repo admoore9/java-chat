@@ -39,6 +39,9 @@ public class Channel implements ChannelInterface
         return whiteList;
     }
 
+    public ArrayList<User> getCurrentUsers(){
+    	return currentUsers;
+    }
     public boolean isPublic()
     {
         return isPublic;
@@ -66,10 +69,15 @@ public class Channel implements ChannelInterface
 
         for (i = 0; i < whiteList.size(); i++)
         {
-            if (whiteList.get(i).getId().equals(u.getId()))
-            {
-                return true;
-            }
+        	User temp = whiteList.get(i);
+        	String id = temp.getId();
+        	if (id.equals(u.getId())){
+        		//System.out.println("User["+id+"] from the channel's whitelist is the current client.");
+        		return true;
+        	}
+        	else {
+        		//System.out.println("User["+id+"] from the channel's whitelist is not the client.");
+        	}
         }
 
         return false;
@@ -152,7 +160,7 @@ public class Channel implements ChannelInterface
     /**
      * Method that adds a user to its white list
      *
-     * @param aid id of current user
+     * @param aid id of channel admin
      * @param u user to add
      * @return true on success
      */

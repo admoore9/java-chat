@@ -15,7 +15,7 @@ public class Client
     private String serverName;
     private int serverPort;
 
-    private ChatServiceController csc;
+    private static ChatServiceController csc = new ChatServiceController();
 
     /*
         Create client object
@@ -33,8 +33,7 @@ public class Client
      */
     public boolean start()
     {
-
-        System.out.println("Tring to connect to server host: " + serverName + " at port: " + serverPort);
+        System.out.println("Trying to connect to server host: " + serverName + " at port: " + serverPort);
 
         try {
             socket = new Socket(serverName, serverPort);
@@ -55,7 +54,9 @@ public class Client
             System.out.println("Exception creating new Input/output Streams: " + e);
             return false;
         }
-
+        System.out.println();
+        System.out.println("~~~~~~~~~~~~~~~~~~~~ WELCOME TO THE CHAT APPLICATION ~~~~~~~~~~~~~~~~~~~~");
+        
         // init server to client listener
         new ClientListener().start();
 
@@ -97,7 +98,12 @@ public class Client
         } catch (IOException e) {
             System.out.println("Error closing client process. Error message: " + e);
         }
-        csc.logout(userID);
+        if (getChatServiceControllerInstance().logout(userID)){
+        	System.out.println("Disconnect successful!");
+        }
+        else {
+        	System.out.println("Disconnect failed.");
+        }
     }
 
     /*
@@ -117,7 +123,7 @@ public class Client
      */
     public static void main(String args[]) throws IOException
     {
-        ChatServiceController csc = new ChatServiceController();
+        //ChatServiceController csc = new ChatServiceController();
 
         Scanner scanner = new Scanner(System.in);
         String userInput;
@@ -173,9 +179,9 @@ public class Client
         }
 
         // create new client
-        //Client client = new Client("104.236.206.121", 4444, uid);
-        Client client = new Client("104.236.206.121", 4444, username, uid);
-
+        //Client client = new Client("104.236.206.121", 4444, username, uid);
+        Client client = new Client("localhost", 4444, username, uid);
+        
         // test we can connect
         if (!client.start())
             return;
@@ -212,12 +218,13 @@ public class Client
                     System.out.println("/acceptInviteToChannel <channelName>");
                     System.out.println("/declineInviteToChannel <channelName>");
                 }
-
+                // LOGOUT 
                 else if (in.length == 1 && in[0].equals("/logout")) {
                     client.disconnect();
+                    System.out.println("Logout successful!");
                     break;
                 }
-
+                // SET USERNAME
                 else if (in.length == 2 && in[0].equals("/setUsername")) {
                     if (csc.setUsername(uid, in[1])) {
                         username = in[1];
@@ -228,7 +235,7 @@ public class Client
                     	System.out.println("Username change failed.");
                     }
                 }
-
+                // SET PASSWORD
                 else if (in.length == 2 && in[0].equals("/setPassword")) {
                     if (csc.setPassword(uid, in[1])) {
                         System.out.println("Password has been changed.");
@@ -237,7 +244,7 @@ public class Client
                         System.out.println("Password change failed.");
                     }
                 }
-
+                // LIST CHANNEL USERS
                 else if (in.length == 2 && in[0].equals("/listChannelUsers")) {
                     ArrayList<User> users = csc.listChannelUsers(in[1], uid);
                     if (users != null) {
@@ -251,7 +258,7 @@ public class Client
                         System.out.println("List channel users failed.");
                     }
                 }
-
+                // JOIN CHANNEL
                 else if (in.length == 2 && in[0].equals("/joinChannel")) {
                     if (csc.joinChannel(in[1], uid)) {
                         System.out.println("You have successfully joined " + in[1] + ".");
@@ -260,7 +267,7 @@ public class Client
                         System.out.println("Join channel failed.");
                     }
                 }
-
+                // LEAVE CHANNEL (NEEDS TESTED)
                 else if (in.length == 2 && in[0].equals("/leaveChannel")) {
                     if (csc.leaveChannel(in[1], uid)) {
                         System.out.println("You have successfully left " + in[1] + ".");
@@ -269,7 +276,7 @@ public class Client
                         System.out.println("Leave channel failed.");
                     }
                 }
-
+                // CREATE CHANNEL (NEEDS TESTED)
                 else if (in.length == 2 && in[0].equals("/createChannel")) {
                     if (csc.createChannel(in[1], uid)) {
                         System.out.println("Channel " + in[1] + " has been created.");
@@ -278,7 +285,7 @@ public class Client
                         System.out.println("Create channel failed.");
                     }
                 }
-
+                // DELETE CHANNEL (NEEDS TESTED)
                 else if (in.length == 2 && in[0].equals("/deleteChannel")) {
                     if (csc.deleteChannel(in[1], uid)) {
                         System.out.println("Channel " + in[1] + " has been deleted.");
@@ -287,7 +294,7 @@ public class Client
                         System.out.println("Delete channel failed.");
                     }
                 }
-
+                // INVITE USER TO CHANNEL (NEEDS IMPLEMENTED)
                 else if (in.length == 3 && in[0].equals("/inviteUserToChannel")) {
                     if (false) {
 
@@ -341,58 +348,66 @@ public class Client
 
                     }
                 }
-
+                // ADD FRIEND
                 else if (in.length == 2 && in[0].equals("/addFriend")) {
-                    if (false) {
-
+                    if (csc.addFriend(uid, in[1])) {
+                    	System.out.println("Friend successfully added.");
                     }
                     else {
-
+                    	System.out.println("Unable to add friend.");
                     }
                 }
-
+                // REMOVE FRIEND
                 else if (in.length == 2 && in[0].equals("/removeFriend")) {
-                    if (false) {
-
+                    if (csc.removeFriend(uid, in[1])) {
+                    	System.out.println("Friend successfully removed.");
                     }
                     else {
-
+                    	System.out.println("Unable to remove friend.");
                     }
                 }
-
+                // VIEW FRIENDS
                 else if (in.length == 1 && in[0].equals("/viewFriends")) {
-                    if (false) {
-
+                    ArrayList<User> users = csc.viewFriends(uid);
+                    if (users != null) {
+                        System.out.println("Users friends are: ");
+                        for (User u : users) {
+                            System.out.println(u.getUsername());
+                        }
                     }
                     else {
-
+                        System.out.println("List channel users failed.");
                     }
                 }
-
+                // ADD BLOCKED USER
                 else if (in.length == 2 && in[0].equals("/addBlockedUser")) {
-                    if (false) {
-
+                    if (csc.addBlockedUser(uid, in[1])) {
+                    	System.out.println(in[1]+" was blocked.");
                     }
                     else {
-
+                    	System.out.println("Unable to block user.");
                     }
                 }
-
+                // REMOVE BLOCKED USER
                 else if (in.length == 2 && in[0].equals("/removeBlockedUser")) {
-                    if (false) {
-
+                    if (csc.removeBlockedUser(uid, in[1])) {
+                    	System.out.println("Successfully unblocked "+in[1]);
                     }
                     else {
-
+                    	System.out.println("Unable to remove user from block list.");
                     }
                 }
-
+                // VIEW BLOCKED USERS
                 else if (in.length == 1 && in[0].equals("/viewBlockedUsers")) {
-                    if (false) {
-
+                    ArrayList<User> users = csc.viewBlockedUsers(uid);
+                    if (users != null) {
+                        System.out.println("Ignored users are: ");
+                        for (User u : users) {
+                            System.out.println(u.getUsername());
+                        }
                     }
                     else {
-
+                        System.out.println("List channel users failed.");
                     }
                 }
 
@@ -432,8 +447,8 @@ public class Client
             }
         }
         // logout user, close all connections.
-        csc.logout(uid);
-        client.disconnect();
+        //csc.logout(uid);
+        //client.disconnect();
     }
 
 
@@ -451,7 +466,7 @@ public class Client
 
 
                 } catch (IOException e) {
-                    System.out.println("Server has close the connection: " + e);
+                    System.out.println("Server has closed the connection: " + e);
                     break;
                 }
                 // can't happen with a String object but need the catch anyhow
