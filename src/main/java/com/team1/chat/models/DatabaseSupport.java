@@ -135,15 +135,30 @@ public class DatabaseSupport implements DatabaseSupportInterface
     public boolean putUser(User u)
     {
     	String statement;
+    	String fList = userListToString(u.getFriends());
+    	String bList = userListToString(u.getBlockedUsers());
+    	
     	User thisUser = getUserById(u.getId());
+    	
+//    	if (thisUser!=null){
+//    		statement = "UPDATE User "+
+//    						"SET username='"+u.getUsername()+"',"+
+//    							"password='"+u.getPassword()+"'"+
+//    						"WHERE uid='"+u.getId()+"'";
+//    	}
+//    	else {statement = "INSERT INTO User " +
+//    					   "VALUES(DEFAULT,'" + u.getUsername()+"','"+u.getPassword()+"')";
+//    	}
     	if (thisUser!=null){
     		statement = "UPDATE User "+
     						"SET username='"+u.getUsername()+"',"+
-    							"password='"+u.getPassword()+"'"+
+    							"password='"+u.getPassword()+"',"+
+    							"friendlist='"+fList+"',"+
+    							"blocklist='"+bList+"' "+
     						"WHERE uid='"+u.getId()+"'";
     	}
     	else {statement = "INSERT INTO User " +
-    					   "VALUES(DEFAULT,'" + u.getUsername()+"','"+u.getPassword()+"')";
+    					   "VALUES(DEFAULT,'" + u.getUsername()+"','"+u.getPassword()+"','"+fList+"','"+bList+"')";
     	}
         return setData(statement);
     }
@@ -158,26 +173,27 @@ public class DatabaseSupport implements DatabaseSupportInterface
     					   "WHERE u.username = '"+username+ 
     					   "'AND u.password = '"+ password+"'";
     	ArrayList<String> result = getData(statement);
-    	if (result.size()==1)
-    	{
-    		Scanner scanForColumnValues = new Scanner(result.get(0));
-    		
-    		//First column: uid
-    		String uid = scanForColumnValues.nextLine();
-    		
-    		//Second column: username
-    		String uname = scanForColumnValues.nextLine();
-    		
-    		//Third column: password
-    		String pw = scanForColumnValues.nextLine();
-    		
-    		User u = new User(uid,uname,pw);
-    		
-    		scanForColumnValues.close();
-    		return u;
-    	}
-    	else return null;
-		
+//    	if (result.size()==1)
+//    	{
+//    		Scanner scanForColumnValues = new Scanner(result.get(0));
+//    		
+//    		//First column: uid
+//    		String uid = scanForColumnValues.nextLine();
+//    		
+//    		//Second column: username
+//    		String uname = scanForColumnValues.nextLine();
+//    		
+//    		//Third column: password
+//    		String pw = scanForColumnValues.nextLine();
+//    		
+//    		User u = new User(uid,uname,pw);
+//    		
+//            //System.out.println("User was successfully retrieved from database.");
+//    		scanForColumnValues.close();
+//    		return u;
+//    	}
+//    	else return null;
+		return parseUserData(result);
     }
 
     /**
@@ -191,28 +207,101 @@ public class DatabaseSupport implements DatabaseSupportInterface
 		String statement = "SELECT * " + "FROM User u " + "WHERE u.uid ='"+uid+"'";
 		ArrayList<String> result = getData(statement);
 		
-    	if (result.size()==1)
-    	{
-    		Scanner scanForColumnValues = new Scanner(result.get(0));
-    		//First column: uid
-    		String userid = scanForColumnValues.nextLine();
-
-    		
-    		//Second column: username
-    		String uname = scanForColumnValues.nextLine();
-
-    		
-    		//Third column: password
-    		String pw = scanForColumnValues.nextLine();
-
-    		User u = new User(userid,uname,pw);
-    		
-    		scanForColumnValues.close();
-    		return u;
-    	}
-    	else return null;
+//    	if (result.size()==1)
+//    	{
+//    		Scanner scanForColumnValues = new Scanner(result.get(0));
+//    		//First column: uid
+//    		String userid = scanForColumnValues.nextLine();
+//
+//    		
+//    		//Second column: username
+//    		String uname = scanForColumnValues.nextLine();
+//
+//    		
+//    		//Third column: password
+//    		String pw = scanForColumnValues.nextLine();
+//
+//    		User u = new User(userid,uname,pw);
+//    		
+//    		scanForColumnValues.close();
+//    		return u;
+//    	}
+//    	else return null;
+		return parseUserData(result);
 	}
-
+	
+	private User parseUserData(ArrayList<String> result)
+	{    	
+		if (result.size()==1){
+			Scanner scanForColumnValues = new Scanner(result.get(0));
+			
+			//First column: uid
+			String uid = scanForColumnValues.nextLine();
+			
+			//Second column: username
+			String uname = scanForColumnValues.nextLine();
+			
+			//Third column: password
+			String pw = scanForColumnValues.nextLine();
+			
+			User u = new User(uid,uname,pw);
+	        
+	        // Fourth Column: friendlist
+	        while (scanForColumnValues.hasNextLine())
+	        {
+	        	String id = scanForColumnValues.nextLine();
+	        	if (!id.equals("0"))
+	        	{
+	            	User friend = getUserById(id);
+	            	if (friend==null){
+	            		//System.out.println("parseUserData(): User["+id+"] could not be found.");
+	            		continue;
+	            	}
+	                if (u.addFriend(friend)){
+	                	//System.out.println("parseUserData(): Successfully added user["+id+"] to friend list.");
+	                }
+	                else {
+	                	//System.out.println("parseUserData(): Failed to add user["+id+"] to friend list.");
+	                }
+	        	}
+	        	else{
+	        		//System.out.println("At end of friendlist column.");
+	        		break;
+	        	}
+	        }
+	
+	        // Fifth Column: blocklist
+	        while (scanForColumnValues.hasNextLine())
+	        {
+	        	String id = scanForColumnValues.nextLine();
+	        	if (id.isEmpty()){
+	        		continue;
+	        	}
+	        	if (!id.equals("0"))
+	        	{
+	            	User blocked = getUserById(id);
+	            	if (blocked==null){
+	            		//System.out.println("parseUserData(): User["+id+"] could not be found.");
+	            		continue;
+	            	}
+	                if (u.blockUser(blocked)){
+	                	//System.out.println("parseUserData(): Successfully added user["+id+"] to blocklist.");
+	                }
+	                else {
+	                	//System.out.println("parseUserData(): Failed to add user["+id+"] to blocklist.");
+	                }
+	        	}
+	        	else {
+	        		//System.out.println("At end of blocklist column.");
+	        		break;
+	        	}
+	        }
+	        //System.out.println("User was successfully retrieved from database.");
+			scanForColumnValues.close();
+			return u;
+		}
+		return null;
+	}
     public boolean nameAvailable(String newUsername)
     {
     	ArrayList<String> result = getData("SELECT * FROM User u WHERE u.username = '"+newUsername+"'");
@@ -245,22 +334,21 @@ public class DatabaseSupport implements DatabaseSupportInterface
             // Instantiate channel so that it can modified 
             
             Channel c = new Channel(channelName, admin);
+            
             // Fourth Column: whitelist
             // 	This could've been implemented better. Should prob change the format for lists on the database to
             // 	json or something, instead of how I have it now.
             
-            //ArrayList<User> whitelist=new ArrayList<User>();
             while (scanForColumnValues.hasNextLine())
             {
             	String id = scanForColumnValues.nextLine();
-            	if (!id.equals("0")){
+            	if (!id.equals("0"))
+            	{
 	            	User u = getUserById(id);
 	            	if (u==null){
 	            		//System.out.println("getChannelByName(): User["+id+"] could not be found.");
 	            		continue;
 	            	}
-	                // This might need some error handling. Not sure.
-	               // whitelist.add(getUserById(scanForColumnValues.nextLine()));
 	                if (c.whiteListUser(admin, u)){
 	                	//System.out.println("getChannelByName(): Successfully added user["+id+"] to whitelist.");
 	                }
@@ -273,22 +361,21 @@ public class DatabaseSupport implements DatabaseSupportInterface
             		break;
             	}
             }
-            //ArrayList<User> currentlist = new ArrayList<User>();
+
+            // Fifth Column: currentlist
             while (scanForColumnValues.hasNextLine())
             {
             	String id = scanForColumnValues.nextLine();
             	if (id.isEmpty()){
             		continue;
             	}
-            	if (!id.equals("0")){
+            	if (!id.equals("0"))
+            	{
 	            	User u = getUserById(id);
-	            	
 	            	if (u==null){
 	            		//System.out.println("getChannelByName(): User["+id+"] could not be found.");
 	            		continue;
 	            	}
-	                // This might need some error handling. Not sure.
-	                //currentlist.add(getUserById(scanForColumnValues.nextLine()));
 	                if (c.addChannelUser(u)){
 	                	//System.out.println("getChannelByName(): Successfully added user["+id+"] to currentlist.");
 	                }
@@ -312,22 +399,24 @@ public class DatabaseSupport implements DatabaseSupportInterface
     {
     	
     	String statement;
-    	String wList = "";
-    	ArrayList<User> tempList = c.getWhiteList();
-    	int i;
-    	for (i = 0; i < tempList.size();i++)
-    	{
-    		wList = wList + tempList.get(i).getId() + "\n";
-    	}
-    	wList = wList + "0\n";
+//    	String wList = "";
+//    	ArrayList<User> tempList = c.getWhiteList();
+//    	int i;
+//    	for (i = 0; i < tempList.size();i++)
+//    	{
+//    		wList = wList + tempList.get(i).getId() + "\n";
+//    	}
+//    	wList = wList + "0\n";
+    	String wList = userListToString(c.getWhiteList());
     	
-    	String cList="";
-    	tempList = c.getCurrentUsers();
-    	for (i=0; i < tempList.size();i++)
-    	{
-    		cList = cList + tempList.get(i).getId()+"\n";
-    	}
-    	cList = cList + "0\n";
+//    	String cList="";
+//    	tempList = c.getCurrentUsers();
+//    	for (i=0; i < tempList.size();i++)
+//    	{
+//    		cList = cList + tempList.get(i).getId()+"\n";
+//    	}
+//    	cList = cList + "0\n";
+    	String cList = userListToString(c.getCurrentUsers());
     	
     	int val = c.isPublic() ? 0 : 1;
     	String isPublic = String.valueOf(val);
@@ -381,13 +470,16 @@ public class DatabaseSupport implements DatabaseSupportInterface
     /*
      * Helper method for converting a list of Users into a parse-able string to be stored in database. 
      */
-    String userListToString(ArrayList<User> list){
-    	String uListStr = "";
-    	for (int i = 0; i < list.size();i++)
+    String userListToString(ArrayList<User> list)
+    {	
+    	String listString="";
+    	ArrayList<User>tempList = list;
+    	for (int i=0; i < tempList.size();i++)
     	{
-    		uListStr = uListStr + list.get(i).getId() + "\n";
+    		listString = listString + tempList.get(i).getId()+"\n";
     	}
-    	return uListStr;
+    	listString = listString + "0\n";
+    	return listString;
     }
     /*
      * Helper method for converting a parse-able string taken from database into a list of users.
