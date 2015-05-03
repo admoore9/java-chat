@@ -399,29 +399,17 @@ public class DatabaseSupport implements DatabaseSupportInterface
     {
     	
     	String statement;
-//    	String wList = "";
-//    	ArrayList<User> tempList = c.getWhiteList();
-//    	int i;
-//    	for (i = 0; i < tempList.size();i++)
-//    	{
-//    		wList = wList + tempList.get(i).getId() + "\n";
-//    	}
-//    	wList = wList + "0\n";
+    	//whitelist
     	String wList = userListToString(c.getWhiteList());
-    	
-//    	String cList="";
-//    	tempList = c.getCurrentUsers();
-//    	for (i=0; i < tempList.size();i++)
-//    	{
-//    		cList = cList + tempList.get(i).getId()+"\n";
-//    	}
-//    	cList = cList + "0\n";
+    	//currentlist
     	String cList = userListToString(c.getCurrentUsers());
-    	//System.out.println("CurrentList that is going to be put in the database:"+cList);
+    	//ispublic
     	int val = c.isPublic() ? 0 : 1;
     	String isPublic = String.valueOf(val);
+    	//Check if this channel exists in database.
     	Channel thisChannel = getChannelByName(c.getName());
     	if (thisChannel!=null){
+    		//Update the existing channel.
     		statement = "UPDATE Channel "+
     						"SET name='"+c.getName()+"',"+
     							"ispublic='"+isPublic+"',"+
@@ -430,8 +418,10 @@ public class DatabaseSupport implements DatabaseSupportInterface
     							"currentlist='"+cList+"'"+
     						"WHERE name='"+c.getName()+"'";
     	}
-    	else {statement = "INSERT INTO Channel " +
-	   			"VALUES('"+c.getName()+"','"+isPublic+"','"+c.getAdminId()+"','"+wList+"','"+cList+"')";
+    	else {
+    		//Otherwise create a new Channel
+    		statement = "INSERT INTO Channel " +
+    					"VALUES('"+c.getName()+"','"+isPublic+"','"+c.getAdminId()+"','"+wList+"','"+cList+"')";
     	}
         return setData(statement);
     }
@@ -467,6 +457,17 @@ public class DatabaseSupport implements DatabaseSupportInterface
         String statement = "DELETE FROM Channel WHERE name = '"+name+"'";
         return (setData(statement));
     }
+    
+    public ArrayList<String> getPublicChannelNames(){
+		String statement = "SELECT name FROM Channel c WHERE c.ispublic='1'";
+		ArrayList<String> result = getData(statement);
+		return result;
+    }
+    public ArrayList<String> getPrivateChannelNames(){
+    	String statement = "SELECT name FROM Channel c WHERE c.ispublic='0'";
+		ArrayList<String> result = getData(statement);
+		return result;
+    }
     /*
      * Helper method for converting a list of Users into a parse-able string to be stored in database. 
      */
@@ -494,31 +495,5 @@ public class DatabaseSupport implements DatabaseSupportInterface
         }
         scanString.close();
     	return userList;
-    }
-    /*
-     * Helper method for converting a list of Channels into a parse-able string to be stored in database. 
-     */
-    String channelListToString(ArrayList<Channel> list)
-    {
-    	String cListStr = "";
-    	for (int i = 0; i < list.size(); i++)
-    	{
-    		cListStr = cListStr + list.get(i).getName() + "\n";
-    	}
-    	return cListStr;
-    }
-    /*
-     * Helper method for converting a parse-able string taken from database into a list of channels.
-     */
-    ArrayList<Channel> channelStringToList(String str)
-    {
-    	ArrayList<Channel> channelList = new ArrayList<Channel>();
-    	Scanner scanString = new Scanner(str);
-        while (scanString.hasNextLine())
-        {
-        	channelList.add(getChannelByName(scanString.nextLine()));
-        }
-        scanString.close();
-    	return channelList;    	
     }
 }

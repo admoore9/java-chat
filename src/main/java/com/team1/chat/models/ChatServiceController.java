@@ -97,12 +97,20 @@ public class ChatServiceController implements ChatServiceControllerInterface
     {
         return this.getChatServiceInstance().viewPrivateChannels(uid);
     }
-
+    //TODO: IF WE KEEP THIS, IT NEEDS TO BE ADDED TO THE DESIGN IN PLACE OF viewPrivateChannels
+    public ArrayList<String> viewPrivateChannelNames(String uid)
+    {
+    	return this.getChatServiceInstance().viewPrivateChannelNames(uid);
+    }
     public ArrayList<Channel> viewPublicChannels(String uid)
     {
         return this.getChatServiceInstance().viewPublicChannels(uid);
     }
-
+    //TODO: IF WE KEEP THIS, IT NEEDS TO BE ADDED TO THE DESIGN IN PLACE OF viewPublicChannels.
+    public ArrayList<String> viewPublicChannelNames(String uid)
+    {
+    	return this.getChatServiceInstance().viewPublicChannelNames(uid);
+    }
     public boolean toggleChannelVisibility(String cname, String aid)
     {
         return this.getChatServiceInstance().toggleChannelVisibility(cname, aid);

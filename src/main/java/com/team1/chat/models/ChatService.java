@@ -439,7 +439,21 @@ public class ChatService implements ChatServiceInterface
         }
         return u.viewPrivateChannels();
     }
+    /**
+     * Method that gets a list of all private channel names.
+     * @param uid
+     * @return
+     */
+	public ArrayList<String> viewPrivateChannelNames(String uid) {
+        User u;
 
+        u = this.getDatabaseSupportInstance().getUserById(uid);
+        if (u==null){
+        	return null;
+        }
+        return dbs.getPrivateChannelNames();
+
+	}
     /**
      * Method that gets a list of public channels
      *
@@ -454,8 +468,24 @@ public class ChatService implements ChatServiceInterface
         	return null;
         }
         return u.viewPublicChannels();
-    }
 
+    	
+    }
+/**
+ * Method that gets a list of public channel names.
+ * 
+ * @param uid
+ * @return a list of public channel names.
+ */
+    public ArrayList<String> viewPublicChannelNames(String uid){
+        User u;
+
+        u = this.getDatabaseSupportInstance().getUserById(uid);
+        if (u==null){
+        	return null;
+        }
+    	return this.getDatabaseSupportInstance().getPublicChannelNames();
+    }
     /**
      * Method to check if password is well-formed
      * Criteria:
@@ -739,4 +769,5 @@ public class ChatService implements ChatServiceInterface
             dbs = new DatabaseSupport();
         return dbs;
     }
+
 }

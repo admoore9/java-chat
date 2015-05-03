@@ -268,9 +268,9 @@ public class Client
                 	//		to the UI.
                 	if (!channel.isEmpty()){
                 		csc.leaveChannel(channel, uid);
+                        System.out.println("You have successfully left " + channel + ".");
                 		channel="";
                     	client.sendMessage("/joinChannel "+channel);
-                        System.out.println("You have successfully left " + in[1] + ".");
                 	}
                     if (csc.joinChannel(in[1], uid)) {
                     	channel=in[1];
@@ -315,7 +315,7 @@ public class Client
                         System.out.println("Delete channel failed.");
                     }
                 }
-                // INVITE USER TO CHANNEL (NEEDS IMPLEMENTED)
+                // INVITE USER TO CHANNEL (NEEDS TESTED)
                 else if (in.length == 3 && in[0].equals("/inviteUserToChannel")) {
                     if (csc.inviteUserToChannel(in[2], uid, in[1])) {
                         System.out.println(in[1] + " has been added to " + in[2] + ".");
@@ -324,7 +324,7 @@ public class Client
                         System.out.println("Invite user to channel failed");
                     }
                 }
-
+                // REMOVE USER FROM CHANNEL (NEEDS TESTED)
                 else if (in.length == 3 && in[0].equals("/removeUserFromChannel")) {
                     if (csc.removeUserFromChannel(in[2], uid, in[1])) {
                         System.out.println(in[1] + " has been removed from " + in[2] + ".");
@@ -333,39 +333,50 @@ public class Client
                         System.out.println("Remove user from channel failed");
                     }
                 }
-
+                // VIEW PUBLIC CHANNELS (NEEDS TESTED)
+                // TODO: I'm changing the purpose of this command to display a list of all public channel names.
                 else if (in.length == 1 && in[0].equals("/viewPublicChannels")) {
-                    ArrayList<Channel> channels = csc.viewPublicChannels(uid);
+                    //ArrayList<Channel> channels = csc.viewPublicChannels(uid);
+                	ArrayList<String> channels = csc.viewPublicChannelNames(uid);
                     if (channels != null) {
-                        System.out.println("Public channels are:");
+                        System.out.println("Public channels are:\n");
 
-                        for (Channel c : channels) {
-                            System.out.println(c.getName());
+//                        for (Channel c : channels) {
+//                            System.out.println(c.getName());
+//                        }
+                        for (String c : channels){
+                        	System.out.println(c);
                         }
                     }
                     else {
                         System.out.println("View public channels failed.");
                     }
                 }
-
+                // VIEW PRIVATE CHANNELS (NEEDS TESTED)
+                //TODO: I'm changing the purpose of this command to display a list of all public channel names.
                 else if (in.length == 1 && in[0].equals("/viewPrivateChannels")) {
-                    ArrayList<Channel> channels = csc.viewPrivateChannels(uid);
+                    //ArrayList<Channel> channels = csc.viewPrivateChannels(uid);
+                	ArrayList<String> channels = csc.viewPrivateChannelNames(uid);
                     if (channels != null) {
-                        System.out.println("Private channels are:");
+                        System.out.println("Private channels are:\n");
 
-                        for (Channel c : channels) {
-                            System.out.println(c.getName());
+//                        for (Channel c : channels) {
+//                            System.out.println(c.getName());
+//                        }
+                        for (String c : channels) {
+                        	System.out.println(c);
                         }
                     }
                     else {
                         System.out.println("View Private channels failed.");
                     }
                 }
-
+                
+                // VIEW INVITED CHANNELS (NEEDS TESTED)
                 else if (in.length == 1 && in[0].equals("/viewInvitedChannels")) {
                     ArrayList<Channel> channels = csc.viewInvitedChannels(uid);
                     if (channels != null) {
-                        System.out.println("Invited channels are:");
+                        System.out.println("Invited channels are:\n");
 
                         for (Channel c : channels) {
                             System.out.println(c.getName());
@@ -375,7 +386,7 @@ public class Client
                         System.out.println("View invited channels failed.");
                     }
                 }
-
+                // TOGGLE CHANNEL VISIBILITY (NEEDS FIXED)
                 else if (in.length == 2 && in[0].equals("/toggleChannelVisibility")) {
                     if (csc.toggleChannelVisibility(in[1], uid)) {
                         System.out.println(in[1] + " visibility toggled.");
@@ -448,7 +459,7 @@ public class Client
                         System.out.println("View blocked users failed.");
                     }
                 }
-
+                // SET PUBLIC NAME (NEEDS TESTED: Is this any different than setUsername?)
                 else if (in.length == 2 && in[0].equals("/setPublicName")) {
                     if (csc.setPublicName(uid, in[1])) {
                         System.out.println("Public name has been set to " + in[1] + ".");
@@ -457,7 +468,7 @@ public class Client
                         System.out.println("Set public name failed.");
                     }
                 }
-
+                // ACCEPT INVITE TO CHANNEL (NEEDS TESTED)
                 else if (in.length == 2 && in[0].equals("/acceptInviteToChannel")) {
                     if (csc.acceptInviteToChannel(uid, in[1])) {
                         System.out.println("Invite accepted to " + in[1] + ".");
@@ -466,7 +477,7 @@ public class Client
                         System.out.println("Accept invite to channel failed.");
                     }
                 }
-
+                // DECLINE INVITE TO CHANNEL (NEEDS TESTED)
                 else if (in.length == 2 && in[0].equals("/declineInviteToChannel")) {
                     if (csc.declineInviteToChannel(uid, in[1])) {
                         System.out.println("Invite declined to " + in[1] + ".");
@@ -475,7 +486,7 @@ public class Client
                         System.out.println("Decline invite to channel failed.");
                     }
                 }
-
+                // FAILED COMMAND
                 else {
                     System.out.println("Command is invalid, misspelled, or has the wrong number of arguments.");
                 }
