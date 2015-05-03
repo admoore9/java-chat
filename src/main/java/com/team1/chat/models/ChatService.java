@@ -278,6 +278,14 @@ public class ChatService implements ChatServiceInterface
     public boolean createChannel(String cname, String aid)
     {
         if (this.getDatabaseSupportInstance().getChannelByName(cname) == null) {
+        	if (cname==null || cname.isEmpty()){
+        		System.out.println("A name was not provided for the new channel.");
+        		return false;
+        	}
+        	if (cname.length()>10){
+        		System.out.println("A channel name may be no longer than 10 characters.");
+        		return false;
+        	}
             Channel c = new Channel(cname, aid);
             User u = this.getDatabaseSupportInstance().getUserById(aid);
             if (u==null){

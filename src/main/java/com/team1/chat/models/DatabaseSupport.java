@@ -431,7 +431,7 @@ public class DatabaseSupport implements DatabaseSupportInterface
     						"WHERE name='"+c.getName()+"'";
     	}
     	else {statement = "INSERT INTO Channel " +
-	   			"VALUES('"+c.getName()+"','"+isPublic+"','"+c.getAdminId()+"','"+wList+"+','"+cList+"')";
+	   			"VALUES('"+c.getName()+"','"+isPublic+"','"+c.getAdminId()+"','"+wList+"','"+cList+"')";
     	}
         return setData(statement);
     }
