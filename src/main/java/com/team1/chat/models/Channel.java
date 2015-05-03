@@ -109,6 +109,7 @@ public class Channel implements ChannelInterface
             {
                 if (currentUsers.get(i).getId().equals(u.getId()))
                 {
+                	System.out.println("User already in this channel.");
                     return false;
                 }
             }
