@@ -22,8 +22,6 @@ public class User implements UserInterface
 
 	/**
 	 * Constructor
-	 * @param username user username
-	 * @param password user password
 	 */
 	public User()
 	{
@@ -35,6 +33,12 @@ public class User implements UserInterface
         this.blocked = new ArrayList<User>();
         this.publicName = "";
 	}
+    /**
+     * Constructor
+     * @param id user id
+     * @param username user username
+     * @param password user password
+     */
 	public User(String id, String username, String password){
 		this.username=username;
 		this.password=password;
@@ -120,6 +124,38 @@ public class User implements UserInterface
     public String getPassword()
     {
     	return password;
+    }
+
+    /**
+     *  Set the currentChannel of a User
+     */
+    public boolean setCurrentChannel(String uid, String cname){
+        if(this.getId().equals(uid)) {
+            this.currentChannel = cname;
+            return true;
+        }
+        else
+            return false;
+    }
+
+    /**
+     * Get a User's current channel
+     * If no channel set, set to default and return.
+     */
+    public String getCurrentChannel(String uid){
+        if(this.getId().equals(uid) ){
+            if(this.currentChannel != null) {
+                return this.currentChannel;
+            }
+            else{
+                // Shouldn't happen, should be set to default on login.
+                System.out.println("Logged-in user does not have default channel set.");
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
     }
 
     // Iteration 2

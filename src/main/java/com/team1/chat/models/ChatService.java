@@ -208,9 +208,21 @@ public class ChatService implements ChatServiceInterface
         if (ch==null){
         	return false;
         }
+
         User u = this.getDatabaseSupportInstance().getUserById(uid);
         if (u==null){
         	return false;
+        }
+        else{
+            //TODO - edge case tests
+            boolean flag = false;
+            flag = u.setCurrentChannel(uid, cname);
+            if(!flag)
+                System.out.println("Error setting channel in joinChannel method.");
+
+            flag = ch.whiteListUser(uid, u);
+            if(!flag)
+                System.out.println("Error whitelisting user during join channel.");
         }
         
         if ((ch != null && u != null) && ch.addChannelUser(u)) {

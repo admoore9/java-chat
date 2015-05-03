@@ -1,15 +1,19 @@
 package com.team1.chat.models;
 
+import java.lang.reflect.Array;
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /*
     Class to implement the server-side functionality and main method for a chat service
  */
 public class Server
 {
-    private ArrayList<ClientThread> clients;
+    private DatabaseSupport dbs;
+    private HashMap<String, ArrayList<ClientThread>> channelRosters;
+    //private ArrayList<ClientThread> clients;
     private int port;
     private int numClients = 0;
     private boolean running;
@@ -20,7 +24,9 @@ public class Server
     public Server(int port)
     {
         this.port = port;
-        clients = new ArrayList<ClientThread>();
+        dbs = new DatabaseSupport();
+        channelRosters = new HashMap<String, ArrayList<ClientThread>>();
+        //clients = new ArrayList<ClientThread>();
     }
 
     /*
@@ -46,8 +52,8 @@ public class Server
 
                 // add thread to master-list and send them to initialize.
                 ClientThread ct = new ClientThread(socket);
-                clients.add(ct);
-                System.out.println("Client #" + numClients + " has been connected.");
+                addToChannelRoster(ct);
+                System.out.println("Client #" + numClients + ": " + ct.username + " has been connected.");
                 ct.start();
             }
 
@@ -56,13 +62,15 @@ public class Server
                 serverSocket.close();
 
                 // loop array and terminate each thread
-                for (ClientThread cls : clients) {
-                    try {
-                        cls.socketInput.close();
-                        cls.socketOutput.close();
-                        cls.socket.close();
-                    } catch (IOException e) {
-                        System.out.println("Error during shutdown: " + e);
+                for (ArrayList<ClientThread> mapValueArrs : channelRosters.values()) {
+                    for (ClientThread cls : mapValueArrs) {
+                        try {
+                            cls.socketInput.close();
+                            cls.socketOutput.close();
+                            cls.socket.close();
+                        } catch (IOException e) {
+                            System.out.println("Error during shutdown: " + e);
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -71,36 +79,63 @@ public class Server
         } catch (IOException e) {
             System.out.println("Critical error creating new server socket: " + e);
         }
+        // remove all key-value pairs from the channelRoster.
+        channelRosters.clear();
+    }
+    /*
+     * On login or channel change, method is called to check for existence of
+     * channel key, if not there create a new key->ArrayList pair.
+     * Then place thread object into the proper channel.
+     */
+    public void addToChannelRoster(ClientThread ct){
+
+        if (!channelRosters.containsKey(ct.channel)) {
+            channelRosters.put(ct.channel, new ArrayList<ClientThread>());
+        }
+        channelRosters.get(ct.channel).add(ct);
+
     }
 
-    public synchronized void broadcast(String message)
-    {
-        // print to server
-        System.out.println(message);
+    public synchronized void changeChannel(ClientThread ct, String newChannel){
 
-        // print to clients
+        int index = channelRosters.get(ct.channel).indexOf(ct);
+        if(index == -1){
+            System.out.println("Change channel failed. Client thread not found in channel roster.");
+            return;
+        }
+        ClientThread mover = channelRosters.get(ct.channel).remove(index);
+        mover.channel = newChannel;
+
+        addToChannelRoster(mover);
+    }
+
+
+    public synchronized void broadcast(String message, String channel)
+    {
+        // Get the roster for the channel
+        ArrayList<ClientThread> clients = channelRosters.get(channel);
+
+        // print to server console
+        System.out.println("Channel: " + channel + " - " + message);
+
+        // print to clients, loop backwards so if we have to remove, we don't go OoB or skip a user.
         for (int i = clients.size()-1; i >= 0; --i) {
 
             // if sendMessage for a client fails, disconnect them from channel.
             if (!clients.get(i).sendMessage(message)) {
 
                 System.out.println("Client: " + clients.get(i).username + " disconnected. Removing from active.");
-                removeFromServerList(i);
+                removeFromServerList(channel, i);
             }
         }
     }
 
-    public synchronized void removeFromServerList(int indexToRemove)
+    /*
+     * Removes a ClientThread from the channelRoster
+     */
+    public synchronized void removeFromServerList(String key, int index)
     {
-        int i = 0;
-        for (ClientThread s : clients) {
-            //i++;
-            if (s.thread_ID == indexToRemove) {
-                clients.remove(i);
-                return;
-            }
-            i++;
-        }
+       channelRosters.get(key).remove(index);
     }
 
     /*
@@ -129,6 +164,7 @@ public class Server
         int thread_ID;
         int numClients;
         String username;
+        String channel;
         String message;
 
         /* Construct a new client thread */
@@ -136,6 +172,8 @@ public class Server
         {
             thread_ID = numClients += 1;
             this.socket = socket;
+            // On thread creation, add them to testCH1, a.k.a., the lobby.
+            this.channel = "testCH1";
 
             // create data streams
             System.out.println("Thread setting up Object I/O streams.");
@@ -170,12 +208,36 @@ public class Server
                 } catch (ClassNotFoundException c) {
                     break;
                 }
+                // *** Check for passed command before broadcasting ***
+                // user sent logout message. Set flag, and break loop. Perform logout.
+                if(message.contains("/logout")){
+                    running = false;
+                    continue;
+                }
+                // user changed screen name. set this.username to  username.
+                else if(message.contains("/changeName")){
 
-                // renamed from sendMessage, less ambiguity for server/client methods.
-                // print to server
-                broadcast(username + ": " + message);
+                    String[] input = message.split(" ");
+                    if(!input[1].isEmpty())
+                        username = input[1];
+
+                }
+                // user wants to switch channels.
+                else if(message.contains("/joinChannel")){
+                    String[] input = message.split(" ");
+                    String newChannel = input[1];
+                    changeChannel(this, newChannel);
+                }
+                else {
+                    // renamed from sendMessage, less ambiguity for server/client methods.
+                    // print to server
+                    broadcast(username + ": " + message, channel);
+                }
             }
-            removeFromServerList(thread_ID);
+            // user passed "/logout" message. Remove from channel roster, close connections.
+            System.out.println("User: " + username + "is logging out.");
+            int index = channelRosters.get(channel).indexOf(this);
+            removeFromServerList(channel, index);
             close();
         }
 
@@ -201,6 +263,7 @@ public class Server
             } catch (Exception ece) {
                 System.out.println("Closing server socket threw: " + ece);
             }
+            System.out.println("User " + username + " has been disconnected.");
         }
 
         public boolean sendMessage(String message)

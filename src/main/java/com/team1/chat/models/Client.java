@@ -220,6 +220,7 @@ public class Client
                 }
                 // LOGOUT 
                 else if (in.length == 1 && in[0].equals("/logout")) {
+                    client.sendMessage("/logout");
                     client.disconnect();
                     System.out.println("Logout successful!");
                     break;
@@ -228,10 +229,10 @@ public class Client
                 else if (in.length == 2 && in[0].equals("/setUsername")) {
                     if (csc.setUsername(uid, in[1])) {
                         username = in[1];
+                        client.sendMessage("/changeName " + username);
                         System.out.println("Username has been set to " + username + ".");
                     }
-                    else
-                    {
+                    else {
                     	System.out.println("Username change failed.");
                     }
                 }
@@ -261,6 +262,7 @@ public class Client
                 // JOIN CHANNEL
                 else if (in.length == 2 && in[0].equals("/joinChannel")) {
                     if (csc.joinChannel(in[1], uid)) {
+                        client.sendMessage("/joinChannel " + in[1]);
                         System.out.println("You have successfully joined " + in[1] + ".");
                     }
                     else {
