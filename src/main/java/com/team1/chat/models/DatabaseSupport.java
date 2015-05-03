@@ -417,7 +417,7 @@ public class DatabaseSupport implements DatabaseSupportInterface
 //    	}
 //    	cList = cList + "0\n";
     	String cList = userListToString(c.getCurrentUsers());
-    	
+    	//System.out.println("CurrentList that is going to be put in the database:"+cList);
     	int val = c.isPublic() ? 0 : 1;
     	String isPublic = String.valueOf(val);
     	Channel thisChannel = getChannelByName(c.getName());

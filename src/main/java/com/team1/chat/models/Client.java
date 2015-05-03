@@ -263,8 +263,17 @@ public class Client
                 }
                 // JOIN CHANNEL
                 else if (in.length == 2 && in[0].equals("/joinChannel")) {
+                	//TODO: I think that this whole leaveChannel and then joinChannel thing should probably
+                	//      be taken care of inside csc's join channel. It seems like its giving an extension
+                	//		to the UI.
+                	if (!channel.isEmpty()){
+                		csc.leaveChannel(channel, uid);
+                		channel="";
+                    	client.sendMessage("/joinChannel "+channel);
+                        System.out.println("You have successfully left " + in[1] + ".");
+                	}
                     if (csc.joinChannel(in[1], uid)) {
-                        csc.leaveChannel(channel, uid);
+                    	channel=in[1];
                         client.sendMessage("/joinChannel " + in[1]);
                         System.out.println("You have successfully joined " + in[1] + ".");
                     }
@@ -272,16 +281,23 @@ public class Client
                         System.out.println("Join channel failed.");
                     }
                 }
-                // LEAVE CHANNEL (NEEDS TESTED)
+                // LEAVE CHANNEL
                 else if (in.length == 2 && in[0].equals("/leaveChannel")) {
-                    if (csc.leaveChannel(in[1], uid)) {
-                        System.out.println("You have successfully left " + in[1] + ".");
-                    }
-                    else {
-                        System.out.println("Leave channel failed.");
-                    }
+                	if (!channel.isEmpty()){
+	                    if (csc.leaveChannel(in[1], uid)) {
+	                    	channel = "";
+	                    	client.sendMessage("/joinChannel "+channel);
+	                        System.out.println("You have successfully left " + in[1] + ".");
+	                    }
+	                    else {
+	                        System.out.println("Leave channel failed.");
+	                    }
+                	}
+                	else {
+                		System.out.println("You're not currently in a channel.");
+                	}
                 }
-                // CREATE CHANNEL (NEEDS TESTED)
+                // CREATE CHANNEL
                 else if (in.length == 2 && in[0].equals("/createChannel")) {
                     if (csc.createChannel(in[1], uid)) {
                         System.out.println("Channel " + in[1] + " has been created.");
@@ -290,7 +306,7 @@ public class Client
                         System.out.println("Create channel failed.");
                     }
                 }
-                // DELETE CHANNEL (NEEDS TESTED)
+                // DELETE CHANNEL
                 else if (in.length == 2 && in[0].equals("/deleteChannel")) {
                     if (csc.deleteChannel(in[1], uid)) {
                         System.out.println("Channel " + in[1] + " has been deleted.");

@@ -185,9 +185,9 @@ public class ChatService implements ChatServiceInterface
         	return false;
         }
         if ((ch != null && u != null) && ch.removeChannelUser(u)) {
-        	System.out.println("Attempting to remove user from channel.");
+        	//System.out.println("Attempting to remove user from channel.");
             this.getDatabaseSupportInstance().putChannel(ch);
-            System.out.println("Successfully left channel.");
+            //System.out.println("Successfully left channel.");
             return true;
         }
         System.out.println("Leave channel failed.");
@@ -217,12 +217,16 @@ public class ChatService implements ChatServiceInterface
             //TODO - added check if on whitelist, then set current channel.
             boolean flag;
             flag = ch.isWhiteListed(u);
-            if(!flag)
+            if(!flag){
                 System.out.println("User " + u.getUsername() +" not on " + cname + " whitelist.");
+                return false;
+            }
 
             flag = u.setCurrentChannel(uid, cname);
-            if(!flag)
-                System.out.println("Error setting channel in joinChannel method.");
+            if(!flag){
+                System.out.println("Error trying to setCurrentChannel in joinChannel method.");
+                return false;
+            }
         }
         
         if ((ch != null && u != null) && ch.addChannelUser(u)) {
@@ -230,10 +234,11 @@ public class ChatService implements ChatServiceInterface
         		return true;
         	}
         	else{
-            	//System.out.println("Failed to update Channel's contents in database.");
+            	System.out.println("Failed to update Channel's contents in database.");
+            	return false;
             }
         }
-        return false;
+        else return false;
     }
 
     /**
