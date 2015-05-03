@@ -130,7 +130,7 @@ public class User implements UserInterface
      *  Set the currentChannel of a User
      */
     public boolean setCurrentChannel(String uid, String cname){
-        if(this.getId().equals(uid)) {
+        if(this.uid!=null && this.getId().equals(uid)) {
             this.currentChannel = cname;
             return true;
         }
@@ -143,7 +143,7 @@ public class User implements UserInterface
      * If no channel set, set to default and return.
      */
     public String getCurrentChannel(String uid){
-        if(this.getId().equals(uid) ){
+        if(this.uid!=null && this.getId().equals(uid) ){
             if(this.currentChannel != null) {
                 return this.currentChannel;
             }
@@ -184,7 +184,7 @@ public class User implements UserInterface
         int i;
         String deletedChannel = c.getName();
 
-        if (currentChannel.equals(deletedChannel))
+        if (currentChannel != null && currentChannel.equals(deletedChannel))
         {
             currentChannel = null;
         }

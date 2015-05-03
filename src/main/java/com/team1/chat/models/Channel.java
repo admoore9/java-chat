@@ -152,7 +152,7 @@ public class Channel implements ChannelInterface
     {
         if (admin.equals(aid))
         {
-            return whiteList;
+            return currentUsers;
         }
         return null;
     }

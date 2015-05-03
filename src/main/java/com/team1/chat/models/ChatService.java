@@ -321,16 +321,30 @@ public class ChatService implements ChatServiceInterface
         if (c != null) {
             users = c.deleteChannel(aid);
             if (users != null) {
-                // the user is confirmed to be the admin and we have a list of users in the channel
+                // the user is confirmed to be the admin and we have a list of users in the channel.
                 for (i = 0; i < users.size(); i++) {
                     user = this.getDatabaseSupportInstance().getUserById(users.get(i).getId());
                     user.deleteChannel(c);
                     this.getDatabaseSupportInstance().putUser(user);
                 }
-                this.getDatabaseSupportInstance().deleteChannel(c.getName());
+                if (this.getDatabaseSupportInstance().deleteChannel(c.getName())){
+                	System.out.println("Channel removed from database.");
+                	return true;
+                }
+                else {
+                	System.out.println("Unable to remove channel from database.");
+                	return false;
+                }
+            }
+            else {
+            	System.out.println("This user does not have sufficient privileges to delete the channel.");
+            	return false;
             }
         }
-        return false;
+        else{
+        	System.out.println("Channel could not be found");
+        	return false;
+        }
     }
 
     /**
