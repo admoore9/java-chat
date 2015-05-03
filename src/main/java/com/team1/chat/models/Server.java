@@ -1,6 +1,6 @@
 package com.team1.chat.models;
 
-import java.lang.reflect.Array;
+
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -13,7 +13,6 @@ public class Server
 {
     private DatabaseSupport dbs;
     private HashMap<String, ArrayList<ClientThread>> channelRosters;
-    //private ArrayList<ClientThread> clients;
     private int port;
     private int numClients = 0;
     private boolean running;
@@ -26,7 +25,6 @@ public class Server
         this.port = port;
         dbs = new DatabaseSupport();
         channelRosters = new HashMap<String, ArrayList<ClientThread>>();
-        //clients = new ArrayList<ClientThread>();
     }
 
     /*
@@ -53,7 +51,7 @@ public class Server
                 // add thread to master-list and send them to initialize.
                 ClientThread ct = new ClientThread(socket);
                 addToChannelRoster(ct);
-                System.out.println("Client #" + numClients + ": " + ct.username + " has been connected.");
+                System.out.println("Client #" + (numClients++) + ": " + ct.username + " has been connected.");
                 ct.start();
             }
 
@@ -61,9 +59,9 @@ public class Server
             try {
                 serverSocket.close();
 
-                // loop array and terminate each thread
-                for (ArrayList<ClientThread> mapValueArrs : channelRosters.values()) {
-                    for (ClientThread cls : mapValueArrs) {
+                // iterate map and terminate each thread
+                for (ArrayList<ClientThread> mapValueArr : channelRosters.values()) {
+                    for (ClientThread cls : mapValueArr) {
                         try {
                             cls.socketInput.close();
                             cls.socketOutput.close();
@@ -87,7 +85,7 @@ public class Server
      * channel key, if not there create a new key->ArrayList pair.
      * Then place thread object into the proper channel.
      */
-    public void addToChannelRoster(ClientThread ct){
+    public synchronized void addToChannelRoster(ClientThread ct){
 
         if (!channelRosters.containsKey(ct.channel)) {
             channelRosters.put(ct.channel, new ArrayList<ClientThread>());
@@ -96,6 +94,10 @@ public class Server
 
     }
 
+    /*
+     * when user sends message containing "/joinChannel <channel>" message is intercepted by
+     *  ClientThread run() and triggers channel change
+     */
     public synchronized void changeChannel(ClientThread ct, String newChannel){
 
         int index = channelRosters.get(ct.channel).indexOf(ct);
@@ -109,7 +111,11 @@ public class Server
         addToChannelRoster(mover);
     }
 
-
+    /*
+     * Use channel key to retrieve roster for channel X,
+     * Loop key-value arraylist and broadcast message from end of list to beginning
+     * If message send fails, disconnect the user that failed.
+     */
     public synchronized void broadcast(String message, String channel)
     {
         // Get the roster for the channel
@@ -133,8 +139,8 @@ public class Server
     /*
      * Removes a ClientThread from the channelRoster
      */
-    public synchronized void removeFromServerList(String key, int index)
-    {
+    public synchronized void removeFromServerList(String key, int index) {
+
        channelRosters.get(key).remove(index);
     }
 
@@ -212,7 +218,6 @@ public class Server
                 // user sent logout message. Set flag, and break loop. Perform logout.
                 if(message.contains("/logout")){
                     running = false;
-                    continue;
                 }
                 // user changed screen name. set this.username to  username.
                 else if(message.contains("/changeName")){
@@ -220,7 +225,6 @@ public class Server
                     String[] input = message.split(" ");
                     if(!input[1].isEmpty())
                         username = input[1];
-
                 }
                 // user wants to switch channels.
                 else if(message.contains("/joinChannel")){
@@ -235,7 +239,7 @@ public class Server
                 }
             }
             // user passed "/logout" message. Remove from channel roster, close connections.
-            System.out.println("User: " + username + "is logging out.");
+            System.out.println("User " + username + " is logging out.");
             int index = channelRosters.get(channel).indexOf(this);
             removeFromServerList(channel, index);
             close();

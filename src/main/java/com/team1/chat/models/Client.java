@@ -130,6 +130,7 @@ public class Client
         String[] in;
         String uid = "";
         String username = "";
+        String channel = "";
 
 
         System.out.println("\nTo login enter: login <username> <password>");
@@ -148,6 +149,7 @@ public class Client
                 if (in[0].equals("login")) {
                     uid = csc.login(username, password);
                     if (uid != null) {
+                        channel = "testCH1"; // set to defualt channel
                         System.out.println("Login successful");
                         break;
                     }
@@ -199,9 +201,9 @@ public class Client
                     System.out.println("/setPassword <password");
                     System.out.println("/listChannelUsers");
                     System.out.println("/joinChannel <channelName>");
-                    System.out.println("/leaveChannel <channelName");
-                    System.out.println("/createChannel <channelName");
-                    System.out.println("/deleteChannel <channelName");
+                    System.out.println("/leaveChannel <channelName>");
+                    System.out.println("/createChannel <channelName>");
+                    System.out.println("/deleteChannel <channelName>");
                     System.out.println("/inviteUserToChannel <username> <channelName>");
                     System.out.println("/removeUserFromChannel <username> <channelName>");
                     System.out.println("/viewPublicChannels");
@@ -262,6 +264,7 @@ public class Client
                 // JOIN CHANNEL
                 else if (in.length == 2 && in[0].equals("/joinChannel")) {
                     if (csc.joinChannel(in[1], uid)) {
+                        csc.leaveChannel(channel, uid);
                         client.sendMessage("/joinChannel " + in[1]);
                         System.out.println("You have successfully joined " + in[1] + ".");
                     }

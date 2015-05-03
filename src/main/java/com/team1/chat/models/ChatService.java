@@ -214,15 +214,15 @@ public class ChatService implements ChatServiceInterface
         	return false;
         }
         else{
-            //TODO - edge case tests
-            boolean flag = false;
+            //TODO - added check if on whitelist, then set current channel.
+            boolean flag;
+            flag = ch.isWhiteListed(u);
+            if(!flag)
+                System.out.println("User " + u.getUsername() +" not on " + cname + " whitelist.");
+
             flag = u.setCurrentChannel(uid, cname);
             if(!flag)
                 System.out.println("Error setting channel in joinChannel method.");
-
-            flag = ch.whiteListUser(uid, u);
-            if(!flag)
-                System.out.println("Error whitelisting user during join channel.");
         }
         
         if ((ch != null && u != null) && ch.addChannelUser(u)) {
@@ -256,6 +256,7 @@ public class ChatService implements ChatServiceInterface
         	System.out.println("User["+uid+"] does not exist.");
         	return null;
         }
+        // TODO - (ch != null && u != null)
         if ((ch != null && u != null) && ch.isWhiteListed(u)) {
             return ch.listChannelUsers();
         }
@@ -283,6 +284,7 @@ public class ChatService implements ChatServiceInterface
             	return false;
             }
             u.addChannel(c);
+            c.whiteListUser(aid, u);
 
             // update database
             this.getDatabaseSupportInstance().putChannel(c);
