@@ -137,7 +137,8 @@ public class DatabaseSupport implements DatabaseSupportInterface
     	String statement;
     	String fList = userListToString(u.getFriends());
     	String bList = userListToString(u.getBlockedUsers());
-    	
+    	String iList = channelListToString(u.getInvitedChannels());
+    	String pList = channelListToString(u.getPrivateChannels());
     	User thisUser = getUserById(u.getId());
     	
 //    	if (thisUser!=null){
@@ -154,11 +155,13 @@ public class DatabaseSupport implements DatabaseSupportInterface
     						"SET username='"+u.getUsername()+"',"+
     							"password='"+u.getPassword()+"',"+
     							"friendlist='"+fList+"',"+
-    							"blocklist='"+bList+"' "+
+    							"blocklist='"+bList+"',"+
+    							"invitedlist='"+iList+"',"+
+    							"privatelist='"+pList+"' "+
     						"WHERE uid='"+u.getId()+"'";
     	}
     	else {statement = "INSERT INTO User " +
-    					   "VALUES(DEFAULT,'" + u.getUsername()+"','"+u.getPassword()+"','"+fList+"','"+bList+"')";
+    					   "VALUES(DEFAULT,'" + u.getUsername()+"','"+u.getPassword()+"','"+fList+"','"+bList+"','"+iList+"','"+pList+"')";
     	}
         return setData(statement);
     }
@@ -173,26 +176,6 @@ public class DatabaseSupport implements DatabaseSupportInterface
     					   "WHERE u.username = '"+username+ 
     					   "'AND u.password = '"+ password+"'";
     	ArrayList<String> result = getData(statement);
-//    	if (result.size()==1)
-//    	{
-//    		Scanner scanForColumnValues = new Scanner(result.get(0));
-//    		
-//    		//First column: uid
-//    		String uid = scanForColumnValues.nextLine();
-//    		
-//    		//Second column: username
-//    		String uname = scanForColumnValues.nextLine();
-//    		
-//    		//Third column: password
-//    		String pw = scanForColumnValues.nextLine();
-//    		
-//    		User u = new User(uid,uname,pw);
-//    		
-//            //System.out.println("User was successfully retrieved from database.");
-//    		scanForColumnValues.close();
-//    		return u;
-//    	}
-//    	else return null;
 		return parseUserData(result);
     }
 
@@ -207,26 +190,6 @@ public class DatabaseSupport implements DatabaseSupportInterface
 		String statement = "SELECT * " + "FROM User u " + "WHERE u.uid ='"+uid+"'";
 		ArrayList<String> result = getData(statement);
 		
-//    	if (result.size()==1)
-//    	{
-//    		Scanner scanForColumnValues = new Scanner(result.get(0));
-//    		//First column: uid
-//    		String userid = scanForColumnValues.nextLine();
-//
-//    		
-//    		//Second column: username
-//    		String uname = scanForColumnValues.nextLine();
-//
-//    		
-//    		//Third column: password
-//    		String pw = scanForColumnValues.nextLine();
-//
-//    		User u = new User(userid,uname,pw);
-//    		
-//    		scanForColumnValues.close();
-//    		return u;
-//    	}
-//    	else return null;
 		return parseUserData(result);
 	}
 	
@@ -293,6 +256,55 @@ public class DatabaseSupport implements DatabaseSupportInterface
 	        	}
 	        	else {
 	        		//System.out.println("At end of blocklist column.");
+	        		break;
+	        	}
+	        }
+	       
+	        // Sixth column: invitedlist
+	        while (scanForColumnValues.hasNextLine())
+	        {
+	        	String name = scanForColumnValues.nextLine();
+	        	if (name.isEmpty()){
+	        		continue;
+	        	}
+	        	if (!name.equals("0")){
+	        		Channel channel = getChannelByName(name);
+	        		if (channel==null){
+	        			continue;
+	        		}
+	        		if (u.addChannelInvite(channel)){
+	        			
+	        		}
+	        		else {
+	        			System.out.println("Unable to add invite for the channel: "+channel);
+	        		}
+	        	}
+	        	else {
+	        		break;
+	        	}
+	        }
+	        // Seventh column: privatelist
+	        while (scanForColumnValues.hasNextLine())
+	        {
+	        	String name = scanForColumnValues.nextLine();
+	        	if (name.isEmpty()){
+	        		continue;
+	        	}
+	        	if (!name.equals("0")){
+	        		Channel channel = getChannelByName(name);
+	        		if (channel==null){
+	        			continue;
+	        		}
+	        		if (u.addChannelInvite(channel)){
+	        			if (!u.acceptChannelInvite(channel)){
+	        				System.out.println("Unable to accept invitation for channel: "+channel);
+	        			}
+	        		}
+	        		else {
+	        			System.out.println("Unable to add invite for the channel: "+channel);
+	        		}
+	        	}
+	        	else {
 	        		break;
 	        	}
 	        }
@@ -490,10 +502,12 @@ public class DatabaseSupport implements DatabaseSupportInterface
     String channelListToString(ArrayList<Channel> list)
     {
     	String cListStr = "";
+    	ArrayList<Channel> tempList = list;
     	for (int i = 0; i < list.size(); i++)
     	{
-    		cListStr = cListStr + list.get(i).getName() + "\n";
+    		cListStr = cListStr + tempList.get(i).getName() + "\n";
     	}
+    	cListStr = cListStr + "0\n";
     	return cListStr;
     }
     /*

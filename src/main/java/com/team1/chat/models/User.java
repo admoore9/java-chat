@@ -71,6 +71,21 @@ public class User implements UserInterface
     	return uid;
     }
     
+    /**
+     * Returns the private channels that this User has a pending invite to.
+     * @return
+     */
+    public ArrayList<Channel> getInvitedChannels(){
+    	return this.invitedChannels;
+    }
+    /**
+     * Returns the private channels that this User has accepted an invite for.
+     * @return
+     */
+    public ArrayList<Channel> getPrivateChannels(){
+    	return this.privateChannels;
+    }
+    
     public boolean sendMessage(UserInterface u, String msgText)
     {
         return false;
