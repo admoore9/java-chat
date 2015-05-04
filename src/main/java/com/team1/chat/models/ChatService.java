@@ -342,7 +342,9 @@ public class ChatService implements ChatServiceInterface
         u = this.getDatabaseSupportInstance().getUserByName(uname);
 
         if (c != null && u != null) {
+            // TODO - shouldn't be whitelising until user accepts?
             if (c.whiteListUser(aid, u) && u.addChannelInvite(c)) {
+
                 this.getDatabaseSupportInstance().putChannel(c);
                 this.getDatabaseSupportInstance().putUser(u);
 

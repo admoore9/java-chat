@@ -139,9 +139,11 @@ public class Server
     /*
      * Removes a ClientThread from the channelRoster
      */
-    public synchronized void removeFromServerList(String key, int index) {
+    public synchronized ClientThread removeFromServerList(String key, int index) {
 
-       channelRosters.get(key).remove(index);
+        ClientThread ct;
+        ct = channelRosters.get(key).remove(index);
+        return ct;
     }
 
     /*
@@ -232,6 +234,17 @@ public class Server
                     String newChannel = input[1];
                     changeChannel(this, newChannel);
                 }
+                // admin method
+                else if(message.contains("/removeUserFromChannel")){
+                    String[] input = message.split(" ");
+
+                    ClientThread mover = removeFromServerList(input[2], channelRosters.get(input[2]).indexOf(input[1]));
+                    mover.channel = "testCH1";
+                    addToChannelRoster(mover);
+                    mover.sendMessage("/BOOTED" + input[1]);
+                    mover.sendMessage("You have been removed from " + input[2] + " by Admin. You are now in Lobby.");
+
+                }
                 else {
                     // renamed from sendMessage, less ambiguity for server/client methods.
                     // print to server
@@ -247,6 +260,7 @@ public class Server
 
         public void close()
         {
+            numClients--;
 
             try {
                 if (socketOutput != null)

@@ -13,6 +13,8 @@ public class Client
     private String username;
     private String userID;
     private String serverName;
+    protected String channel;
+    protected boolean channelChanged;
     private int serverPort;
 
     private static ChatServiceController csc = new ChatServiceController();
@@ -26,6 +28,7 @@ public class Client
         this.serverPort = serverPort;
         this.username = username;
         this.userID = userID;
+        this.channel = "testCH1";
     }
 
     /*
@@ -106,6 +109,19 @@ public class Client
         }
     }
 
+    protected void setClientChannel(String newChannel){
+        this.channelChanged = true;
+        this.channel = newChannel;
+    }
+
+    protected String getClientChannel(){
+        return this.channel;
+    }
+
+    protected void resetChangeChannelFlag(){
+        this.channelChanged = false;
+    }
+
     /*
         Make sure a null CSC object can exist.
         Used to pull database info at user/client request.
@@ -149,7 +165,6 @@ public class Client
                 if (in[0].equals("login")) {
                     uid = csc.login(username, password);
                     if (uid != null) {
-                        channel = "testCH1"; // set to defualt channel
                         System.out.println("Login successful");
                         break;
                     }
@@ -183,6 +198,7 @@ public class Client
         // create new client
         //Client client = new Client("104.236.206.121", 4444, username, uid);
         Client client = new Client("localhost", 4444, username, uid);
+        channel = client.getClientChannel(); // set to default channel
         
         // test we can connect
         if (!client.start())
@@ -311,6 +327,7 @@ public class Client
 
                 else if (in.length == 3 && in[0].equals("/removeUserFromChannel")) {
                     if (csc.removeUserFromChannel(in[2], uid, in[1])) {
+                        client.sendMessage("/removeUserFromChannel " + in[1] + " " + in[2] );
                         System.out.println(in[1] + " has been removed from " + in[2] + ".");
                     }
                     else {
@@ -465,6 +482,10 @@ public class Client
                 }
             }
             else if (message.length() > 0) {
+                if(client.channelChanged) {
+                    channel = client.getClientChannel();
+                    client.resetChangeChannelFlag();
+                }
                 client.sendMessage(message);
             }
         }
@@ -476,15 +497,21 @@ public class Client
 
     class ClientListener extends Thread
     {
+
         public void run()
         {
             while (true) {
                 try {
                     String input = (String) socketInput.readObject();
                     // if console mode print the message and add back the prompt
-
-                    System.out.println(input);
+                    if(input.contains("/BOOTED")){
+                        setClientChannel("testCH1");
+                    }
+                    else {
+                        System.out.println(input);
+                    }
                     System.out.print("> ");
+
 
 
                 } catch (IOException e) {

@@ -234,7 +234,7 @@ public class User implements UserInterface
             }
         }
 
-        invitedChannels.add(c);
+        this.invitedChannels.add(c);
 
         return true;
     }
@@ -249,10 +249,17 @@ public class User implements UserInterface
     {
         int i;
 
-        if (currentChannel.equals(c.getName()))
-        {
-            currentChannel = null;
+        if (null != currentChannel) {
+
+            if( currentChannel.equals(c.getName())) {
+
+                currentChannel = null;
+            }
         }
+        else{
+            currentChannel = "";
+        }
+
 
         for (i = 0; i < invitedChannels.size(); i++)
         {
@@ -447,11 +454,9 @@ public class User implements UserInterface
                 {
                     privateChannels.add(c);
                 }
-
                 return true;
             }
         }
-
         return false;
     }
 
