@@ -137,8 +137,8 @@ public class DatabaseSupport implements DatabaseSupportInterface
     	String statement;
     	String fList = userListToString(u.getFriends());
     	String bList = userListToString(u.getBlockedUsers());
-    	String iList = channelListToString(u.getInvitedChannels());
-    	String pList = channelListToString(u.getPrivateChannels());
+    	String iList = stringListToString(u.getInvitedChannels());
+    	String pList = stringListToString(u.getPrivateChannels());
     	User thisUser = getUserById(u.getId());
     	
 //    	if (thisUser!=null){
@@ -268,15 +268,11 @@ public class DatabaseSupport implements DatabaseSupportInterface
 	        		continue;
 	        	}
 	        	if (!name.equals("0")){
-	        		Channel channel = getChannelByName(name);
-	        		if (channel==null){
-	        			continue;
-	        		}
-	        		if (u.addChannelInvite(channel)){
+	        		if (u.addChannelInvite(name)){
 	        			
 	        		}
 	        		else {
-	        			System.out.println("Unable to add invite for the channel: "+channel);
+	        			System.out.println("Unable to add invite for the channel: "+name);
 	        		}
 	        	}
 	        	else {
@@ -290,18 +286,15 @@ public class DatabaseSupport implements DatabaseSupportInterface
 	        	if (name.isEmpty()){
 	        		continue;
 	        	}
-	        	if (!name.equals("0")){
-	        		Channel channel = getChannelByName(name);
-	        		if (channel==null){
-	        			continue;
-	        		}
-	        		if (u.addChannelInvite(channel)){
-	        			if (!u.acceptChannelInvite(channel)){
-	        				System.out.println("Unable to accept invitation for channel: "+channel);
+	        	if (!name.equals("0"))
+	        	{
+	        		if (u.addChannelInvite(name)){
+	        			if (!u.acceptChannelInvite(name)){
+	        				System.out.println("Unable to accept invitation for channel: "+name);
 	        			}
 	        		}
 	        		else {
-	        			System.out.println("Unable to add invite for the channel: "+channel);
+	        			System.out.println("Unable to add invite for the channel: "+name);
 	        		}
 	        	}
 	        	else {
@@ -443,24 +436,25 @@ public class DatabaseSupport implements DatabaseSupportInterface
 				   "FROM User u " +
 				   "WHERE u.username = '"+uname+"'";
 		ArrayList<String> result = getData(statement);
-		if (result.size() == 1) {
-			Scanner scanForColumnValues = new Scanner(result.get(0));
-
-			// First column: uid
-			String uid = scanForColumnValues.nextLine();
-
-			// Second column: username
-			String username = scanForColumnValues.nextLine();
-
-			// Third column: password
-			String pw = scanForColumnValues.nextLine();
-
-			User u = new User(uid, username, pw);
-
-			scanForColumnValues.close();
-			return u;
-		} else
-			return null;
+//		if (result.size() == 1) {
+//			Scanner scanForColumnValues = new Scanner(result.get(0));
+//
+//			// First column: uid
+//			String uid = scanForColumnValues.nextLine();
+//
+//			// Second column: username
+//			String username = scanForColumnValues.nextLine();
+//
+//			// Third column: password
+//			String pw = scanForColumnValues.nextLine();
+//
+//			User u = new User(uid, username, pw);
+//
+//			scanForColumnValues.close();
+//			return u;
+//		} else
+//			return null;
+		return parseUserData(result);
     }
 
     public boolean deleteChannel(String name)
@@ -499,16 +493,16 @@ public class DatabaseSupport implements DatabaseSupportInterface
     /*
      * Helper method for converting a list of Channels into a parse-able string to be stored in database. 
      */
-    String channelListToString(ArrayList<Channel> list)
+    String stringListToString(ArrayList<String> list)
     {
-    	String cListStr = "";
-    	ArrayList<Channel> tempList = list;
+    	String listString = "";
+    	ArrayList<String> tempList = list;
     	for (int i = 0; i < list.size(); i++)
     	{
-    		cListStr = cListStr + tempList.get(i).getName() + "\n";
+    		listString = listString + tempList.get(i) + "\n";
     	}
-    	cListStr = cListStr + "0\n";
-    	return cListStr;
+    	listString = listString + "0\n";
+    	return listString;
     }
     /*
      * Helper method for converting a parse-able string taken from database into a list of channels.
