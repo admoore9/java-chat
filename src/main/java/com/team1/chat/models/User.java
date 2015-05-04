@@ -14,8 +14,8 @@ public class User implements UserInterface
 	private String password;
     private String publicName;
     private String currentChannel;
-    private ArrayList<Channel> invitedChannels;
-    private ArrayList<Channel> privateChannels;
+    public ArrayList<Channel> invitedChannels;
+    public ArrayList<Channel> privateChannels;
     private ArrayList<Channel> publicChannels;
     private ArrayList<User> friends;
     private ArrayList<User> blocked;
@@ -69,6 +69,21 @@ public class User implements UserInterface
     public String getId()
     {
     	return uid;
+    }
+    
+    /**
+     * Returns the private channels that this User has a pending invite to.
+     * @return
+     */
+    public ArrayList<Channel> getInvitedChannels(){
+    	return this.invitedChannels;
+    }
+    /**
+     * Returns the private channels that this User has accepted an invite for.
+     * @return
+     */
+    public ArrayList<Channel> getPrivateChannels(){
+    	return this.privateChannels;
     }
     
     public boolean sendMessage(UserInterface u, String msgText)

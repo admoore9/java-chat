@@ -137,7 +137,8 @@ public class DatabaseSupport implements DatabaseSupportInterface
     	String statement;
     	String fList = userListToString(u.getFriends());
     	String bList = userListToString(u.getBlockedUsers());
-    	
+    	String iList = stringListToString(u.getInvitedChannels());
+    	String pList = stringListToString(u.getPrivateChannels());
     	User thisUser = getUserById(u.getId());
     	
 //    	if (thisUser!=null){
@@ -154,11 +155,13 @@ public class DatabaseSupport implements DatabaseSupportInterface
     						"SET username='"+u.getUsername()+"',"+
     							"password='"+u.getPassword()+"',"+
     							"friendlist='"+fList+"',"+
-    							"blocklist='"+bList+"' "+
+    							"blocklist='"+bList+"',"+
+    							"invitedlist='"+iList+"',"+
+    							"privatelist='"+pList+"' "+
     						"WHERE uid='"+u.getId()+"'";
     	}
     	else {statement = "INSERT INTO User " +
-    					   "VALUES(DEFAULT,'" + u.getUsername()+"','"+u.getPassword()+"','"+fList+"','"+bList+"')";
+    					   "VALUES(DEFAULT,'" + u.getUsername()+"','"+u.getPassword()+"','"+fList+"','"+bList+"','"+iList+"','"+pList+"')";
     	}
         return setData(statement);
     }
@@ -173,26 +176,6 @@ public class DatabaseSupport implements DatabaseSupportInterface
     					   "WHERE u.username = '"+username+ 
     					   "'AND u.password = '"+ password+"'";
     	ArrayList<String> result = getData(statement);
-//    	if (result.size()==1)
-//    	{
-//    		Scanner scanForColumnValues = new Scanner(result.get(0));
-//    		
-//    		//First column: uid
-//    		String uid = scanForColumnValues.nextLine();
-//    		
-//    		//Second column: username
-//    		String uname = scanForColumnValues.nextLine();
-//    		
-//    		//Third column: password
-//    		String pw = scanForColumnValues.nextLine();
-//    		
-//    		User u = new User(uid,uname,pw);
-//    		
-//            //System.out.println("User was successfully retrieved from database.");
-//    		scanForColumnValues.close();
-//    		return u;
-//    	}
-//    	else return null;
 		return parseUserData(result);
     }
 
@@ -207,26 +190,6 @@ public class DatabaseSupport implements DatabaseSupportInterface
 		String statement = "SELECT * " + "FROM User u " + "WHERE u.uid ='"+uid+"'";
 		ArrayList<String> result = getData(statement);
 		
-//    	if (result.size()==1)
-//    	{
-//    		Scanner scanForColumnValues = new Scanner(result.get(0));
-//    		//First column: uid
-//    		String userid = scanForColumnValues.nextLine();
-//
-//    		
-//    		//Second column: username
-//    		String uname = scanForColumnValues.nextLine();
-//
-//    		
-//    		//Third column: password
-//    		String pw = scanForColumnValues.nextLine();
-//
-//    		User u = new User(userid,uname,pw);
-//    		
-//    		scanForColumnValues.close();
-//    		return u;
-//    	}
-//    	else return null;
 		return parseUserData(result);
 	}
 	
@@ -296,6 +259,50 @@ public class DatabaseSupport implements DatabaseSupportInterface
 	        		break;
 	        	}
 	        }
+	       
+	        // Sixth column: invitedlist
+	        while (scanForColumnValues.hasNextLine())
+	        {
+	        	String name = scanForColumnValues.nextLine();
+	        	if (name.isEmpty()){
+	        		continue;
+	        	}
+	        	if (!name.equals("0")){
+	        		u.invitedChannels.add(name);
+//	        		if (u.addChannelInvite(name)){
+//	        			
+//	        		}
+//	        		else {
+//	        			System.out.println("Unable to add invite for the channel: "+name);
+//	        		}
+	        	}
+	        	else {
+	        		break;
+	        	}
+	        }
+	        // Seventh column: privatelist
+	        while (scanForColumnValues.hasNextLine())
+	        {
+	        	String name = scanForColumnValues.nextLine();
+	        	if (name.isEmpty()){
+	        		continue;
+	        	}
+	        	if (!name.equals("0"))
+	        	{
+	        		u.privateChannels.add(name);
+//	        		if (u.addChannelInvite(name)){
+//	        			if (!u.acceptChannelInvite(name)){
+//	        				System.out.println("Unable to accept invitation for channel: "+name);
+//	        			}
+//	        		}
+//	        		else {
+//	        			System.out.println("Unable to add invite for the channel: "+name);
+//	        		}
+	        	}
+	        	else {
+	        		break;
+	        	}
+	        }
 	        //System.out.println("User was successfully retrieved from database.");
 			scanForColumnValues.close();
 			return u;
@@ -323,7 +330,7 @@ public class DatabaseSupport implements DatabaseSupportInterface
             // Second column: ispublic
             Boolean isPublic;
             String visibility = scanForColumnValues.nextLine();
-            if (visibility != "0"){
+            if (!visibility.contains("0")){
                 isPublic=true;
             }
             else isPublic = false;
@@ -333,7 +340,8 @@ public class DatabaseSupport implements DatabaseSupportInterface
             
             // Instantiate channel so that it can modified 
             
-            Channel c = new Channel(channelName, admin);
+            //Channel c = new Channel(channelName, admin);
+            Channel c = new Channel(channelName, admin, isPublic);
             
             // Fourth Column: whitelist
             // 	This could've been implemented better. Should prob change the format for lists on the database to
@@ -399,26 +407,14 @@ public class DatabaseSupport implements DatabaseSupportInterface
     {
     	
     	String statement;
-//    	String wList = "";
-//    	ArrayList<User> tempList = c.getWhiteList();
-//    	int i;
-//    	for (i = 0; i < tempList.size();i++)
-//    	{
-//    		wList = wList + tempList.get(i).getId() + "\n";
-//    	}
-//    	wList = wList + "0\n";
     	String wList = userListToString(c.getWhiteList());
     	
-//    	String cList="";
-//    	tempList = c.getCurrentUsers();
-//    	for (i=0; i < tempList.size();i++)
-//    	{
-//    		cList = cList + tempList.get(i).getId()+"\n";
-//    	}
-//    	cList = cList + "0\n";
     	String cList = userListToString(c.getCurrentUsers());
     	//System.out.println("CurrentList that is going to be put in the database:"+cList);
-    	int val = c.isPublic() ? 0 : 1;
+    	int val = 0;
+    	if (c.isPublic()){
+    		val=1;
+    	}
     	String isPublic = String.valueOf(val);
     	Channel thisChannel = getChannelByName(c.getName());
     	if (thisChannel!=null){
@@ -442,24 +438,25 @@ public class DatabaseSupport implements DatabaseSupportInterface
 				   "FROM User u " +
 				   "WHERE u.username = '"+uname+"'";
 		ArrayList<String> result = getData(statement);
-		if (result.size() == 1) {
-			Scanner scanForColumnValues = new Scanner(result.get(0));
-
-			// First column: uid
-			String uid = scanForColumnValues.nextLine();
-
-			// Second column: username
-			String username = scanForColumnValues.nextLine();
-
-			// Third column: password
-			String pw = scanForColumnValues.nextLine();
-
-			User u = new User(uid, username, pw);
-
-			scanForColumnValues.close();
-			return u;
-		} else
-			return null;
+//		if (result.size() == 1) {
+//			Scanner scanForColumnValues = new Scanner(result.get(0));
+//
+//			// First column: uid
+//			String uid = scanForColumnValues.nextLine();
+//
+//			// Second column: username
+//			String username = scanForColumnValues.nextLine();
+//
+//			// Third column: password
+//			String pw = scanForColumnValues.nextLine();
+//
+//			User u = new User(uid, username, pw);
+//
+//			scanForColumnValues.close();
+//			return u;
+//		} else
+//			return null;
+		return parseUserData(result);
     }
 
     public boolean deleteChannel(String name)
@@ -498,14 +495,16 @@ public class DatabaseSupport implements DatabaseSupportInterface
     /*
      * Helper method for converting a list of Channels into a parse-able string to be stored in database. 
      */
-    String channelListToString(ArrayList<Channel> list)
+    String stringListToString(ArrayList<String> list)
     {
-    	String cListStr = "";
+    	String listString = "";
+    	ArrayList<String> tempList = list;
     	for (int i = 0; i < list.size(); i++)
     	{
-    		cListStr = cListStr + list.get(i).getName() + "\n";
+    		listString = listString + tempList.get(i) + "\n";
     	}
-    	return cListStr;
+    	listString = listString + "0\n";
+    	return listString;
     }
     /*
      * Helper method for converting a parse-able string taken from database into a list of channels.
