@@ -14,9 +14,11 @@ public class User implements UserInterface
 	private String password;
     private String publicName;
     private String currentChannel;
-    public ArrayList<Channel> invitedChannels;
-    public ArrayList<Channel> privateChannels;
-    private ArrayList<Channel> publicChannels;
+
+    public ArrayList<String> invitedChannels;
+    public ArrayList<String> privateChannels;
+    public ArrayList<String> publicChannels;
+
     private ArrayList<User> friends;
     private ArrayList<User> blocked;
 
@@ -27,8 +29,8 @@ public class User implements UserInterface
 	{
 		this.uid=null;
         this.currentChannel = null;
-        this.invitedChannels = new ArrayList<Channel>();
-        this.privateChannels = new ArrayList<Channel>();
+        this.invitedChannels = new ArrayList<String>();
+        this.privateChannels = new ArrayList<String>();
         this.friends = new ArrayList<User>();
         this.blocked = new ArrayList<User>();
         this.publicName = "";
@@ -44,8 +46,8 @@ public class User implements UserInterface
 		this.password=password;
 		this.uid=id;
         this.currentChannel = null;
-        this.invitedChannels = new ArrayList<Channel>();
-        this.privateChannels = new ArrayList<Channel>();
+        this.invitedChannels = new ArrayList<String>();
+        this.privateChannels = new ArrayList<String>();
         this.friends = new ArrayList<User>();
         this.blocked = new ArrayList<User>();
         this.publicName = "";		
@@ -75,14 +77,14 @@ public class User implements UserInterface
      * Returns the private channels that this User has a pending invite to.
      * @return
      */
-    public ArrayList<Channel> getInvitedChannels(){
+    public ArrayList<String> getInvitedChannels(){
     	return this.invitedChannels;
     }
     /**
      * Returns the private channels that this User has accepted an invite for.
      * @return
      */
-    public ArrayList<Channel> getPrivateChannels(){
+    public ArrayList<String> getPrivateChannels(){
     	return this.privateChannels;
     }
     
@@ -183,7 +185,7 @@ public class User implements UserInterface
      */
     public boolean addChannel(Channel c)
     {
-        privateChannels.add(c);
+        privateChannels.add(c.getName());
         return true;
     }
 
@@ -206,7 +208,7 @@ public class User implements UserInterface
 
         for (i = 0; i < invitedChannels.size(); i++)
         {
-            if (invitedChannels.get(i).getName().equals(deletedChannel))
+            if (invitedChannels.get(i).equals(deletedChannel))
             {
                 invitedChannels.remove(i);
             }
@@ -214,7 +216,7 @@ public class User implements UserInterface
 
         for (i = 0; i < privateChannels.size(); i++)
         {
-            if (privateChannels.get(i).getName().equals(deletedChannel))
+            if (privateChannels.get(i).equals(deletedChannel))
             {
                 privateChannels.remove(i);
             }
@@ -235,7 +237,7 @@ public class User implements UserInterface
 
         for (i = 0; i < invitedChannels.size(); i++)
         {
-            if (invitedChannels.get(i).getName().equals(c.getName()))
+            if (invitedChannels.get(i).equals(c.getName()))
             {
                 return false;
             }
@@ -243,13 +245,13 @@ public class User implements UserInterface
 
         for (i = 0; i < privateChannels.size(); i++)
         {
-            if (privateChannels.get(i).getName().equals(c.getName()))
+            if (privateChannels.get(i).equals(c.getName()))
             {
                 return false;
             }
         }
 
-        invitedChannels.add(c);
+        invitedChannels.add(c.getName());
 
         return true;
     }
@@ -271,7 +273,7 @@ public class User implements UserInterface
 
         for (i = 0; i < invitedChannels.size(); i++)
         {
-            if (invitedChannels.get(i).getName().equals(c.getName()))
+            if (invitedChannels.get(i).equals(c.getName()))
             {
                 invitedChannels.remove(i);
                 return true;
@@ -280,7 +282,7 @@ public class User implements UserInterface
 
         for (i = 0; i < privateChannels.size(); i++)
         {
-            if (privateChannels.get(i).getName().equals(c.getName()))
+            if (privateChannels.get(i).equals(c.getName()))
             {
                 privateChannels.remove(i);
                 return true;
@@ -295,7 +297,7 @@ public class User implements UserInterface
      *
      * @return a list of the user's invited channels
      */
-    public ArrayList<Channel> viewInvitedChannels()
+    public ArrayList<String> viewInvitedChannels()
     {
         return invitedChannels;
     }
@@ -305,7 +307,7 @@ public class User implements UserInterface
      *
      * @return a list of the user's private channels
      */
-    public ArrayList<Channel> viewPrivateChannels()
+    public ArrayList<String> viewPrivateChannels()
     {
         return privateChannels;
     }
@@ -315,7 +317,7 @@ public class User implements UserInterface
      *
      * @return a list of public channels
      */
-    public ArrayList<Channel> viewPublicChannels()
+    public ArrayList<String> viewPublicChannels()
     {
         return publicChannels;
     }
@@ -454,13 +456,13 @@ public class User implements UserInterface
 
         for (i = 0; i < invitedChannels.size(); i++)
         {
-            if (invitedChannels.get(i).getName().equals(c.getName()))
+            if (invitedChannels.get(i).equals(c.getName()))
             {
                 invitedChannels.remove(i);
 
                 if (!c.isPublic())
                 {
-                    privateChannels.add(c);
+                    privateChannels.add(c.getName());
                 }
 
                 return true;
@@ -482,7 +484,7 @@ public class User implements UserInterface
 
         for (i = 0; i < invitedChannels.size(); i++)
         {
-            if (invitedChannels.get(i).getName().equals(c.getName()))
+            if (invitedChannels.get(i).equals(c.getName()))
             {
                 invitedChannels.remove(i);
                 return true;
