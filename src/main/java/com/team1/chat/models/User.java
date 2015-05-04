@@ -14,8 +14,8 @@ public class User implements UserInterface
 	private String password;
     private String publicName;
     private String currentChannel;
-    private ArrayList<Channel> invitedChannels;
-    private ArrayList<Channel> privateChannels;
+    public ArrayList<Channel> invitedChannels;
+    public ArrayList<Channel> privateChannels;
     private ArrayList<Channel> publicChannels;
     private ArrayList<User> friends;
     private ArrayList<User> blocked;

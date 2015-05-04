@@ -268,12 +268,13 @@ public class DatabaseSupport implements DatabaseSupportInterface
 	        		continue;
 	        	}
 	        	if (!name.equals("0")){
-	        		if (u.addChannelInvite(name)){
-	        			
-	        		}
-	        		else {
-	        			System.out.println("Unable to add invite for the channel: "+name);
-	        		}
+	        		u.invitedChannels.add(name);
+//	        		if (u.addChannelInvite(name)){
+//	        			
+//	        		}
+//	        		else {
+//	        			System.out.println("Unable to add invite for the channel: "+name);
+//	        		}
 	        	}
 	        	else {
 	        		break;
@@ -288,14 +289,15 @@ public class DatabaseSupport implements DatabaseSupportInterface
 	        	}
 	        	if (!name.equals("0"))
 	        	{
-	        		if (u.addChannelInvite(name)){
-	        			if (!u.acceptChannelInvite(name)){
-	        				System.out.println("Unable to accept invitation for channel: "+name);
-	        			}
-	        		}
-	        		else {
-	        			System.out.println("Unable to add invite for the channel: "+name);
-	        		}
+	        		u.privateChannels.add(name);
+//	        		if (u.addChannelInvite(name)){
+//	        			if (!u.acceptChannelInvite(name)){
+//	        				System.out.println("Unable to accept invitation for channel: "+name);
+//	        			}
+//	        		}
+//	        		else {
+//	        			System.out.println("Unable to add invite for the channel: "+name);
+//	        		}
 	        	}
 	        	else {
 	        		break;
