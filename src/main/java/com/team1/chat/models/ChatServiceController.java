@@ -88,17 +88,17 @@ public class ChatServiceController implements ChatServiceControllerInterface
         return this.getChatServiceInstance().removeUserFromChannel(cname, aid, uname);
     }
 
-    public ArrayList<Channel> viewInvitedChannels(String uid)
+    public ArrayList<String> viewInvitedChannels(String uid)
     {
         return this.getChatServiceInstance().viewInvitedChannels(uid);
     }
 
-    public ArrayList<Channel> viewPrivateChannels(String uid)
+    public ArrayList<String> viewPrivateChannels(String uid)
     {
         return this.getChatServiceInstance().viewPrivateChannels(uid);
     }
 
-    public ArrayList<Channel> viewPublicChannels(String uid)
+    public ArrayList<String> viewPublicChannels(String uid)
     {
         return this.getChatServiceInstance().viewPublicChannels(uid);
     }
