@@ -51,7 +51,7 @@ public class ChatService implements ChatServiceInterface
 
         //if (!id.isEmpty()) {
             //joinChannel("0", id);
-        	if (joinChannel("testCH1",id)){
+        	if (joinChannel("Lobby",id)){
         		System.out.println("Successfully joined default channel.");
         	}
         	else {
@@ -74,7 +74,7 @@ public class ChatService implements ChatServiceInterface
         if (u==null){
         	return false;
         }
-        if (leaveChannel("testCH1", u.getId())){
+        if (leaveChannel("Lobby", u.getId())){
             	return true;
         }
         else{

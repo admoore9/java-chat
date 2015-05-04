@@ -180,8 +180,8 @@ public class Server
         {
             thread_ID = numClients += 1;
             this.socket = socket;
-            // On thread creation, add them to testCH1, a.k.a., the lobby.
-            this.channel = "testCH1";
+            // On thread creation, add them to Lobby.
+            this.channel = "Lobby";
 
             // create data streams
             System.out.println("Thread setting up Object I/O streams.");

@@ -149,7 +149,7 @@ public class Client
                 if (in[0].equals("login")) {
                     uid = csc.login(username, password);
                     if (uid != null) {
-                        channel = "testCH1"; // set to defualt channel
+                        channel = "Lobby"; // set to defualt channel
                         System.out.println("Login successful");
                         break;
                     }

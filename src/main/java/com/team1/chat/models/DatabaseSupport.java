@@ -33,7 +33,7 @@ public class DatabaseSupport implements DatabaseSupportInterface
 	    }
 	    System.out.println ("*** Connected to the database ***");
 	    //Get default channel.
-    	Channel defaultChannel = getChannelByName("testCH1");
+    	Channel defaultChannel = getChannelByName("Lobby");
     	//MySQL statement to get all userids from User table.
 		String statement = "SELECT uid " + "FROM User u";
 		//Execute query.
