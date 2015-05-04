@@ -323,7 +323,7 @@ public class DatabaseSupport implements DatabaseSupportInterface
             // Second column: ispublic
             Boolean isPublic;
             String visibility = scanForColumnValues.nextLine();
-            if (visibility != "0"){
+            if (!visibility.contains("0")){
                 isPublic=true;
             }
             else isPublic = false;
@@ -333,7 +333,8 @@ public class DatabaseSupport implements DatabaseSupportInterface
             
             // Instantiate channel so that it can modified 
             
-            Channel c = new Channel(channelName, admin);
+            //Channel c = new Channel(channelName, admin);
+            Channel c = new Channel(channelName, admin, isPublic);
             
             // Fourth Column: whitelist
             // 	This could've been implemented better. Should prob change the format for lists on the database to
@@ -399,26 +400,14 @@ public class DatabaseSupport implements DatabaseSupportInterface
     {
     	
     	String statement;
-//    	String wList = "";
-//    	ArrayList<User> tempList = c.getWhiteList();
-//    	int i;
-//    	for (i = 0; i < tempList.size();i++)
-//    	{
-//    		wList = wList + tempList.get(i).getId() + "\n";
-//    	}
-//    	wList = wList + "0\n";
     	String wList = userListToString(c.getWhiteList());
     	
-//    	String cList="";
-//    	tempList = c.getCurrentUsers();
-//    	for (i=0; i < tempList.size();i++)
-//    	{
-//    		cList = cList + tempList.get(i).getId()+"\n";
-//    	}
-//    	cList = cList + "0\n";
     	String cList = userListToString(c.getCurrentUsers());
     	//System.out.println("CurrentList that is going to be put in the database:"+cList);
-    	int val = c.isPublic() ? 0 : 1;
+    	int val = 0;
+    	if (c.isPublic()){
+    		val=1;
+    	}
     	String isPublic = String.valueOf(val);
     	Channel thisChannel = getChannelByName(c.getName());
     	if (thisChannel!=null){
