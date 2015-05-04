@@ -33,9 +33,10 @@ public interface ChatServiceInterface
 
     boolean removeUserFromChannel(String cname, String aid, String uname);
 
-    ArrayList<Channel> viewInvitedChannels(String uid);
+    // TODO deviation from interaction diagram below
+    ArrayList<String> viewInvitedChannels(String uid);
 
-    ArrayList<Channel> viewPrivateChannels(String uid);
+    ArrayList<String> viewPrivateChannels(String uid);
 
     boolean toggleChannelVisibility(String cname, String aid);
 

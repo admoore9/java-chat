@@ -412,7 +412,7 @@ public class ChatService implements ChatServiceInterface
      * @param uid users id
      * @return a list of channels the user is invited to
      */
-    public ArrayList<Channel> viewInvitedChannels(String uid)
+    public ArrayList<String> viewInvitedChannels(String uid)
     {
         User u;
 
@@ -429,7 +429,7 @@ public class ChatService implements ChatServiceInterface
      * @param uid users id
      * @return a list of private channels
      */
-    public ArrayList<Channel> viewPrivateChannels(String uid)
+    public ArrayList<String> viewPrivateChannels(String uid)
     {
         User u;
 
@@ -445,7 +445,7 @@ public class ChatService implements ChatServiceInterface
      *
      * @return a list of public channels
      */
-    public ArrayList<Channel> viewPublicChannels(String uid)
+    public ArrayList<String> viewPublicChannels(String uid)
     {
         User u;
 

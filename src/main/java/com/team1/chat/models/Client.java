@@ -335,12 +335,12 @@ public class Client
                 }
 
                 else if (in.length == 1 && in[0].equals("/viewPublicChannels")) {
-                    ArrayList<Channel> channels = csc.viewPublicChannels(uid);
+                    ArrayList<String> channels = csc.viewPublicChannels(uid);
                     if (channels != null) {
                         System.out.println("Public channels are:");
 
-                        for (Channel c : channels) {
-                            System.out.println(c.getName());
+                        for (String c : channels) {
+                            System.out.println(c);
                         }
                     }
                     else {
@@ -349,12 +349,12 @@ public class Client
                 }
 
                 else if (in.length == 1 && in[0].equals("/viewPrivateChannels")) {
-                    ArrayList<Channel> channels = csc.viewPrivateChannels(uid);
+                    ArrayList<String> channels = csc.viewPrivateChannels(uid);
                     if (channels != null) {
                         System.out.println("Private channels are:");
 
-                        for (Channel c : channels) {
-                            System.out.println(c.getName());
+                        for (String c : channels) {
+                            System.out.println(c);
                         }
                     }
                     else {
@@ -363,12 +363,12 @@ public class Client
                 }
 
                 else if (in.length == 1 && in[0].equals("/viewInvitedChannels")) {
-                    ArrayList<Channel> channels = csc.viewInvitedChannels(uid);
+                    ArrayList<String> channels = csc.viewInvitedChannels(uid);
                     if (channels != null) {
                         System.out.println("Invited channels are:");
 
-                        for (Channel c : channels) {
-                            System.out.println(c.getName());
+                        for (String c : channels) {
+                            System.out.println(c);
                         }
                     }
                     else {
