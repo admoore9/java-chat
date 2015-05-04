@@ -33,7 +33,13 @@ public class Channel implements ChannelInterface
         this.whiteList = new ArrayList<User>();
         this.currentUsers = new ArrayList<User>();
     }
-
+    public Channel(String name, String admin, boolean ispublic){
+    	this.name=name;
+    	this.admin=admin;
+    	this.isPublic=ispublic;
+        this.whiteList = new ArrayList<User>();
+        this.currentUsers = new ArrayList<User>();
+    }
     public ArrayList<User> getWhiteList()
     {
         return whiteList;

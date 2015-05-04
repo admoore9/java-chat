@@ -505,8 +505,23 @@ public class ChatService implements ChatServiceInterface
         Channel c;
 
         c = this.getDatabaseSupportInstance().getChannelByName(cname);
-
-        return c != null && c.toggleChannelVisibility(aid);
+        if (c!=null){
+        	if (c.toggleChannelVisibility(aid)){
+        		if(dbs.putChannel(c)){
+        			return true;
+        		}
+        		System.out.println("Failed to put channel in database.");
+        		return false;
+        	}
+        	else {
+        		System.out.println("Failed to toggle channel visibility.");
+        		return false;
+        	}
+        }
+        else {
+        	System.out.println("Channel does not exist.");
+        	return false;
+        }
     }
 
     // Iteration 3
