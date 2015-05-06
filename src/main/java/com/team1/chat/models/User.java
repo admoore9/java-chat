@@ -75,14 +75,14 @@ public class User implements UserInterface
     
     /**
      * Returns the private channels that this User has a pending invite to.
-     * @return
+     * @return invited channels
      */
     public ArrayList<String> getInvitedChannels(){
     	return this.invitedChannels;
     }
     /**
      * Returns the private channels that this User has accepted an invite for.
-     * @return
+     * @return private channels
      */
     public ArrayList<String> getPrivateChannels(){
     	return this.privateChannels;
