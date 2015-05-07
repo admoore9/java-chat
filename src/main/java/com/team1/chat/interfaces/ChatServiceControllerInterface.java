@@ -33,7 +33,6 @@ public interface ChatServiceControllerInterface
 
     boolean removeUserFromChannel(String cname, String aid, String uname);
 
-    // TODO deviation from interaction diagram below
     ArrayList<String> viewInvitedChannels(String uid);
 
     ArrayList<String> viewPrivateChannels(String uid);

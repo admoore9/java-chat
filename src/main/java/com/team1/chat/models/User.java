@@ -256,27 +256,6 @@ public class User implements UserInterface
         return false;
     }
 
-    // TODO fix below
-//    /**
-//     * Get a User's current channel
-//     * If no channel set, set to default and return.
-//     */
-//    public String getCurrentChannel(String uid){
-//        if(this.uid!=null && this.getId().equals(uid) ){
-//            if(this.currentChannel != null) {
-//                return this.currentChannel;
-//            }
-//            else{
-//                // Shouldn't happen, should be set to default on login.
-//                System.out.println("Logged-in user does not have default channel set.");
-//                return null;
-//            }
-//        }
-//        else {
-//            return null;
-//        }
-//    }
-
     /**
      * Method that adds a channel to the users ArrayList of private channels
      * this is called when a user creates a new channel

@@ -1,7 +1,6 @@
 package com.team1.chat.models;
 
 import com.team1.chat.interfaces.ChatServiceInterface;
-
 import java.util.ArrayList;
 
 public class ChatService implements ChatServiceInterface
@@ -406,7 +405,6 @@ public class ChatService implements ChatServiceInterface
      *
      * @return a list of public channels
      */
-    // TODO need to implement
     public ArrayList<String> viewPublicChannels(String uid)
     {
         User u;

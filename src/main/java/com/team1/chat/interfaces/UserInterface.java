@@ -21,7 +21,6 @@ public interface UserInterface
     String getPassword();
 
     // Iteration 2
-    // TODO update interaction diagram
     boolean addPrivateChannel(Channel c);
 
     boolean deleteChannel(Channel c);
@@ -30,7 +29,6 @@ public interface UserInterface
 
     boolean removeFromChannel(Channel c);
 
-    // TODO deviation from interaction diagram for next 3
     ArrayList<String> getInvitedChannels();
 
     ArrayList<String> getPrivateChannels();

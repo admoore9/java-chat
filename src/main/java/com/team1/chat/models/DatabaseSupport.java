@@ -140,21 +140,12 @@ public class DatabaseSupport implements DatabaseSupportInterface
     	String iList = stringListToString(u.getInvitedChannels());
     	String pList = stringListToString(u.getPrivateChannels());
     	User thisUser = getUserById(u.getId());
-    	
-//    	if (thisUser!=null){
-//    		statement = "UPDATE User "+
-//    						"SET username='"+u.getUsername()+"',"+
-//    							"password='"+u.getPassword()+"'"+
-//    						"WHERE uid='"+u.getId()+"'";
-//    	}
-//    	else {statement = "INSERT INTO User " +
-//    					   "VALUES(DEFAULT,'" + u.getUsername()+"','"+u.getPassword()+"')";
-//    	}
+
     	if (thisUser!=null){
     		statement = "UPDATE User "+
     						"SET username='"+u.getUsername()+"',"+
     							"password='"+u.getPassword()+"',"+
-    							"currentchannel='"+u.getCurrentChannel(u.getId())+"',"+
+    							"currentchannel='"+u.getCurrentChannel()+"',"+
     							"friendlist='"+fList+"',"+
     							"blocklist='"+bList+"',"+
     							"invitedlist='"+iList+"',"+
@@ -162,7 +153,7 @@ public class DatabaseSupport implements DatabaseSupportInterface
     						"WHERE uid='"+u.getId()+"'";
     	}
     	else {statement = "INSERT INTO User " +
-    					   "VALUES(DEFAULT,'" + u.getUsername()+"','"+u.getPassword()+"','"+fList+"','"+bList+"','"+iList+"','"+pList+"')";
+    					   "VALUES(DEFAULT,'" + u.getUsername()+"','"+u.getPassword()+"','"+u.getCurrentChannel()+"','"+fList+"','"+bList+"','"+iList+"','"+pList+"')";
     	}
         return setData(statement);
     }
@@ -273,12 +264,6 @@ public class DatabaseSupport implements DatabaseSupportInterface
 	        	}
 	        	if (!name.equals("0")){
 	        		u.invitedChannels.add(name);
-//	        		if (u.addChannelInvite(name)){
-//	        			
-//	        		}
-//	        		else {
-//	        			System.out.println("Unable to add invite for the channel: "+name);
-//	        		}
 	        	}
 	        	else {
 	        		break;
@@ -294,14 +279,6 @@ public class DatabaseSupport implements DatabaseSupportInterface
 	        	if (!name.equals("0"))
 	        	{
 	        		u.privateChannels.add(name);
-//	        		if (u.addChannelInvite(name)){
-//	        			if (!u.acceptChannelInvite(name)){
-//	        				System.out.println("Unable to accept invitation for channel: "+name);
-//	        			}
-//	        		}
-//	        		else {
-//	        			System.out.println("Unable to add invite for the channel: "+name);
-//	        		}
 	        	}
 	        	else {
 	        		break;
@@ -442,24 +419,6 @@ public class DatabaseSupport implements DatabaseSupportInterface
 				   "FROM User u " +
 				   "WHERE u.username = '"+uname+"'";
 		ArrayList<String> result = getData(statement);
-//		if (result.size() == 1) {
-//			Scanner scanForColumnValues = new Scanner(result.get(0));
-//
-//			// First column: uid
-//			String uid = scanForColumnValues.nextLine();
-//
-//			// Second column: username
-//			String username = scanForColumnValues.nextLine();
-//
-//			// Third column: password
-//			String pw = scanForColumnValues.nextLine();
-//
-//			User u = new User(uid, username, pw);
-//
-//			scanForColumnValues.close();
-//			return u;
-//		} else
-//			return null;
 		return parseUserData(result);
     }
 
