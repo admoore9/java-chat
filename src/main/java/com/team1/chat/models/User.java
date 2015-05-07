@@ -14,11 +14,9 @@ public class User implements UserInterface
 	private String password;
     private String publicName;
     private String currentChannel;
-
-    public ArrayList<String> invitedChannels;
-    public ArrayList<String> privateChannels;
-    public ArrayList<String> publicChannels;
-
+    private ArrayList<Channel> invitedChannels;
+    private ArrayList<Channel> privateChannels;
+    private ArrayList<Channel> publicChannels;
     private ArrayList<User> friends;
     private ArrayList<User> blocked;
 
@@ -29,8 +27,8 @@ public class User implements UserInterface
 	{
 		this.uid=null;
         this.currentChannel = null;
-        this.invitedChannels = new ArrayList<String>();
-        this.privateChannels = new ArrayList<String>();
+        this.invitedChannels = new ArrayList<Channel>();
+        this.privateChannels = new ArrayList<Channel>();
         this.friends = new ArrayList<User>();
         this.blocked = new ArrayList<User>();
         this.publicName = "";
@@ -46,8 +44,8 @@ public class User implements UserInterface
 		this.password=password;
 		this.uid=id;
         this.currentChannel = null;
-        this.invitedChannels = new ArrayList<String>();
-        this.privateChannels = new ArrayList<String>();
+        this.invitedChannels = new ArrayList<Channel>();
+        this.privateChannels = new ArrayList<Channel>();
         this.friends = new ArrayList<User>();
         this.blocked = new ArrayList<User>();
         this.publicName = "";		
@@ -71,21 +69,6 @@ public class User implements UserInterface
     public String getId()
     {
     	return uid;
-    }
-    
-    /**
-     * Returns the private channels that this User has a pending invite to.
-     * @return
-     */
-    public ArrayList<String> getInvitedChannels(){
-    	return this.invitedChannels;
-    }
-    /**
-     * Returns the private channels that this User has accepted an invite for.
-     * @return
-     */
-    public ArrayList<String> getPrivateChannels(){
-    	return this.privateChannels;
     }
     
     public boolean sendMessage(UserInterface u, String msgText)
@@ -147,7 +130,7 @@ public class User implements UserInterface
      *  Set the currentChannel of a User
      */
     public boolean setCurrentChannel(String uid, String cname){
-        if(this.uid!=null && this.getId().equals(uid)) {
+        if(this.getId().equals(uid)) {
             this.currentChannel = cname;
             return true;
         }
@@ -160,7 +143,7 @@ public class User implements UserInterface
      * If no channel set, set to default and return.
      */
     public String getCurrentChannel(String uid){
-        if(this.uid!=null && this.getId().equals(uid) ){
+        if(this.getId().equals(uid) ){
             if(this.currentChannel != null) {
                 return this.currentChannel;
             }
@@ -185,7 +168,7 @@ public class User implements UserInterface
      */
     public boolean addChannel(Channel c)
     {
-        privateChannels.add(c.getName());
+        privateChannels.add(c);
         return true;
     }
 
@@ -201,14 +184,14 @@ public class User implements UserInterface
         int i;
         String deletedChannel = c.getName();
 
-        if (currentChannel != null && currentChannel.equals(deletedChannel))
+        if (currentChannel.equals(deletedChannel))
         {
             currentChannel = null;
         }
 
         for (i = 0; i < invitedChannels.size(); i++)
         {
-            if (invitedChannels.get(i).equals(deletedChannel))
+            if (invitedChannels.get(i).getName().equals(deletedChannel))
             {
                 invitedChannels.remove(i);
             }
@@ -216,7 +199,7 @@ public class User implements UserInterface
 
         for (i = 0; i < privateChannels.size(); i++)
         {
-            if (privateChannels.get(i).equals(deletedChannel))
+            if (privateChannels.get(i).getName().equals(deletedChannel))
             {
                 privateChannels.remove(i);
             }
@@ -237,7 +220,7 @@ public class User implements UserInterface
 
         for (i = 0; i < invitedChannels.size(); i++)
         {
-            if (invitedChannels.get(i).equals(c.getName()))
+            if (invitedChannels.get(i).getName().equals(c.getName()))
             {
                 return false;
             }
@@ -245,13 +228,13 @@ public class User implements UserInterface
 
         for (i = 0; i < privateChannels.size(); i++)
         {
-            if (privateChannels.get(i).equals(c.getName()))
+            if (privateChannels.get(i).getName().equals(c.getName()))
             {
                 return false;
             }
         }
 
-        invitedChannels.add(c.getName());
+        this.invitedChannels.add(c);
 
         return true;
     }
@@ -266,14 +249,21 @@ public class User implements UserInterface
     {
         int i;
 
-        if (currentChannel.equals(c.getName()))
-        {
-            currentChannel = null;
+        if (null != currentChannel) {
+
+            if( currentChannel.equals(c.getName())) {
+
+                currentChannel = null;
+            }
         }
+        else{
+            currentChannel = "";
+        }
+
 
         for (i = 0; i < invitedChannels.size(); i++)
         {
-            if (invitedChannels.get(i).equals(c.getName()))
+            if (invitedChannels.get(i).getName().equals(c.getName()))
             {
                 invitedChannels.remove(i);
                 return true;
@@ -282,7 +272,7 @@ public class User implements UserInterface
 
         for (i = 0; i < privateChannels.size(); i++)
         {
-            if (privateChannels.get(i).equals(c.getName()))
+            if (privateChannels.get(i).getName().equals(c.getName()))
             {
                 privateChannels.remove(i);
                 return true;
@@ -297,7 +287,7 @@ public class User implements UserInterface
      *
      * @return a list of the user's invited channels
      */
-    public ArrayList<String> viewInvitedChannels()
+    public ArrayList<Channel> viewInvitedChannels()
     {
         return invitedChannels;
     }
@@ -307,7 +297,7 @@ public class User implements UserInterface
      *
      * @return a list of the user's private channels
      */
-    public ArrayList<String> viewPrivateChannels()
+    public ArrayList<Channel> viewPrivateChannels()
     {
         return privateChannels;
     }
@@ -317,7 +307,7 @@ public class User implements UserInterface
      *
      * @return a list of public channels
      */
-    public ArrayList<String> viewPublicChannels()
+    public ArrayList<Channel> viewPublicChannels()
     {
         return publicChannels;
     }
@@ -456,19 +446,17 @@ public class User implements UserInterface
 
         for (i = 0; i < invitedChannels.size(); i++)
         {
-            if (invitedChannels.get(i).equals(c.getName()))
+            if (invitedChannels.get(i).getName().equals(c.getName()))
             {
                 invitedChannels.remove(i);
 
                 if (!c.isPublic())
                 {
-                    privateChannels.add(c.getName());
+                    privateChannels.add(c);
                 }
-
                 return true;
             }
         }
-
         return false;
     }
 
@@ -484,7 +472,7 @@ public class User implements UserInterface
 
         for (i = 0; i < invitedChannels.size(); i++)
         {
-            if (invitedChannels.get(i).equals(c.getName()))
+            if (invitedChannels.get(i).getName().equals(c.getName()))
             {
                 invitedChannels.remove(i);
                 return true;
