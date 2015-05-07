@@ -1,6 +1,7 @@
 package com.team1.chat.interfaces;
 
 import com.team1.chat.models.Channel;
+import com.team1.chat.models.User;
 
 import java.util.ArrayList;
 
@@ -11,8 +12,6 @@ public interface UserInterface
 
     String getId();
 
-    boolean sendMessage(UserInterface u, String msgText);
-
     boolean setUsername(String uid, String newUsername);
 
     String getUsername();
@@ -22,7 +21,7 @@ public interface UserInterface
     String getPassword();
 
     // Iteration 2
-    boolean addChannel(Channel c);
+    boolean addPrivateChannel(Channel c);
 
     boolean deleteChannel(Channel c);
 
@@ -30,7 +29,32 @@ public interface UserInterface
 
     boolean removeFromChannel(Channel c);
 
-    ArrayList<Channel> viewInvitedChannels();
+    ArrayList<String> getInvitedChannels();
 
-    ArrayList<Channel> viewPrivateChannels();
+    ArrayList<String> getPrivateChannels();
+
+    // Iteration 3
+    boolean addFriend(User f);
+
+    boolean removeFriend(User f);
+
+    ArrayList<User> getFriends();
+
+    boolean blockUser(User f);
+
+    boolean removeBlockedUser(User f);
+
+    ArrayList<User> getBlockedUsers();
+
+    boolean setPublicName(String publicName);
+
+    boolean acceptChannelInvite(Channel c);
+
+    boolean declineChannelInvite(Channel c);
+
+    String getPublicName();
+
+    String getCurrentChannel();
+
+    boolean setCurrentChannel(String uid, String cname);
 }

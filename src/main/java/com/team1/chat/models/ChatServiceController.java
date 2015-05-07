@@ -1,39 +1,27 @@
 package com.team1.chat.models;
 
 import com.team1.chat.interfaces.ChatServiceControllerInterface;
-
 import java.util.ArrayList;
-
-//Tyler Notes: I'm thinking that each instance of ChatServiceController
-//will need to open a Socket, and pass information to ChatService.
 
 public class ChatServiceController implements ChatServiceControllerInterface
 {
     private ChatService cs = null;
 	
-	/**
-	 * Creates a new account with username and password.
-	 * @return true on success, false on failure.
-	 */
+    public ChatServiceController(){
+    	cs = this.getChatServiceInstance();
+    }
+
     public boolean createAccount(String username, String password)
     {
     	
     	return cs.createAccount(username, password);
     }
 
-    /**
-     * Logs in the User whose username/password match the input username and password.
-     * @return returns the user's id.
-     */
     public String login(String username, String password)
     {
         return cs.login(username, password);
     }
 
-    /**
-     * Logs out the User whose id matches the input uid. 
-     * @return true on success, false on failure.
-     */
     public boolean logout(String uid)
     {
         return cs.logout(uid);
@@ -59,9 +47,9 @@ public class ChatServiceController implements ChatServiceControllerInterface
         return this.getChatServiceInstance().joinChannel(cid, uid);
     }
 
-    public ArrayList<User> listChannelUsers(String cid, String uid)
+    public ArrayList<User> listChannelUsers(String cname, String uid)
     {
-        return this.getChatServiceInstance().listChannelUsers(cid, uid);
+        return this.getChatServiceInstance().listChannelUsers(cname, uid);
     }
 
     // Iteration 2
@@ -85,19 +73,70 @@ public class ChatServiceController implements ChatServiceControllerInterface
         return this.getChatServiceInstance().removeUserFromChannel(cname, aid, uname);
     }
 
-    public ArrayList<Channel> viewInvitedChannels(String uid)
+    public ArrayList<String> viewInvitedChannels(String uid)
     {
         return this.getChatServiceInstance().viewInvitedChannels(uid);
     }
 
-    public ArrayList<Channel> viewPrivateChannels(String uid)
+    public ArrayList<String> viewPrivateChannels(String uid)
     {
         return this.getChatServiceInstance().viewPrivateChannels(uid);
+    }
+
+    public ArrayList<String> viewPublicChannels(String uid)
+    {
+        return this.getChatServiceInstance().viewPublicChannels(uid);
     }
 
     public boolean toggleChannelVisibility(String cname, String aid)
     {
         return this.getChatServiceInstance().toggleChannelVisibility(cname, aid);
+    }
+
+    // Iteration 3
+    public boolean addFriend(String uid, String username)
+    {
+        return this.getChatServiceInstance().addFriend(uid, username);
+    }
+
+    public boolean removeFriend(String uid, String username)
+    {
+        return this.getChatServiceInstance().removeFriend(uid, username);
+    }
+
+    public ArrayList<User> viewFriends(String uid)
+    {
+        return this.getChatServiceInstance().viewFriends(uid);
+    }
+
+    public boolean addBlockedUser(String uid, String username)
+    {
+        return this.getChatServiceInstance().addBlockedUser(uid, username);
+    }
+
+    public boolean removeBlockedUser(String uid, String username)
+    {
+        return this.getChatServiceInstance().removeBlockedUser(uid, username);
+    }
+
+    public ArrayList<User> viewBlockedUsers(String uid)
+    {
+        return this.getChatServiceInstance().viewBlockedUsers(uid);
+    }
+
+    public boolean setPublicName(String uid, String publicName)
+    {
+        return this.getChatServiceInstance().setPublicName(uid, publicName);
+    }
+
+    public boolean acceptInviteToChannel(String uid, String cname)
+    {
+        return this.getChatServiceInstance().acceptInviteToChannel(uid, cname);
+    }
+
+    public boolean declineInviteToChannel(String uid, String cname)
+    {
+        return this.getChatServiceInstance().declineInviteToChannel(uid, cname);
     }
 
     private ChatService getChatServiceInstance()
