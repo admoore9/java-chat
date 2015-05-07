@@ -1,6 +1,8 @@
 package com.team1.chat.models;
 
 
+import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
+
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -11,8 +13,9 @@ import java.util.HashMap;
  */
 public class Server
 {
-    private DatabaseSupport dbs;
+
     private HashMap<String, ArrayList<ClientThread>> channelRosters;
+    //private DatabaseSupport dbs;
     private int port;
     private int numClients = 0;
     private boolean running;
@@ -23,7 +26,7 @@ public class Server
     public Server(int port)
     {
         this.port = port;
-        dbs = new DatabaseSupport();
+        //dbs = new DatabaseSupport();
         channelRosters = new HashMap<String, ArrayList<ClientThread>>();
     }
 
@@ -147,6 +150,25 @@ public class Server
     }
 
     /*
+     * Prints a list of logged-on users to Server terminal
+     */
+    public synchronized void printActiveClientList(){
+
+        System.out.println("\n *** ACTIVE USERS BY CHANNEL *** ");
+
+        for(String key : channelRosters.keySet()) {
+
+            System.out.println("Channel: " + key + " : ");
+            ArrayList<ClientThread> names = channelRosters.get(key);
+            int i = 0;
+            for(ClientThread ct : names) {
+                System.out.println(i + ".  " + ct.username);
+                i++;
+            }
+        }
+    }
+
+    /*
         MAIN METHOD
      */
     public static void main(String args[])
@@ -160,9 +182,8 @@ public class Server
     }
 
     /*
-            Internal class for a client thread.
-
-            One instance per client.
+     *   Internal class for a client thread.
+     *      - One instance per client.
      */
     class ClientThread extends Thread
     {
@@ -245,6 +266,14 @@ public class Server
                     mover.sendMessage("You have been removed from " + input[2] + " by Admin. You are now in Lobby.");
 
                 }
+                /*
+                 *  Admin wants to print active clients to server console and their
+                 *  local console.
+                 */
+                else if(message.contains("/showLoggedIn")){
+                    printActiveClientList(); // to server
+                    printClientListToAdminConsole(); // to client who passed "/showLoggedIn"
+                }
                 else {
                     // renamed from sendMessage, less ambiguity for server/client methods.
                     // print to server
@@ -299,6 +328,32 @@ public class Server
                 System.out.println(e.toString());
             }
             return true;
+        }
+
+        /*
+         * Prints a list of logged-on users to Admin terminal
+         */
+        public void printClientListToAdminConsole(){
+
+            StringWriter sw = new StringWriter();
+            PrintWriter writer = new PrintWriter(sw, true);
+
+            writer.println("\n**** ACTIVE USERS BY CHANNEL **** \n");
+
+
+            for(String key : channelRosters.keySet()) {
+
+                writer.println(key);
+                writer.println("-------------------");
+                ArrayList<ClientThread> names = channelRosters.get(key);
+                int i = 0;
+                for(ClientThread ct : names) {
+                   writer.println("\t" + i + ".  " + ct.username);
+                    i++;
+                }
+            }
+            // Print to User's console.
+            this.sendMessage(sw.toString());
         }
     }
 }

@@ -48,7 +48,7 @@ public class ChatService implements ChatServiceInterface
         	return null;
         }
         String id = u.getId();
-
+        u.setCurrentChannel(id, "Lobby");
         //if (!id.isEmpty()) {
             //joinChannel("0", id);
         	if (joinChannel("testCH1",id)){

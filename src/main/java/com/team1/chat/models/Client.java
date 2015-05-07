@@ -239,7 +239,7 @@ public class Client
                 // LOGOUT 
                 else if (in.length == 1 && in[0].equals("/logout")) {
                     client.sendMessage("/logout");
-                    client.disconnect();
+                    //client.disconnect();
                     System.out.println("Logout successful!");
                     break;
                 }
@@ -279,6 +279,7 @@ public class Client
                 }
                 // JOIN CHANNEL
                 else if (in.length == 2 && in[0].equals("/joinChannel")) {
+
                     if (csc.joinChannel(in[1], uid)) {
                         csc.leaveChannel(channel, uid);
                         client.sendMessage("/joinChannel " + in[1]);
@@ -475,6 +476,10 @@ public class Client
                     else {
                         System.out.println("Decline invite to channel failed.");
                     }
+                }
+                // Admin command - hidden from clients.
+                else if(message.equals("/showLoggedIn")){
+                    client.sendMessage(message);
                 }
 
                 else {
