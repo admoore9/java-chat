@@ -9,9 +9,14 @@ public class ChatService implements ChatServiceInterface
     // class-level instantiation of DatabaseSupport object.
     private DatabaseSupport dbs = null;
 
-    public ChatService(){
+    /**
+     * Constructor
+     */
+    public ChatService()
+    {
     	dbs = this.getDatabaseSupportInstance();
     }
+
     /**
      * Creates a new User in the database.
      */
@@ -44,24 +49,18 @@ public class ChatService implements ChatServiceInterface
     public String login(String username, String password)
     {
         User u = dbs.getUser(username, password);
-        if (u==null){
+        if (u == null){
         	return null;
         }
+
         String id = u.getId();
 
-        //if (!id.isEmpty()) {
-            //joinChannel("0", id);
-        	if (joinChannel("Lobby",id)){
-        		System.out.println("Successfully joined default channel.");
-        	}
-        	else {
-        		System.out.println("Failed to join default channel.");
-        	}
-        //}
-        return id;
+        if (joinChannel("Lobby",id))
+        {
+            return id;
+        }
+        return null;
     }
-
-    //TODO Need to eventually discuss what actions we want to occur on logout.
 
     /**
      * User logs out and leaves the default channel.
@@ -71,15 +70,8 @@ public class ChatService implements ChatServiceInterface
     public boolean logout(String uid)
     {
         User u = dbs.getUserById(uid);
-        if (u==null){
-        	return false;
-        }
-        if (leaveChannel("Lobby", u.getId())){
-            	return true;
-        }
-        else{
-            	return false;
-        }
+
+        return u != null && leaveChannel(u.getCurrentChannel(), uid);
     }
 
     /**
@@ -93,18 +85,21 @@ public class ChatService implements ChatServiceInterface
     {
         // get User object from database.
         User u = this.getDatabaseSupportInstance().getUserById(uid);
-        if (u == null){
+        if (u == null)
+        {
         	return false;
         }
+
         // Check if username is same as first.
-        if (u.getUsername().equals(newUsername)){
+        if (u.getUsername().equals(newUsername))
+        {
         	System.out.println("Username entered is same as the existing username.");
         	return false;
         }
+
         // Check if username is already taken.
-//        User isTaken = this.getDatabaseSupportInstance().getUserByName(newUsername);
-//        if (isTaken != null){
-        if (!this.getDatabaseSupportInstance().nameAvailable(newUsername)){
+        if (!this.getDatabaseSupportInstance().nameAvailable(newUsername))
+        {
         	System.out.println("That username is not available.");
         	return false;
         }
@@ -134,26 +129,34 @@ public class ChatService implements ChatServiceInterface
     {
         // get User object from database.
         User u = getDatabaseSupportInstance().getUserById(uid);
-        if (u==null){
+        if (u == null)
+        {
         	return false;
         }
+
         // check if new password is same as old password.
-        if (u.getPassword().equals(newPassword)){
+        if (u.getPassword().equals(newPassword))
+        {
         	System.out.println("New password is same as existing password.");
         	return false;
         }
+
         // check if password if of a valid format.
-        if (!this.checkWellFormed(newPassword)){
+        if (!this.checkWellFormed(newPassword))
+        {
         	return false;
         }
+
         // use setUsername method in User object to place new username.
-        if (!u.setPassword(uid, newPassword)){
+        if (!u.setPassword(uid, newPassword))
+        {
         	System.out.println("User.setPassword(uid, newPassword) Error: uid does not match this user's id.");
         	return false;
         }
 
         // return User object to database, if returns false, we have an error.
-        if (!dbs.putUser(u)) {
+        if (!dbs.putUser(u))
+        {
             System.out.println("Database put error");
             return false;
         }
@@ -170,26 +173,26 @@ public class ChatService implements ChatServiceInterface
     public boolean leaveChannel(String cname, String uid)
     {
         Channel ch = this.getDatabaseSupportInstance().getChannelByName(cname);
-        //TODO: REVIEW THIS CONDITIONAL LATER
-        if (ch==null){
+        if (ch == null)
+        {
         	System.out.println("Specified channel name does not exist.");
         	return false;
         }
-        if (uid==null){
-        	System.out.println("The user id provided is null.");
-        	return false;
-        }
+
         User u = this.getDatabaseSupportInstance().getUserById(uid);
-        if (u==null){
+        if (u == null)
+        {
         	System.out.println("Specified user does not exist.");
         	return false;
         }
-        if ((ch != null && u != null) && ch.removeChannelUser(u)) {
-        	//System.out.println("Attempting to remove user from channel.");
-            this.getDatabaseSupportInstance().putChannel(ch);
-            //System.out.println("Successfully left channel.");
-            return true;
+
+        if (ch.removeChannelUser(u))
+        {
+            return u.setCurrentChannel(u.getId(), null) &&
+                   this.getDatabaseSupportInstance().putUser(u) &&
+                   this.getDatabaseSupportInstance().putChannel(ch);
         }
+
         System.out.println("Leave channel failed.");
         return false;
     }
@@ -203,42 +206,17 @@ public class ChatService implements ChatServiceInterface
      */
     public boolean joinChannel(String cname, String uid)
     {
+
         Channel ch = this.getDatabaseSupportInstance().getChannelByName(cname);
-        //TODO: REVIEW THIS CONDITIONAL LATER
-        if (ch==null){
-        	return false;
-        }
-
         User u = this.getDatabaseSupportInstance().getUserById(uid);
-        if (u==null){
-        	return false;
-        }
-        else{
-            //TODO - added check if on whitelist, then set current channel.
-            boolean flag;
-            flag = ch.isWhiteListed(u);
-            if(!flag){
-                System.out.println("User " + u.getUsername() +" not on " + cname + " whitelist.");
-                return false;
-            }
 
-            flag = u.setCurrentChannel(uid, cname);
-            if(!flag){
-                System.out.println("Error trying to setCurrentChannel in joinChannel method.");
-                return false;
-            }
-        }
-        
-        if ((ch != null && u != null) && ch.addChannelUser(u)) {
-        	if (this.getDatabaseSupportInstance().putChannel(ch)){
-        		return true;
-        	}
-        	else{
-            	System.out.println("Failed to update Channel's contents in database.");
-            	return false;
-            }
-        }
-        else return false;
+        return ch != null &&
+                u != null &&
+                u.getCurrentChannel() == null &&
+                u.setCurrentChannel(uid, cname) &&
+                ch.addChannelUser(u) &&
+                this.getDatabaseSupportInstance().putUser(u) &&
+                this.getDatabaseSupportInstance().putChannel(ch);
     }
 
     /**
@@ -250,28 +228,16 @@ public class ChatService implements ChatServiceInterface
      */
     public ArrayList<User> listChannelUsers(String cname, String uid)
     {
-
         Channel ch = this.getDatabaseSupportInstance().getChannelByName(cname);
-        if (ch==null){
-        	System.out.println("Channel["+cname+"] does not exist.");
-        	return null;
-        }
         User u = this.getDatabaseSupportInstance().getUserById(uid);
-        if (u==null){
-        	System.out.println("User["+uid+"] does not exist.");
-        	return null;
+
+        if (ch != null && u != null && ch.isWhiteListed(u))
+        {
+            return ch.getCurrentUsers();
         }
-        // TODO - (ch != null && u != null)
-        if ((ch != null && u != null) && ch.isWhiteListed(u)) {
-            return ch.listChannelUsers();
-        }
-        else {
-        	System.out.println("User["+u.getId()+"] is not white listed.");
-        }
+
         return null;
     }
-
-    // iteration 2
 
     /**
      * Method that creates a new channel and adds the current user to that channel
@@ -293,17 +259,15 @@ public class ChatService implements ChatServiceInterface
         	}
             Channel c = new Channel(cname, aid);
             User u = this.getDatabaseSupportInstance().getUserById(aid);
-            if (u==null){
+            if (u == null)
+            {
             	return false;
             }
-            u.addChannel(c);
+            u.addPrivateChannel(c);
             c.whiteListUser(aid, u);
 
-            // update database
-            this.getDatabaseSupportInstance().putChannel(c);
-            this.getDatabaseSupportInstance().putUser(u);
-
-            return true;
+            return this.getDatabaseSupportInstance().putChannel(c) &&
+                   this.getDatabaseSupportInstance().putUser(u);
         }
         return false;
     }
@@ -330,7 +294,10 @@ public class ChatService implements ChatServiceInterface
                 for (i = 0; i < users.size(); i++) {
                     user = this.getDatabaseSupportInstance().getUserById(users.get(i).getId());
                     user.deleteChannel(c);
-                    this.getDatabaseSupportInstance().putUser(user);
+                    if (!this.getDatabaseSupportInstance().putUser(user))
+                    {
+                        return false;
+                    }
                 }
                 if (this.getDatabaseSupportInstance().deleteChannel(c.getName())){
                 	System.out.println("Channel removed from database.");
@@ -362,18 +329,15 @@ public class ChatService implements ChatServiceInterface
      */
     public boolean inviteUserToChannel(String cname, String aid, String uname)
     {
-        Channel c;
-        User u;
+        Channel c = this.getDatabaseSupportInstance().getChannelByName(cname);
+        User u = this.getDatabaseSupportInstance().getUserByName(uname);
 
-        c = this.getDatabaseSupportInstance().getChannelByName(cname);
-        u = this.getDatabaseSupportInstance().getUserByName(uname);
-
-        if (c != null && u != null) {
-            if (c.whiteListUser(aid, u) && u.addChannelInvite(c)) {
-                this.getDatabaseSupportInstance().putChannel(c);
-                this.getDatabaseSupportInstance().putUser(u);
-
-                return true;
+        if (c != null && u != null)
+        {
+            if (c.whiteListUser(aid, u) && u.addChannelInvite(c))
+            {
+                return this.getDatabaseSupportInstance().putChannel(c) &&
+                       this.getDatabaseSupportInstance().putUser(u);
             }
         }
         return false;
@@ -389,18 +353,15 @@ public class ChatService implements ChatServiceInterface
      */
     public boolean removeUserFromChannel(String cname, String aid, String uname)
     {
-        Channel c;
-        User u;
+        Channel c = this.getDatabaseSupportInstance().getChannelByName(cname);
+        User u = this.getDatabaseSupportInstance().getUserByName(uname);
 
-        c = this.getDatabaseSupportInstance().getChannelByName(cname);
-        u = this.getDatabaseSupportInstance().getUserByName(uname);
-
-        if (c != null && u != null) {
-            if (c.removeUser(aid, u) && u.removeFromChannel(c)) {
-                this.getDatabaseSupportInstance().putChannel(c);
-                this.getDatabaseSupportInstance().putUser(u);
-
-                return true;
+        if (c != null && u != null)
+        {
+            if (c.removeUser(aid, u) && u.removeFromChannel(c))
+            {
+                return this.getDatabaseSupportInstance().putChannel(c) &&
+                       this.getDatabaseSupportInstance().putUser(u);
             }
         }
         return false;
@@ -414,13 +375,13 @@ public class ChatService implements ChatServiceInterface
      */
     public ArrayList<String> viewInvitedChannels(String uid)
     {
-        User u;
+        User u = this.getDatabaseSupportInstance().getUserById(uid);
 
-        u = this.getDatabaseSupportInstance().getUserById(uid);
-        if (u==null){
-        	return null;
+        if (u != null)
+        {
+        	return u.getInvitedChannels();
         }
-        return u.viewInvitedChannels();
+        return null;
     }
 
     /**
@@ -431,13 +392,13 @@ public class ChatService implements ChatServiceInterface
      */
     public ArrayList<String> viewPrivateChannels(String uid)
     {
-        User u;
+        User u = this.getDatabaseSupportInstance().getUserById(uid);
 
-        u = this.getDatabaseSupportInstance().getUserById(uid);
-        if (u==null){
-        	return null;
+        if (u != null)
+        {
+        	return u.getInvitedChannels();
         }
-        return u.viewPrivateChannels();
+        return null;
     }
 
     /**
@@ -445,6 +406,7 @@ public class ChatService implements ChatServiceInterface
      *
      * @return a list of public channels
      */
+    // TODO need to implement
     public ArrayList<String> viewPublicChannels(String uid)
     {
         User u;
@@ -453,7 +415,7 @@ public class ChatService implements ChatServiceInterface
         if (u==null){
         	return null;
         }
-        return u.viewPublicChannels();
+        return u.getInvitedChannels();
     }
 
     /**
@@ -490,7 +452,6 @@ public class ChatService implements ChatServiceInterface
             System.out.println("Password must contain at least two digits [0-9]. Number of digits: " + count);
             return false;
         }
-
     }
 
     /**
@@ -502,29 +463,31 @@ public class ChatService implements ChatServiceInterface
      */
     public boolean toggleChannelVisibility(String cname, String aid)
     {
-        Channel c;
+        Channel c = this.getDatabaseSupportInstance().getChannelByName(cname);
 
-        c = this.getDatabaseSupportInstance().getChannelByName(cname);
-        if (c!=null){
-        	if (c.toggleChannelVisibility(aid)){
-        		if(dbs.putChannel(c)){
+        if (c != null)
+        {
+        	if (c.toggleChannelVisibility(aid))
+            {
+        		if(dbs.putChannel(c))
+                {
         			return true;
         		}
         		System.out.println("Failed to put channel in database.");
         		return false;
         	}
-        	else {
+        	else
+            {
         		System.out.println("Failed to toggle channel visibility.");
         		return false;
         	}
         }
-        else {
+        else
+        {
         	System.out.println("Channel does not exist.");
         	return false;
         }
     }
-
-    // Iteration 3
 
     /**
      * Method that adds a friend to a user
@@ -535,23 +498,13 @@ public class ChatService implements ChatServiceInterface
      */
     public boolean addFriend(String uid, String username)
     {
-        User u, f;
+        User u = this.getDatabaseSupportInstance().getUserById(uid);
+        User f = this.getDatabaseSupportInstance().getUserByName(username);
 
-        u = this.getDatabaseSupportInstance().getUserById(uid);
-        if (u==null){
-        	return false;
-        }
-        f = this.getDatabaseSupportInstance().getUserByName(username);
-
-        if (f != null)
-        {
-            u.addFriend(f);
-            this.getDatabaseSupportInstance().putUser(u);
-
-            return true;
-        }
-
-        return false;
+        return u != null &&
+               f != null &&
+               u.addFriend(f) &&
+               this.getDatabaseSupportInstance().putUser(u);
     }
 
     /**
@@ -563,23 +516,13 @@ public class ChatService implements ChatServiceInterface
      */
     public boolean removeFriend(String uid, String username)
     {
-        User u, f;
+        User u = this.getDatabaseSupportInstance().getUserById(uid);
+        User f = this.getDatabaseSupportInstance().getUserByName(username);
 
-        u = this.getDatabaseSupportInstance().getUserById(uid);
-        if (u==null){
-        	return false;
-        }
-        f = this.getDatabaseSupportInstance().getUserByName(username);
-
-        if (f != null)
-        {
-            u.removeFriend(f);
-            this.getDatabaseSupportInstance().putUser(u);
-
-            return true;
-        }
-
-        return false;
+        return u != null &&
+               f != null &&
+               u.removeFriend(f) &&
+               this.getDatabaseSupportInstance().putUser(u);
     }
 
     /**
@@ -590,13 +533,14 @@ public class ChatService implements ChatServiceInterface
      */
     public ArrayList<User> viewFriends(String uid)
     {
-        User u;
+        User u = this.getDatabaseSupportInstance().getUserById(uid);
 
-        u = this.getDatabaseSupportInstance().getUserById(uid);
-        if (u==null){
-        	return null;
+        if (u != null)
+        {
+        	return u.getFriends();
         }
-        return u.getFriends();
+
+        return null;
     }
 
     /**
@@ -608,23 +552,13 @@ public class ChatService implements ChatServiceInterface
      */
     public boolean addBlockedUser(String uid, String username)
     {
-        User u, f;
+        User u = this.getDatabaseSupportInstance().getUserById(uid);
+        User f = this.getDatabaseSupportInstance().getUserByName(username);
 
-        u = this.getDatabaseSupportInstance().getUserById(uid);
-        if (u==null){
-        	return false;
-        }
-        f = this.getDatabaseSupportInstance().getUserByName(username);
-
-        if (f != null)
-        {
-            u.blockUser(f);
-            this.getDatabaseSupportInstance().putUser(u);
-
-            return true;
-        }
-
-        return false;
+        return u != null &&
+               f != null &&
+               u.blockUser(f) &&
+               this.getDatabaseSupportInstance().putUser(u);
     }
 
     /**
@@ -636,23 +570,13 @@ public class ChatService implements ChatServiceInterface
      */
     public boolean removeBlockedUser(String uid, String username)
     {
-        User u, f;
+        User u = this.getDatabaseSupportInstance().getUserById(uid);
+        User f = this.getDatabaseSupportInstance().getUserByName(username);
 
-        u = this.getDatabaseSupportInstance().getUserById(uid);
-        if (u==null){
-        	return false;
-        }
-        f = this.getDatabaseSupportInstance().getUserByName(username);
-
-        if (f != null)
-        {
-            u.removeBlockedUser(f);
-            this.getDatabaseSupportInstance().putUser(u);
-
-            return true;
-        }
-
-        return false;
+        return u != null &&
+               f != null &&
+               u.removeBlockedUser(f) &&
+               this.getDatabaseSupportInstance().putUser(u);
     }
 
     /**
@@ -663,13 +587,14 @@ public class ChatService implements ChatServiceInterface
      */
     public ArrayList<User> viewBlockedUsers(String uid)
     {
-        User u;
+        User u = this.getDatabaseSupportInstance().getUserById(uid);
 
-        u = this.getDatabaseSupportInstance().getUserById(uid);
-        if (u==null){
-        	return null;
+        if (u != null)
+        {
+        	return u.getBlockedUsers();
         }
-        return u.getBlockedUsers();
+
+        return null;
     }
 
     /**
@@ -681,16 +606,11 @@ public class ChatService implements ChatServiceInterface
      */
     public boolean setPublicName(String uid, String publicName)
     {
-        User u;
+        User u = this.getDatabaseSupportInstance().getUserById(uid);
 
-        u = this.getDatabaseSupportInstance().getUserById(uid);
-        if (u==null){
-        	return false;
-        }
-        u.setPublicName(publicName);
-        this.getDatabaseSupportInstance().putUser(u);
-
-        return true;
+        return u != null &&
+               u.setPublicName(publicName) &&
+               this.getDatabaseSupportInstance().putUser(u);
     }
 
     /**
@@ -702,23 +622,14 @@ public class ChatService implements ChatServiceInterface
      */
     public boolean acceptInviteToChannel(String uid, String cname)
     {
-        User u;
-        Channel c;
+        User u = this.getDatabaseSupportInstance().getUserById(uid);
+        Channel c = this.getDatabaseSupportInstance().getChannelByName(cname);
 
-        u = this.getDatabaseSupportInstance().getUserById(uid);
-        if (u==null){
-        	return false;
-        }
-        c = this.getDatabaseSupportInstance().getChannelByName(cname);
-
-        if (c != null && c.isWhiteListed(u))
-        {
-            u.acceptChannelInvite(c);
-            this.getDatabaseSupportInstance().putUser(u);
-            return true;
-        }
-
-        return false;
+        return u != null &&
+               c != null &&
+               c.isWhiteListed(u) &&
+               u.acceptChannelInvite(c) &&
+               this.getDatabaseSupportInstance().putUser(u);
     }
 
     /**
@@ -730,19 +641,16 @@ public class ChatService implements ChatServiceInterface
      */
     public boolean declineInviteToChannel(String uid, String cname)
     {
-        User u;
-        Channel c;
+        User u = this.getDatabaseSupportInstance().getUserById(uid);
+        Channel c = this.getDatabaseSupportInstance().getChannelByName(cname);
 
-        u = this.getDatabaseSupportInstance().getUserById(uid);
-        if (u==null){
-        	return false;
-        }
-        c = this.getDatabaseSupportInstance().getChannelByName(cname);
-
-        return (c != null &&
-                c.isWhiteListed(u) &&
-                c.removeDeclinedInviteFromWhiteList(uid) &&
-                u.declineChannelInvite(c));
+        return c != null &&
+               u != null &&
+               c.isWhiteListed(u) &&
+               c.removeDeclinedInviteFromWhiteList(uid) &&
+               u.declineChannelInvite(c) &&
+               this.getDatabaseSupportInstance().putChannel(c) &&
+               this.getDatabaseSupportInstance().putUser(u);
     }
 
     /**
@@ -751,7 +659,9 @@ public class ChatService implements ChatServiceInterface
     private DatabaseSupport getDatabaseSupportInstance()
     {
         if (dbs == null)
+        {
             dbs = new DatabaseSupport();
+        }
         return dbs;
     }
 }

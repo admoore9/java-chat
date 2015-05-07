@@ -38,6 +38,8 @@ public interface ChatServiceInterface
 
     ArrayList<String> viewPrivateChannels(String uid);
 
+    ArrayList<String> viewPublicChannels(String uid);
+
     boolean toggleChannelVisibility(String cname, String aid);
 
     // Iteration 3

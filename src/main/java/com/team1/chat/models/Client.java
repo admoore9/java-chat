@@ -72,6 +72,7 @@ public class Client
     /*
         Business end of the Client. Send a message. It sends a message.
      */
+    // TODO update interaction diagram/use case for send message
     public void sendMessage(String message)
     {
         try {
@@ -149,8 +150,8 @@ public class Client
                 if (in[0].equals("login")) {
                     uid = csc.login(username, password);
                     if (uid != null) {
-                        channel = "Lobby"; // set to defualt channel
-                        System.out.println("Login successful");
+                        channel = "Lobby"; // set to default channel
+                        System.out.println("Login successful. You are in the lobby.");
                         break;
                     }
                     else {
@@ -182,7 +183,7 @@ public class Client
 
         // create new client
         //Client client = new Client("104.236.206.121", 4444, username, uid);
-        Client client = new Client("localhost", 4444, username, uid);
+        Client client = new Client("localhost",  4444, username, uid);
         
         // test we can connect
         if (!client.start())
@@ -263,21 +264,30 @@ public class Client
                 }
                 // JOIN CHANNEL
                 else if (in.length == 2 && in[0].equals("/joinChannel")) {
-                	//TODO: I think that this whole leaveChannel and then joinChannel thing should probably
-                	//      be taken care of inside csc's join channel. It seems like its giving an extension
-                	//		to the UI.
-                	if (!channel.isEmpty()){
-                		csc.leaveChannel(channel, uid);
-                		channel="";
-                    	client.sendMessage("/joinChannel "+channel);
-                        System.out.println("You have successfully left " + in[1] + ".");
-                	}
-                    if (csc.joinChannel(in[1], uid)) {
-                    	channel=in[1];
-                        client.sendMessage("/joinChannel " + in[1]);
-                        System.out.println("You have successfully joined " + in[1] + ".");
+//                	//TODO: I think that this whole leaveChannel and then joinChannel thing should probably
+//                	//      be taken care of inside csc's join channel. It seems like its giving an extension
+//                	//		to the UI.
+//                	if (!channel.isEmpty()){
+//                		csc.leaveChannel(channel, uid);
+//                		channel="";
+//                    	client.sendMessage("/joinChannel "+channel);
+//                        System.out.println("You have successfully left " + in[1] + ".");
+//                	}
+//                    if (csc.joinChannel(in[1], uid)) {
+//                    	channel=in[1];
+//                        client.sendMessage("/joinChannel " + in[1]);
+//                        System.out.println("You have successfully joined " + in[1] + ".");
+//                    }
+//                    else {
+//                        System.out.println("Join channel failed.");
+//                    }
+                    if (csc.joinChannel(in[1], uid))
+                    {
+                        channel = in[1];
+                        System.out.println("Joined channel " + in[1] + ".");
                     }
-                    else {
+                    else
+                    {
                         System.out.println("Join channel failed.");
                     }
                 }

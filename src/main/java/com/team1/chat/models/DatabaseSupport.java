@@ -421,13 +421,13 @@ public class DatabaseSupport implements DatabaseSupportInterface
     		statement = "UPDATE Channel "+
     						"SET name='"+c.getName()+"',"+
     							"ispublic='"+isPublic+"',"+
-    							"admin='"+c.getAdminId()+"',"+
+    							"admin='"+c.getAdmin()+"',"+
     							"whitelist='"+wList+"',"+
     							"currentlist='"+cList+"'"+
     						"WHERE name='"+c.getName()+"'";
     	}
     	else {statement = "INSERT INTO Channel " +
-	   			"VALUES('"+c.getName()+"','"+isPublic+"','"+c.getAdminId()+"','"+wList+"','"+cList+"')";
+	   			"VALUES('"+c.getName()+"','"+isPublic+"','"+c.getAdmin()+"','"+wList+"','"+cList+"')";
     	}
         return setData(statement);
     }

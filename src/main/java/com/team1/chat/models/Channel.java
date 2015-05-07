@@ -1,21 +1,14 @@
 package com.team1.chat.models;
 
 import com.team1.chat.interfaces.ChannelInterface;
-
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.ArrayList;
 
 /**
- * The channel class which contains a list of whiteListed users and current users
+ * The Channel class which contains a name, administrator, visibility
+ * flag, white list, and list of current users
  */
 public class Channel implements ChannelInterface
 {
-
     private String name;
     private String admin;
     private boolean isPublic;
@@ -23,7 +16,10 @@ public class Channel implements ChannelInterface
     private ArrayList<User> currentUsers;
 
     /**
-     * Constructor for the Channel
+     * Constructor
+     *
+     * @param name name of channel
+     * @param admin id of channel admin
      */
     public Channel(String name, String admin)
     {
@@ -33,24 +29,20 @@ public class Channel implements ChannelInterface
         this.whiteList = new ArrayList<User>();
         this.currentUsers = new ArrayList<User>();
     }
-    public Channel(String name, String admin, boolean ispublic){
-    	this.name=name;
-    	this.admin=admin;
-    	this.isPublic=ispublic;
+
+    /**
+     * Constructor
+     *
+     * @param name name of channel
+     * @param admin id of channel admin
+     * @param isPublic visibility of channel
+     */
+    public Channel(String name, String admin, boolean isPublic){
+    	this.name = name;
+    	this.admin = admin;
+    	this.isPublic = isPublic;
         this.whiteList = new ArrayList<User>();
         this.currentUsers = new ArrayList<User>();
-    }
-    public ArrayList<User> getWhiteList()
-    {
-        return whiteList;
-    }
-
-    public ArrayList<User> getCurrentUsers(){
-    	return currentUsers;
-    }
-    public boolean isPublic()
-    {
-        return isPublic;
     }
 
     public String getName()
@@ -58,9 +50,23 @@ public class Channel implements ChannelInterface
         return name;
     }
 
-    public String getAdminId()
+    public String getAdmin()
     {
         return admin;
+    }
+
+    public boolean isPublic()
+    {
+        return isPublic;
+    }
+
+    public ArrayList<User> getWhiteList()
+    {
+        return whiteList;
+    }
+
+    public ArrayList<User> getCurrentUsers(){
+    	return currentUsers;
     }
 
     /**
@@ -72,31 +78,26 @@ public class Channel implements ChannelInterface
     public boolean isWhiteListed(User u)
     {
         int i;
+        String id;
+        User temp;
+
+        if (isPublic)
+        {
+            return true;
+        }
 
         for (i = 0; i < whiteList.size(); i++)
         {
-        	User temp = whiteList.get(i);
-        	String id = temp.getId();
-        	if (id.equals(u.getId())){
-        		//System.out.println("User["+id+"] from the channel's whitelist is the current client.");
+        	temp = whiteList.get(i);
+        	id = temp.getId();
+
+        	if (id.equals(u.getId()))
+            {
         		return true;
-        	}
-        	else {
-        		//System.out.println("User["+id+"] from the channel's whitelist is not the client.");
         	}
         }
 
         return false;
-    }
-
-    /**
-     * Method that returns a list of users currently in the channel
-     *
-     * @return the list of users in the channel
-     */
-    public ArrayList<User> listChannelUsers()
-    {
-        return currentUsers;
     }
 
     /**
@@ -109,7 +110,7 @@ public class Channel implements ChannelInterface
     {
         int i;
 
-        if ((isWhiteListed(u) && !isPublic) || isPublic)
+        if (isWhiteListed(u))
         {
             for (i = 0; i < currentUsers.size(); i++)
             {
@@ -148,7 +149,6 @@ public class Channel implements ChannelInterface
         return false;
     }
 
-    // Iteration 2
     /**
      * Method that gets the users in the channel to prepare for deletion
      *

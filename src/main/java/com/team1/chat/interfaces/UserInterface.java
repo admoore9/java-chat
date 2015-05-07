@@ -12,8 +12,6 @@ public interface UserInterface
 
     String getId();
 
-    boolean sendMessage(UserInterface u, String msgText);
-
     boolean setUsername(String uid, String newUsername);
 
     String getUsername();
@@ -23,7 +21,8 @@ public interface UserInterface
     String getPassword();
 
     // Iteration 2
-    boolean addChannel(Channel c);
+    // TODO update interaction diagram
+    boolean addPrivateChannel(Channel c);
 
     boolean deleteChannel(Channel c);
 
@@ -32,11 +31,9 @@ public interface UserInterface
     boolean removeFromChannel(Channel c);
 
     // TODO deviation from interaction diagram for next 3
-    ArrayList<String> viewInvitedChannels();
+    ArrayList<String> getInvitedChannels();
 
-    ArrayList<String> viewPrivateChannels();
-
-    ArrayList<String> viewPublicChannels();
+    ArrayList<String> getPrivateChannels();
 
     // Iteration 3
     boolean addFriend(User f);
@@ -56,4 +53,10 @@ public interface UserInterface
     boolean acceptChannelInvite(Channel c);
 
     boolean declineChannelInvite(Channel c);
+
+    String getPublicName();
+
+    String getCurrentChannel();
+
+    boolean setCurrentChannel(String uid, String cname);
 }

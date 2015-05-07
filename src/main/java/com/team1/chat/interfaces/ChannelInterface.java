@@ -8,18 +8,13 @@ import java.util.ArrayList;
 public interface ChannelInterface
 {
     // Iteration 1
-    ArrayList<User> listChannelUsers();
+    ArrayList<User> getCurrentUsers();
 
     boolean addChannelUser(User u);
 
     boolean removeChannelUser(User u);
 
     boolean isWhiteListed(User u);
-
-    public interface ChannelListener{
-        public void start();
-        public boolean sendMessage(String username, String msgText);
-    }
 
     // Iteration 2
     ArrayList<User> deleteChannel(String aid);
