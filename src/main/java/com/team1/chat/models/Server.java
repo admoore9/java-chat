@@ -120,23 +120,25 @@ public class Server
      * If message send fails, disconnect the user that failed.
      */
     public synchronized void broadcast(String message, String channel)
-    {
-        // Get the roster for the channel
-        ArrayList<ClientThread> clients = channelRosters.get(channel);
-
-        // print to server console
-        System.out.println("Channel: " + channel + " - " + message);
-
-        // print to clients, loop backwards so if we have to remove, we don't go OoB or skip a user.
-        for (int i = clients.size()-1; i >= 0; --i) {
-
-            // if sendMessage for a client fails, disconnect them from channel.
-            if (!clients.get(i).sendMessage(message)) {
-
-                System.out.println("Client: " + clients.get(i).username + " disconnected. Removing from active.");
-                removeFromServerList(channel, i);
-            }
-        }
+    {	
+    	if (!channel.isEmpty()){
+	        // Get the roster for the channel
+	        ArrayList<ClientThread> clients = channelRosters.get(channel);
+	
+	        // print to server console
+	        System.out.println("Channel: " + channel + " - " + message);
+	
+	        // print to clients, loop backwards so if we have to remove, we don't go OoB or skip a user.
+	        for (int i = clients.size()-1; i >= 0; --i) {
+	
+	            // if sendMessage for a client fails, disconnect them from channel.
+	            if (!clients.get(i).sendMessage(message)) {
+	
+	                System.out.println("Client: " + clients.get(i).username + " disconnected. Removing from active.");
+	                removeFromServerList(channel, i);
+	            }
+	        }
+    	}
     }
 
     /*
@@ -201,8 +203,8 @@ public class Server
         {
             thread_ID = numClients += 1;
             this.socket = socket;
-            // On thread creation, add them to testCH1, a.k.a., the lobby.
-            this.channel = "testCH1";
+            // On thread creation, add them to Lobby.
+            this.channel = "Lobby";
 
             // create data streams
             System.out.println("Thread setting up Object I/O streams.");
@@ -252,8 +254,13 @@ public class Server
                 // user wants to switch channels.
                 else if(message.contains("/joinChannel")){
                     String[] input = message.split(" ");
-                    String newChannel = input[1];
-                    changeChannel(this, newChannel);
+                    String newChannel = "";
+                    //If there are no arguments, it denotes that the user is only leaving a channel.
+                    if (input.length!=1){
+                    	//Otherwise, the specified value denotes the new channel.
+                    	newChannel = input[1];
+                    }
+                    	changeChannel(this, newChannel);
                 }
                 // admin method
                 else if(message.contains("/removeUserFromChannel")){
@@ -277,7 +284,7 @@ public class Server
                 else {
                     // renamed from sendMessage, less ambiguity for server/client methods.
                     // print to server
-                    broadcast(username + ": " + message, channel);
+                    broadcast("["+channel+"]"+"["+username +"]"+": "+ message, channel);
                 }
             }
             // user passed "/logout" message. Remove from channel roster, close connections.

@@ -31,11 +31,12 @@ public interface UserInterface
 
     boolean removeFromChannel(Channel c);
 
-    ArrayList<Channel> viewInvitedChannels();
+    // TODO deviation from interaction diagram for next 3
+    ArrayList<String> viewInvitedChannels();
 
-    ArrayList<Channel> viewPrivateChannels();
+    ArrayList<String> viewPrivateChannels();
 
-    ArrayList<Channel> viewPublicChannels();
+    ArrayList<String> viewPublicChannels();
 
     // Iteration 3
     boolean addFriend(User f);

@@ -33,7 +33,13 @@ public class Channel implements ChannelInterface
         this.whiteList = new ArrayList<User>();
         this.currentUsers = new ArrayList<User>();
     }
-
+    public Channel(String name, String admin, boolean ispublic){
+    	this.name=name;
+    	this.admin=admin;
+    	this.isPublic=ispublic;
+        this.whiteList = new ArrayList<User>();
+        this.currentUsers = new ArrayList<User>();
+    }
     public ArrayList<User> getWhiteList()
     {
         return whiteList;
@@ -109,6 +115,7 @@ public class Channel implements ChannelInterface
             {
                 if (currentUsers.get(i).getId().equals(u.getId()))
                 {
+                	System.out.println("User already in this channel.");
                     return false;
                 }
             }
@@ -152,7 +159,7 @@ public class Channel implements ChannelInterface
     {
         if (admin.equals(aid))
         {
-            return whiteList;
+            return currentUsers;
         }
         return null;
     }

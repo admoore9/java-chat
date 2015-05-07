@@ -51,7 +51,7 @@ public class ChatService implements ChatServiceInterface
         u.setCurrentChannel(id, "Lobby");
         //if (!id.isEmpty()) {
             //joinChannel("0", id);
-        	if (joinChannel("testCH1",id)){
+        	if (joinChannel("Lobby",id)){
         		System.out.println("Successfully joined default channel.");
         	}
         	else {
@@ -74,7 +74,7 @@ public class ChatService implements ChatServiceInterface
         if (u==null){
         	return false;
         }
-        if (leaveChannel("testCH1", u.getId())){
+        if (leaveChannel("Lobby", u.getId())){
             	return true;
         }
         else{
@@ -185,9 +185,9 @@ public class ChatService implements ChatServiceInterface
         	return false;
         }
         if ((ch != null && u != null) && ch.removeChannelUser(u)) {
-        	System.out.println("Attempting to remove user from channel.");
+        	//System.out.println("Attempting to remove user from channel.");
             this.getDatabaseSupportInstance().putChannel(ch);
-            System.out.println("Successfully left channel.");
+            //System.out.println("Successfully left channel.");
             return true;
         }
         System.out.println("Leave channel failed.");
@@ -217,12 +217,16 @@ public class ChatService implements ChatServiceInterface
             //TODO - added check if on whitelist, then set current channel.
             boolean flag;
             flag = ch.isWhiteListed(u);
-            if(!flag)
+            if(!flag){
                 System.out.println("User " + u.getUsername() +" not on " + cname + " whitelist.");
+                return false;
+            }
 
             flag = u.setCurrentChannel(uid, cname);
-            if(!flag)
-                System.out.println("Error setting channel in joinChannel method.");
+            if(!flag){
+                System.out.println("Error trying to setCurrentChannel in joinChannel method.");
+                return false;
+            }
         }
         
         if ((ch != null && u != null) && ch.addChannelUser(u)) {
@@ -230,10 +234,11 @@ public class ChatService implements ChatServiceInterface
         		return true;
         	}
         	else{
-            	//System.out.println("Failed to update Channel's contents in database.");
+            	System.out.println("Failed to update Channel's contents in database.");
+            	return false;
             }
         }
-        return false;
+        else return false;
     }
 
     /**
@@ -278,6 +283,14 @@ public class ChatService implements ChatServiceInterface
     public boolean createChannel(String cname, String aid)
     {
         if (this.getDatabaseSupportInstance().getChannelByName(cname) == null) {
+        	if (cname==null || cname.isEmpty()){
+        		System.out.println("A name was not provided for the new channel.");
+        		return false;
+        	}
+        	if (cname.length()>10){
+        		System.out.println("A channel name may be no longer than 10 characters.");
+        		return false;
+        	}
             Channel c = new Channel(cname, aid);
             User u = this.getDatabaseSupportInstance().getUserById(aid);
             if (u==null){
@@ -313,16 +326,30 @@ public class ChatService implements ChatServiceInterface
         if (c != null) {
             users = c.deleteChannel(aid);
             if (users != null) {
-                // the user is confirmed to be the admin and we have a list of users in the channel
+                // the user is confirmed to be the admin and we have a list of users in the channel.
                 for (i = 0; i < users.size(); i++) {
                     user = this.getDatabaseSupportInstance().getUserById(users.get(i).getId());
                     user.deleteChannel(c);
                     this.getDatabaseSupportInstance().putUser(user);
                 }
-                this.getDatabaseSupportInstance().deleteChannel(c.getName());
+                if (this.getDatabaseSupportInstance().deleteChannel(c.getName())){
+                	System.out.println("Channel removed from database.");
+                	return true;
+                }
+                else {
+                	System.out.println("Unable to remove channel from database.");
+                	return false;
+                }
+            }
+            else {
+            	System.out.println("This user does not have sufficient privileges to delete the channel.");
+            	return false;
             }
         }
-        return false;
+        else{
+        	System.out.println("Channel could not be found");
+        	return false;
+        }
     }
 
     /**
@@ -387,7 +414,7 @@ public class ChatService implements ChatServiceInterface
      * @param uid users id
      * @return a list of channels the user is invited to
      */
-    public ArrayList<Channel> viewInvitedChannels(String uid)
+    public ArrayList<String> viewInvitedChannels(String uid)
     {
         User u;
 
@@ -404,7 +431,7 @@ public class ChatService implements ChatServiceInterface
      * @param uid users id
      * @return a list of private channels
      */
-    public ArrayList<Channel> viewPrivateChannels(String uid)
+    public ArrayList<String> viewPrivateChannels(String uid)
     {
         User u;
 
@@ -420,7 +447,7 @@ public class ChatService implements ChatServiceInterface
      *
      * @return a list of public channels
      */
-    public ArrayList<Channel> viewPublicChannels(String uid)
+    public ArrayList<String> viewPublicChannels(String uid)
     {
         User u;
 
@@ -480,8 +507,23 @@ public class ChatService implements ChatServiceInterface
         Channel c;
 
         c = this.getDatabaseSupportInstance().getChannelByName(cname);
-
-        return c != null && c.toggleChannelVisibility(aid);
+        if (c!=null){
+        	if (c.toggleChannelVisibility(aid)){
+        		if(dbs.putChannel(c)){
+        			return true;
+        		}
+        		System.out.println("Failed to put channel in database.");
+        		return false;
+        	}
+        	else {
+        		System.out.println("Failed to toggle channel visibility.");
+        		return false;
+        	}
+        }
+        else {
+        	System.out.println("Channel does not exist.");
+        	return false;
+        }
     }
 
     // Iteration 3
