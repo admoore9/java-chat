@@ -149,7 +149,7 @@ public class Client
                 if (in[0].equals("login")) {
                     uid = csc.login(username, password);
                     if (uid != null) {
-                        channel = "testCH1"; // set to defualt channel
+                        channel = "Lobby"; // set to defualt channel
                         System.out.println("Login successful");
                         break;
                     }
@@ -263,8 +263,17 @@ public class Client
                 }
                 // JOIN CHANNEL
                 else if (in.length == 2 && in[0].equals("/joinChannel")) {
+                	//TODO: I think that this whole leaveChannel and then joinChannel thing should probably
+                	//      be taken care of inside csc's join channel. It seems like its giving an extension
+                	//		to the UI.
+                	if (!channel.isEmpty()){
+                		csc.leaveChannel(channel, uid);
+                		channel="";
+                    	client.sendMessage("/joinChannel "+channel);
+                        System.out.println("You have successfully left " + in[1] + ".");
+                	}
                     if (csc.joinChannel(in[1], uid)) {
-                        csc.leaveChannel(channel, uid);
+                    	channel=in[1];
                         client.sendMessage("/joinChannel " + in[1]);
                         System.out.println("You have successfully joined " + in[1] + ".");
                     }
@@ -272,16 +281,23 @@ public class Client
                         System.out.println("Join channel failed.");
                     }
                 }
-                // LEAVE CHANNEL (NEEDS TESTED)
+                // LEAVE CHANNEL
                 else if (in.length == 2 && in[0].equals("/leaveChannel")) {
-                    if (csc.leaveChannel(in[1], uid)) {
-                        System.out.println("You have successfully left " + in[1] + ".");
-                    }
-                    else {
-                        System.out.println("Leave channel failed.");
-                    }
+                	if (!channel.isEmpty()){
+	                    if (csc.leaveChannel(in[1], uid)) {
+	                    	channel = "";
+	                    	client.sendMessage("/joinChannel "+channel);
+	                        System.out.println("You have successfully left " + in[1] + ".");
+	                    }
+	                    else {
+	                        System.out.println("Leave channel failed.");
+	                    }
+                	}
+                	else {
+                		System.out.println("You're not currently in a channel.");
+                	}
                 }
-                // CREATE CHANNEL (NEEDS TESTED)
+                // CREATE CHANNEL
                 else if (in.length == 2 && in[0].equals("/createChannel")) {
                     if (csc.createChannel(in[1], uid)) {
                         System.out.println("Channel " + in[1] + " has been created.");
@@ -290,7 +306,7 @@ public class Client
                         System.out.println("Create channel failed.");
                     }
                 }
-                // DELETE CHANNEL (NEEDS TESTED)
+                // DELETE CHANNEL
                 else if (in.length == 2 && in[0].equals("/deleteChannel")) {
                     if (csc.deleteChannel(in[1], uid)) {
                         System.out.println("Channel " + in[1] + " has been deleted.");
@@ -319,12 +335,12 @@ public class Client
                 }
 
                 else if (in.length == 1 && in[0].equals("/viewPublicChannels")) {
-                    ArrayList<Channel> channels = csc.viewPublicChannels(uid);
+                    ArrayList<String> channels = csc.viewPublicChannels(uid);
                     if (channels != null) {
                         System.out.println("Public channels are:");
 
-                        for (Channel c : channels) {
-                            System.out.println(c.getName());
+                        for (String c : channels) {
+                            System.out.println(c);
                         }
                     }
                     else {
@@ -333,12 +349,12 @@ public class Client
                 }
 
                 else if (in.length == 1 && in[0].equals("/viewPrivateChannels")) {
-                    ArrayList<Channel> channels = csc.viewPrivateChannels(uid);
+                    ArrayList<String> channels = csc.viewPrivateChannels(uid);
                     if (channels != null) {
                         System.out.println("Private channels are:");
 
-                        for (Channel c : channels) {
-                            System.out.println(c.getName());
+                        for (String c : channels) {
+                            System.out.println(c);
                         }
                     }
                     else {
@@ -347,12 +363,12 @@ public class Client
                 }
 
                 else if (in.length == 1 && in[0].equals("/viewInvitedChannels")) {
-                    ArrayList<Channel> channels = csc.viewInvitedChannels(uid);
+                    ArrayList<String> channels = csc.viewInvitedChannels(uid);
                     if (channels != null) {
                         System.out.println("Invited channels are:");
 
-                        for (Channel c : channels) {
-                            System.out.println(c.getName());
+                        for (String c : channels) {
+                            System.out.println(c);
                         }
                     }
                     else {
