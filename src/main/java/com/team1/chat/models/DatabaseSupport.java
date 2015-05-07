@@ -154,6 +154,7 @@ public class DatabaseSupport implements DatabaseSupportInterface
     		statement = "UPDATE User "+
     						"SET username='"+u.getUsername()+"',"+
     							"password='"+u.getPassword()+"',"+
+    							"currentchannel='"+u.getCurrentChannel(u.getId())+"',"+
     							"friendlist='"+fList+"',"+
     							"blocklist='"+bList+"',"+
     							"invitedlist='"+iList+"',"+
@@ -207,9 +208,12 @@ public class DatabaseSupport implements DatabaseSupportInterface
 			//Third column: password
 			String pw = scanForColumnValues.nextLine();
 			
+			//Fourth Column: currentChannel
+			String cchannel = scanForColumnValues.nextLine();
+			
 			User u = new User(uid,uname,pw);
 	        
-	        // Fourth Column: friendlist
+	        // Fifth Column: friendlist
 	        while (scanForColumnValues.hasNextLine())
 	        {
 	        	String id = scanForColumnValues.nextLine();
@@ -233,7 +237,7 @@ public class DatabaseSupport implements DatabaseSupportInterface
 	        	}
 	        }
 	
-	        // Fifth Column: blocklist
+	        // 6th Column: blocklist
 	        while (scanForColumnValues.hasNextLine())
 	        {
 	        	String id = scanForColumnValues.nextLine();
@@ -260,7 +264,7 @@ public class DatabaseSupport implements DatabaseSupportInterface
 	        	}
 	        }
 	       
-	        // Sixth column: invitedlist
+	        // 7th column: invitedlist
 	        while (scanForColumnValues.hasNextLine())
 	        {
 	        	String name = scanForColumnValues.nextLine();
