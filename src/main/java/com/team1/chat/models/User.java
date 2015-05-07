@@ -54,11 +54,6 @@ public class User implements UserInterface
         return uid;
     }
 
-    public String getPublicName()
-    {
-        return publicName;
-    }
-
     public String getUsername()
     {
         return username;
@@ -263,7 +258,7 @@ public class User implements UserInterface
      * @param c Channel to add
      * @return true on success
      */
-    public boolean addPrivateChannel(Channel c)
+    public boolean addChannel(Channel c)
     {
         privateChannels.add(c.getName());
         return true;

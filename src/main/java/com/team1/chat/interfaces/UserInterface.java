@@ -21,7 +21,7 @@ public interface UserInterface
     String getPassword();
 
     // Iteration 2
-    boolean addPrivateChannel(Channel c);
+    boolean addChannel(Channel c);
 
     boolean deleteChannel(Channel c);
 
@@ -51,8 +51,6 @@ public interface UserInterface
     boolean acceptChannelInvite(Channel c);
 
     boolean declineChannelInvite(Channel c);
-
-    String getPublicName();
 
     String getCurrentChannel();
 

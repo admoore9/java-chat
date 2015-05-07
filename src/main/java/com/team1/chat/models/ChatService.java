@@ -262,7 +262,7 @@ public class ChatService implements ChatServiceInterface
             {
             	return false;
             }
-            u.addPrivateChannel(c);
+            u.addChannel(c);
             c.whiteListUser(aid, u);
 
             return this.getDatabaseSupportInstance().putChannel(c) &&
